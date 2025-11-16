@@ -1,16 +1,5 @@
 [
     {
-        "id": "ep05",
-        "episode": "EPISODE 05",
-        "title": "Signal Burn // Brutalist HUD Build",
-        "platform": "YouTube",
-        "url": "https://www.youtube.com/@duriin",
-        "duration": "11:48",
-        "status": "LIVE",
-        "tags": ["ui", "react", "design"],
-        "publishedAt": "2024-11-12"
-    },
-    {
         "id": "ep04",
         "episode": "EPISODE 04",
         "title": "Night Shift // TikTok Cutdown",
@@ -18,40 +7,11 @@
         "url": "https://www.tiktok.com/@duriin",
         "duration": "01:07",
         "status": "LIVE",
-        "tags": ["edit", "tiktok", "cut"],
+        "tags": [
+            "edit",
+            "tiktok",
+            "cut"
+        ],
         "publishedAt": "2024-11-02"
-    },
-    {
-        "id": "ep03",
-        "episode": "EPISODE 03",
-        "title": "Latency Wars // FPS Tuning",
-        "platform": "YouTube",
-        "url": "https://www.youtube.com/@duriin",
-        "duration": "19:09",
-        "status": "ARCHIVED",
-        "tags": ["fps", "pc", "tuning"],
-        "publishedAt": "2024-10-20"
-    },
-    {
-        "id": "ep02",
-        "episode": "EPISODE 02",
-        "title": "Brutalist UI // Layout Breakdown",
-        "platform": "YouTube",
-        "url": "https://www.youtube.com/@duriin",
-        "duration": "14:27",
-        "status": "ARCHIVED",
-        "tags": ["ui", "design"],
-        "publishedAt": "2024-10-04"
-    },
-    {
-        "id": "ep01",
-        "episode": "EPISODE 01",
-        "title": "Synthetic Dawn // Intro Sequence",
-        "platform": "YouTube",
-        "url": "https://www.youtube.com/@duriin",
-        "duration": "08:43",
-        "status": "ARCHIVED",
-        "tags": ["intro", "synth"],
-        "publishedAt": "2024-09-12"
     }
 ]
