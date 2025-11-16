@@ -1,6 +1,12 @@
 import React from 'react';
+import { videos } from '../content';
+
+const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
 
 export const Hero: React.FC = () => {
+    const latestVideo = videos[0];
+
     return (
         <section className="hero" id="featured">
             <div className="hero__frame">
@@ -13,9 +19,26 @@ export const Hero: React.FC = () => {
                     Heavy, deliberate, and unapologetically sharp. A home for dark synth,
                     brutalist experiments, and late‑night code runs.
                 </p>
+
+                {latestVideo && (
+                    <div className="hero__now">
+                        <div className="hero__now-label">NOW PLAYING</div>
+                        <div className="hero__now-title">
+                            {latestVideo.episode} — {latestVideo.title}
+                        </div>
+                        <div className="hero__now-meta">
+                            <span className="chip chip--platform">{latestVideo.platform}</span>
+                            <span className="chip chip--duration">{latestVideo.duration}</span>
+                            <span className="chip chip--date">
+                                {formatDate(latestVideo.publishedAt)}
+                            </span>
+                        </div>
+                    </div>
+                )}
+
                 <div className="hero__cta-row">
                     <a
-                        href="https://youtube.com"
+                        href={latestVideo?.url || 'https://www.youtube.com/@duriin'}
                         target="_blank"
                         rel="noreferrer"
                         className="btn btn--primary"

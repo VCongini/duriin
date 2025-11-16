@@ -1,0 +1,26 @@
+[
+    {
+        "id": "post-03",
+        "title": "Patch Notes // Deploying the Media Hub",
+        "url": "https://github.com/vcongini/duriin",
+        "publishedAt": "2024-11-15",
+        "tags": ["release", "site", "dev"],
+        "excerpt": "Wired GitHub Actions to auto-ship to Pages, and locked the base path for the repo."
+    },
+    {
+        "id": "post-02",
+        "title": "Devlog // Brutalist Theme Kit",
+        "url": "https://github.com/vcongini",
+        "publishedAt": "2024-11-07",
+        "tags": ["design", "ui", "guide"],
+        "excerpt": "Documenting the harsh geometry, neon accents, and spacing rules that drive the channel look."
+    },
+    {
+        "id": "post-01",
+        "title": "Video Roadmap // Winter Drops",
+        "url": "https://www.youtube.com/@duriin",
+        "publishedAt": "2024-10-28",
+        "tags": ["roadmap", "video"],
+        "excerpt": "Stack ranking the next wave of releases: HUD builds, edit cutdowns, and FPS tuning drills."
+    }
+]
