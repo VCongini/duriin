@@ -16,8 +16,8 @@ export const Hero: React.FC = () => {
                     <span className="hero__title-accent">_ONLINE</span>
                 </h1>
                 <p className="hero__subtitle">
-                    Heavy, deliberate, and unapologetically sharp. A home for dark synth,
-                    brutalist experiments, and late‑night code runs.
+                    Sharp cuts, late-night sessions, and game-first breakdowns. A hub for the drops,
+                    edits, and devlogs behind the screen.
                 </p>
 
                 {latestVideo && (
@@ -43,25 +43,25 @@ export const Hero: React.FC = () => {
                         rel="noreferrer"
                         className="btn btn--primary"
                     >
-                        WATCH LATEST TRANSMISSION
+                        Watch latest drop
                     </a>
-                    <a href="#videos" className="btn btn--ghost">
-                        SCAN ARCHIVE
+                    <a href="/videos" className="btn btn--ghost">
+                        Browse videos
                     </a>
                 </div>
             </div>
             <div className="hero__side">
                 <div className="hero__stat hero__stat--primary">
                     <span className="hero__stat-label">MODE</span>
-                    <span className="hero__stat-value">BRUTALIST</span>
+                    <span className="hero__stat-value">ONLINE</span>
                 </div>
                 <div className="hero__stat">
                     <span className="hero__stat-label">STATUS</span>
                     <span className="hero__stat-value">SIGNAL LIVE</span>
                 </div>
                 <div className="hero__stat">
-                    <span className="hero__stat-label">LATENCY</span>
-                    <span className="hero__stat-value">&lt; 16ms</span>
+                    <span className="hero__stat-label">FOCUS</span>
+                    <span className="hero__stat-value">GAMING</span>
                 </div>
             </div>
         </section>

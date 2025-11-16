@@ -5,7 +5,7 @@ export const Footer: React.FC = () => {
         <footer className="footer">
             <span className="footer__block">DURIIN'S CHANNEL NODE</span>
             <span className="footer__block footer__block--muted">
-                Built with React + Vite. Designed to feel like heavy metal in UI form.
+                Built with React + Vite. Signal stays lean and fast.
             </span>
         </footer>
     );
