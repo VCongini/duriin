@@ -3,10 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 
 type HeaderProps = {
     theme: 'dark' | 'light';
+    design: 'brutalist' | 'modern';
     onToggleTheme: () => void;
+    onDesignChange: (design: 'brutalist' | 'modern') => void;
 };
 
-export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme }) => {
+export const Header: React.FC<HeaderProps> = ({ theme, design, onToggleTheme, onDesignChange }) => {
     const location = useLocation();
     const isActive = (path: string) => (location.pathname === path ? 'header__link--active' : '');
 
@@ -30,14 +32,27 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme }) => {
                     About
                 </Link>
             </nav>
-            <button
-                type="button"
-                className="theme-toggle"
-                onClick={onToggleTheme}
-                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-                {theme === 'dark' ? '☀' : '☾'}
-            </button>
+            <div className="header__controls">
+                <label className="design-select">
+                    <span className="design-select__label">Style</span>
+                    <select
+                        className="design-select__field"
+                        value={design}
+                        onChange={(event) => onDesignChange(event.target.value as HeaderProps['design'])}
+                    >
+                        <option value="brutalist">Brutalist</option>
+                        <option value="modern">Modern</option>
+                    </select>
+                </label>
+                <button
+                    type="button"
+                    className="theme-toggle"
+                    onClick={onToggleTheme}
+                    aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                >
+                    {theme === 'dark' ? 'Light' : 'Dark'} mode
+                </button>
+            </div>
         </header>
     );
 };
