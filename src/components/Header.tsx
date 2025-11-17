@@ -8,6 +8,9 @@ export const Header: React.FC = () => {
 
     return (
         <header className="header">
+            <a href="#main" className="skip-link">
+                Skip to main content
+            </a>
             <div className="header__left">
                 <span className="header__logo">DURIIN</span>
                 <span className="header__tagline">GAME FEED</span>

@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { videos } from '../content';
-
-const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+import { formatDate } from '../utils/format';
 
 type SortOrder = 'newest' | 'oldest';
 
@@ -28,6 +26,11 @@ export const Videos: React.FC = () => {
                 return sort === 'newest' ? -diff : diff;
             });
     }, [activeTag, query, sort]);
+
+    const resultText =
+        filtered.length === 1
+            ? '1 video'
+            : `${filtered.length} videos${activeTag ? ` tagged ${activeTag}` : ''}`;
 
     return (
         <div className="page page--stack">
@@ -76,6 +79,9 @@ export const Videos: React.FC = () => {
                         </div>
                     </div>
                 </form>
+                <div className="filter-summary" role="status" aria-live="polite">
+                    {resultText}
+                </div>
 
                 <ul className="episode-list">
                     {filtered.map((video) => (
@@ -101,7 +107,11 @@ export const Videos: React.FC = () => {
                                     <span className="chip chip--platform">{video.platform}</span>
                                     <span className="chip chip--duration">{video.duration}</span>
                                     <span className="chip chip--date">
-                                        {formatDate(video.publishedAt)}
+                                        {formatDate(video.publishedAt, {
+                                            month: 'short',
+                                            day: '2-digit',
+                                            year: 'numeric'
+                                        })}
                                     </span>
                                 </div>
                             </div>

@@ -1,9 +1,7 @@
 import React from 'react';
 import { Hero } from '../components/Hero';
 import { posts, videos } from '../content';
-
-const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+import { formatDate } from '../utils/format';
 
 export const Home: React.FC = () => {
     const latestVideos = videos.slice(0, 3);
@@ -39,9 +37,7 @@ export const Home: React.FC = () => {
                                 <div className="episode__meta">
                                     <span className="chip chip--platform">{video.platform}</span>
                                     <span className="chip chip--duration">{video.duration}</span>
-                                    <span className="chip chip--date">
-                                        {formatDate(video.publishedAt)}
-                                    </span>
+                                    <span className="chip chip--date">{formatDate(video.publishedAt)}</span>
                                 </div>
                             </div>
                         </li>

@@ -1,8 +1,6 @@
 import React from 'react';
 import { posts, videos } from '../content';
-
-const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+import { formatDate } from '../utils/format';
 
 export const Featured: React.FC = () => {
     const priority = videos.filter((v) => v.status === 'LIVE' || v.status === 'PREMIERE');
@@ -38,9 +36,7 @@ export const Featured: React.FC = () => {
                                 <div className="episode__meta">
                                     <span className="chip chip--platform">{video.platform}</span>
                                     <span className="chip chip--duration">{video.duration}</span>
-                                    <span className="chip chip--date">
-                                        {formatDate(video.publishedAt)}
-                                    </span>
+                                    <span className="chip chip--date">{formatDate(video.publishedAt)}</span>
                                 </div>
                             </div>
                             <div className="episode__tags">

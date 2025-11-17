@@ -1,8 +1,6 @@
 import React from 'react';
 import { videos } from '../content';
-
-const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+import { formatDate } from '../utils/format';
 
 export const Hero: React.FC = () => {
     const latestVideo = videos[0];

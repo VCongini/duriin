@@ -53,6 +53,28 @@
     padding-bottom: 0.2rem;
 }
 
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    z-index: 1000;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    padding: 0.6rem 1rem;
+    border: var(--panel-border-width) solid var(--color-border-strong);
+}
+
+.skip-link:focus {
+    left: var(--space-md);
+    top: var(--space-md);
+    width: auto;
+    height: auto;
+    box-shadow: var(--shadow-brutalist);
+}
+
 .header__link::after {
     content: '';
     position: absolute;
