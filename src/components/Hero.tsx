@@ -57,7 +57,7 @@ export const Hero: React.FC = () => {
                 </div>
                 <div className="hero__stat">
                     <span className="hero__stat-label">STATUS</span>
-                    <span className="hero__stat-value">SIGNAL LIVE</span>
+                    <span className="hero__stat-value">LIVE</span>
                 </div>
                 <div className="hero__stat">
                     <span className="hero__stat-label">FOCUS</span>

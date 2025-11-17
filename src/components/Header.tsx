@@ -10,7 +10,7 @@ export const Header: React.FC = () => {
         <header className="header">
             <div className="header__left">
                 <span className="header__logo">DURIIN</span>
-                <span className="header__tagline">GAME SIGNALS</span>
+                <span className="header__tagline">GAME FEED</span>
             </div>
             <nav className="header__nav" aria-label="Primary">
                 <Link to="/" className={`header__link ${isActive('/')}`}>

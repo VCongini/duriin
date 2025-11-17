@@ -18,7 +18,7 @@ export const About: React.FC = () => {
                 <p className="panel__body">
                     Duriin is a channel for people who like their feeds sharp and their games loud.
                     Expect breakdowns of FPS setups, behind-the-scenes edits, and experiments in
-                    game audio and visuals. No fluff—just the signal.
+                    game audio and visuals. No fluff—just the drop.
                 </p>
                 <p className="panel__body">
                     This space will expand with player guides, patch note reactions, build logs, and
