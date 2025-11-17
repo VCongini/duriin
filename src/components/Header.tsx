@@ -1,12 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { ThemeSettings } from './ThemeSettings';
 
-type HeaderProps = {
-    theme: 'dark' | 'light';
-    onToggleTheme: () => void;
-};
-
-export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme }) => {
+export const Header: React.FC = () => {
     const location = useLocation();
     const isActive = (path: string) => (location.pathname === path ? 'header__link--active' : '');
 
@@ -30,14 +26,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme }) => {
                     About
                 </Link>
             </nav>
-            <button
-                type="button"
-                className="theme-toggle"
-                onClick={onToggleTheme}
-                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-                {theme === 'dark' ? '☀' : '☾'}
-            </button>
+            <ThemeSettings />
         </header>
     );
 };

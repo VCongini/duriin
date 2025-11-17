@@ -1,0 +1,76 @@
+.theme-settings {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.theme-settings__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-text-secondary);
+}
+
+.theme-settings__label {
+    font-size: var(--font-size-xs);
+}
+
+.theme-settings__control {
+    display: inline-flex;
+    gap: 0.2rem;
+}
+
+.theme-settings__select {
+    appearance: none;
+    border: 1px solid var(--theme-control-border);
+    background: var(--theme-control-bg);
+    color: var(--color-text-primary);
+    padding: 0.3rem 1.25rem 0.3rem 0.6rem;
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: var(--radius-sm);
+}
+
+.theme-settings__modes {
+    display: inline-flex;
+    background: var(--theme-control-bg);
+    border: 1px solid var(--theme-control-border);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+
+.theme-settings__mode-btn {
+    background: transparent;
+    border: none;
+    color: var(--theme-control-muted);
+    font-size: var(--font-size-sm);
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: background 200ms ease, color 200ms ease;
+}
+
+.theme-settings__mode-btn.is-active {
+    background: var(--theme-control-active);
+    color: var(--theme-control-active-text);
+}
+
+[data-theme-layout='brutalist'] .theme-settings__select,
+[data-theme-layout='brutalist'] .theme-settings__modes {
+    border-radius: var(--radius-none);
+    border-width: var(--border-base);
+}
+
+[data-theme-layout='modern'] .theme-settings__group {
+    letter-spacing: 0.1em;
+}
+
+@media (max-width: 768px) {
+    .theme-settings {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

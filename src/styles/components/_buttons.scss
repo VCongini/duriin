@@ -1,0 +1,39 @@
+@use '../_mixins' as mixins;
+
+.btn {
+    @include mixins.button-base();
+    color: var(--color-text-primary);
+    border-radius: var(--button-border-radius);
+}
+
+.btn--primary {
+    background: linear-gradient(120deg, var(--color-accent-primary), var(--color-accent-secondary));
+    color: #050608;
+    box-shadow: var(--shadow-brutalist);
+}
+
+.btn--primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 0.5rem 0.5rem 0 0 rgba(0, 0, 0, 0.45);
+}
+
+.btn--ghost {
+    border: var(--panel-border-width) solid var(--color-border);
+    background: var(--button-ghost-bg);
+    color: var(--button-ghost-text);
+    box-shadow: var(--shadow-brutalist);
+}
+
+.btn--ghost:hover {
+    background: var(--button-ghost-hover);
+}
+
+[data-theme-layout='modern'] .btn--primary {
+    box-shadow: var(--shadow-modern);
+    color: #020307;
+}
+
+[data-theme-layout='modern'] .btn--ghost {
+    border-radius: var(--radius-pill);
+    box-shadow: none;
+}

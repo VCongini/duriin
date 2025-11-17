@@ -1,0 +1,45 @@
+[data-theme-layout='brutalist'][data-theme-mode='light'] {
+    --color-bg-page: #f5f7fb;
+    --color-bg-muted: #e9eef6;
+    --color-surface: #ffffff;
+    --color-surface-alt: #f3f6ff;
+    --color-border: #c2c9e0;
+    --color-border-strong: #111b2f;
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #46506b;
+    --color-accent-primary: #0ea5e9;
+    --color-accent-secondary: #2563eb;
+    --color-danger: #e11d48;
+    --color-success: #059669;
+    --color-warning: #ca8a04;
+    --color-status-live: #15803d;
+    --color-status-premiere: #b45309;
+    --color-status-draft: #6d28d9;
+    --chip-bg: rgba(15, 23, 42, 0.08);
+    --chip-border: rgba(15, 23, 42, 0.2);
+    --chip-text: #0f172a;
+    --theme-control-bg: rgba(255, 255, 255, 0.85);
+    --theme-control-border: rgba(15, 23, 42, 0.25);
+    --theme-control-muted: rgba(15, 23, 42, 0.7);
+    --theme-control-active: var(--color-accent-secondary);
+    --theme-control-active-text: #ffffff;
+    --button-ghost-bg: transparent;
+    --button-ghost-hover: rgba(15, 23, 42, 0.07);
+    --button-ghost-text: var(--color-text-primary);
+    --app-bg-image: repeating-linear-gradient(
+            to right,
+            #f4f6fd 0,
+            #f4f6fd 1px,
+            #e8ecf7 1px,
+            #e8ecf7 42px
+        ),
+        radial-gradient(circle at top, #e8ecf7 0, #f5f7fb 55%);
+    --shadow-brutalist: 0 0 0 1px rgba(17, 27, 47, 0.3), 0.4rem 0.4rem 0 0 rgba(15, 23, 42, 0.08);
+    --shadow-modern: 0 25px 60px rgba(15, 23, 42, 0.15);
+    --panel-radius: var(--radius-none);
+    --panel-border-width: var(--border-base);
+    --panel-outline: var(--color-border);
+    --button-border-radius: var(--radius-none);
+    --hero-outline-color: rgba(37, 99, 235, 0.4);
+    --header-blur: 0;
+}

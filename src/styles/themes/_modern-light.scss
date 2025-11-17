@@ -1,0 +1,40 @@
+[data-theme-layout='modern'][data-theme-mode='light'] {
+    --color-bg-page: #f5f7fb;
+    --color-bg-muted: rgba(249, 250, 255, 0.85);
+    --color-surface: rgba(255, 255, 255, 0.85);
+    --color-surface-alt: rgba(244, 248, 255, 0.85);
+    --color-border: rgba(15, 23, 42, 0.08);
+    --color-border-strong: rgba(15, 23, 42, 0.4);
+    --color-text-primary: #0b1220;
+    --color-text-secondary: #4b5569;
+    --color-accent-primary: #2563eb;
+    --color-accent-secondary: #7c3aed;
+    --color-danger: #db2777;
+    --color-success: #0f9d58;
+    --color-warning: #b45309;
+    --color-status-live: #2563eb;
+    --color-status-premiere: #db2777;
+    --color-status-draft: #7c3aed;
+    --chip-bg: rgba(15, 23, 42, 0.08);
+    --chip-border: rgba(15, 23, 42, 0.14);
+    --chip-text: #0b1220;
+    --theme-control-bg: rgba(255, 255, 255, 0.85);
+    --theme-control-border: rgba(15, 23, 42, 0.15);
+    --theme-control-muted: rgba(15, 23, 42, 0.65);
+    --theme-control-active: rgba(37, 99, 235, 0.15);
+    --theme-control-active-text: #0b1220;
+    --button-ghost-bg: rgba(15, 23, 42, 0.05);
+    --button-ghost-hover: rgba(15, 23, 42, 0.1);
+    --button-ghost-text: #0b1220;
+    --app-bg-image: radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.22), transparent 45%),
+        radial-gradient(circle at 90% 0%, rgba(59, 130, 246, 0.28), transparent 40%),
+        linear-gradient(140deg, #f5f7fb 0%, #ffffff 50%, #eff4ff 100%);
+    --shadow-brutalist: 0 15px 35px rgba(15, 23, 42, 0.15);
+    --shadow-modern: 0 40px 80px rgba(15, 23, 42, 0.15);
+    --panel-radius: var(--radius-lg);
+    --panel-border-width: var(--border-thin);
+    --panel-outline: rgba(15, 23, 42, 0.08);
+    --button-border-radius: var(--radius-pill);
+    --hero-outline-color: rgba(37, 99, 235, 0.28);
+    --header-blur: 28px;
+}

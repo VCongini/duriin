@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -6,26 +6,14 @@ import { Home } from './pages/Home';
 import { Featured } from './pages/Featured';
 import { Videos } from './pages/Videos';
 import { About } from './pages/About';
+import { ThemeProvider, useTheme } from './theme/ThemeContext';
 
-type ThemeMode = 'light' | 'dark';
-
-const App: React.FC = () => {
-    const [theme, setTheme] = useState<ThemeMode>(() => {
-        const stored = localStorage.getItem('theme');
-        if (stored === 'light' || stored === 'dark') return stored;
-        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    });
-
-    useEffect(() => {
-        localStorage.setItem('theme', theme);
-        document.documentElement.setAttribute('data-theme', theme);
-    }, [theme]);
-
-    const toggleTheme = () => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+const AppShell: React.FC = () => {
+    const { mode, layout } = useTheme();
 
     return (
-        <div className="app" data-theme={theme}>
-            <Header theme={theme} onToggleTheme={toggleTheme} />
+        <div className={`app app--${layout}`} data-theme-mode={mode} data-theme-layout={layout}>
+            <Header />
             <main className="app__main">
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -38,5 +26,11 @@ const App: React.FC = () => {
         </div>
     );
 };
+
+const App: React.FC = () => (
+    <ThemeProvider>
+        <AppShell />
+    </ThemeProvider>
+);
 
 export default App;
