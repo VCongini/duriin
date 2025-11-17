@@ -1,0 +1,40 @@
+[data-theme-layout='modern'][data-theme-mode='dark'] {
+    --color-bg-page: #020307;
+    --color-bg-muted: rgba(8, 12, 22, 0.9);
+    --color-surface: rgba(15, 19, 33, 0.78);
+    --color-surface-alt: rgba(27, 33, 55, 0.78);
+    --color-border: rgba(255, 255, 255, 0.14);
+    --color-border-strong: rgba(255, 255, 255, 0.4);
+    --color-text-primary: #f8fbff;
+    --color-text-secondary: #a9b4d0;
+    --color-accent-primary: #72f7ff;
+    --color-accent-secondary: #7c7dff;
+    --color-danger: #ff5f8f;
+    --color-success: #3dd5ad;
+    --color-warning: #facc15;
+    --color-status-live: #72f7ff;
+    --color-status-premiere: #f9a8d4;
+    --color-status-draft: #c084fc;
+    --chip-bg: rgba(248, 251, 255, 0.08);
+    --chip-border: rgba(248, 251, 255, 0.25);
+    --chip-text: #f8fbff;
+    --theme-control-bg: rgba(7, 11, 23, 0.65);
+    --theme-control-border: rgba(248, 251, 255, 0.2);
+    --theme-control-muted: rgba(248, 251, 255, 0.6);
+    --theme-control-active: rgba(248, 251, 255, 0.2);
+    --theme-control-active-text: #f8fbff;
+    --button-ghost-bg: rgba(248, 251, 255, 0.08);
+    --button-ghost-hover: rgba(248, 251, 255, 0.16);
+    --button-ghost-text: #f8fbff;
+    --app-bg-image: radial-gradient(circle at 10% 20%, rgba(95, 118, 255, 0.35), transparent 45%),
+        radial-gradient(circle at 80% 0%, rgba(123, 255, 239, 0.28), transparent 45%),
+        linear-gradient(140deg, #020307 0%, #050810 45%, #030307 100%);
+    --shadow-brutalist: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 25px 60px rgba(2, 3, 7, 0.9);
+    --shadow-modern: 0 40px 80px rgba(3, 5, 15, 0.85);
+    --panel-radius: var(--radius-lg);
+    --panel-border-width: var(--border-thin);
+    --panel-outline: rgba(255, 255, 255, 0.07);
+    --button-border-radius: var(--radius-pill);
+    --hero-outline-color: rgba(114, 247, 255, 0.4);
+    --header-blur: 24px;
+}

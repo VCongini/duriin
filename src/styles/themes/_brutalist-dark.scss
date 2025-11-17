@@ -1,0 +1,45 @@
+[data-theme-layout='brutalist'][data-theme-mode='dark'] {
+    --color-bg-page: #03050e;
+    --color-bg-muted: #060914;
+    --color-surface: #101322;
+    --color-surface-alt: #161a2d;
+    --color-border: #272b3e;
+    --color-border-strong: #5ff0ff;
+    --color-text-primary: #f5f8ff;
+    --color-text-secondary: #a0a6cc;
+    --color-accent-primary: #16f2d6;
+    --color-accent-secondary: #4ea3ff;
+    --color-danger: #ff4b7d;
+    --color-success: #34d399;
+    --color-warning: #facc15;
+    --color-status-live: #34d399;
+    --color-status-premiere: #f97316;
+    --color-status-draft: #a855f7;
+    --chip-bg: rgba(255, 255, 255, 0.08);
+    --chip-border: rgba(95, 240, 255, 0.35);
+    --chip-text: #f1f5f9;
+    --theme-control-bg: rgba(8, 10, 20, 0.9);
+    --theme-control-border: rgba(95, 240, 255, 0.35);
+    --theme-control-muted: rgba(255, 255, 255, 0.6);
+    --theme-control-active: var(--color-accent-primary);
+    --theme-control-active-text: #03050e;
+    --button-ghost-bg: transparent;
+    --button-ghost-hover: rgba(255, 255, 255, 0.08);
+    --button-ghost-text: var(--color-text-primary);
+    --app-bg-image: repeating-linear-gradient(
+            to right,
+            #040610 0,
+            #040610 1px,
+            #02030a 1px,
+            #02030a 42px
+        ),
+        radial-gradient(circle at top, #111827 0, #050608 55%);
+    --shadow-brutalist: 0 0 0 1px rgba(95, 240, 255, 0.35), 0.45rem 0.45rem 0 0 rgba(0, 0, 0, 0.95);
+    --shadow-modern: 0 30px 80px rgba(5, 6, 24, 0.9);
+    --panel-radius: var(--radius-none);
+    --panel-border-width: var(--border-base);
+    --panel-outline: var(--color-border);
+    --button-border-radius: var(--radius-none);
+    --hero-outline-color: rgba(22, 242, 214, 0.5);
+    --header-blur: 0;
+}

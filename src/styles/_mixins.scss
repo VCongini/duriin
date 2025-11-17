@@ -1,0 +1,38 @@
+@mixin brutalist-border {
+    border: var(--border-base) solid var(--color-border-strong);
+    box-shadow: var(--shadow-brutalist);
+}
+
+@mixin button-base($height: var(--button-height-md)) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    height: $height;
+    padding: 0 var(--space-lg);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+}
+
+@mixin heading-styles($size) {
+    font-size: $size;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+@mixin pill-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.65rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
