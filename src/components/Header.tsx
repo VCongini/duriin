@@ -19,9 +19,6 @@ export const Header: React.FC = () => {
                 <Link to="/" className={`header__link ${isActive('/')}`}>
                     Home
                 </Link>
-                <Link to="/featured" className={`header__link ${isActive('/featured')}`}>
-                    Featured
-                </Link>
                 <Link to="/videos" className={`header__link ${isActive('/videos')}`}>
                     Videos
                 </Link>

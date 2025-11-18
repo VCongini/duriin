@@ -20,3 +20,12 @@ export type Post = {
     tags: string[];
     excerpt: string;
 };
+
+export type FeaturedTopic = {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    href: string;
+    ctaLabel?: string;
+};

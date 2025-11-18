@@ -1,6 +1,7 @@
 import React from 'react';
 import { Hero } from '../components/Hero';
-import { posts, videos } from '../content';
+import { FeaturedCarousel } from '../components/FeaturedCarousel';
+import { featuredTopics, posts, videos } from '../content';
 import { formatDate } from '../utils/format';
 
 export const Home: React.FC = () => {
@@ -10,6 +11,7 @@ export const Home: React.FC = () => {
     return (
         <div className="page page--stack">
             <Hero />
+            <FeaturedCarousel items={featuredTopics} />
 
             <section className="panel panel--primary">
                 <div className="panel__label">Highlights</div>

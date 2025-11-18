@@ -1,0 +1,242 @@
+@use '../tokens';
+
+.featured-carousel {
+    position: relative;
+    margin: var(--space-xl) 0;
+    padding: var(--space-xl);
+    background: var(--color-surface);
+    border: var(--panel-border-width) solid var(--color-border);
+    border-radius: var(--panel-radius);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    overflow: hidden;
+}
+
+.featured-carousel__stage {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-lg);
+    align-items: stretch;
+}
+
+.featured-carousel__viewport {
+    position: relative;
+    min-height: 22rem;
+    overflow: hidden;
+}
+
+.featured-carousel__slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-xl);
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(3%);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+}
+
+.featured-carousel__slide.is-active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.featured-carousel__media {
+    border-radius: clamp(var(--radius-sm), 1vw, var(--radius-lg));
+    overflow: hidden;
+    height: 100%;
+    min-height: 16rem;
+    box-shadow: var(--shadow-modern);
+}
+
+.featured-carousel__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.featured-carousel__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.featured-carousel__eyebrow {
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.featured-carousel__title {
+    font-size: clamp(1.85rem, 2.8vw, var(--font-size-xxl));
+    line-height: 1.1;
+    margin: 0;
+}
+
+.featured-carousel__description {
+    font-size: var(--font-size-lg);
+    margin: 0;
+    color: var(--color-text-secondary);
+}
+
+.featured-carousel__cta {
+    align-self: flex-start;
+    text-decoration: none;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--button-border-radius);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    border: var(--border-base) solid transparent;
+}
+
+.featured-carousel__nav {
+    align-self: center;
+    width: var(--button-height-lg);
+    height: var(--button-height-lg);
+    border-radius: var(--radius-sm);
+    border: var(--border-base) solid var(--color-border);
+    background: var(--button-ghost-bg);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.featured-carousel__nav:hover,
+.featured-carousel__nav:focus-visible {
+    background: var(--button-ghost-hover);
+    color: var(--color-accent-primary);
+}
+
+.featured-carousel__nav:focus-visible {
+    outline: 2px solid var(--color-accent-secondary);
+    outline-offset: 4px;
+}
+
+.featured-carousel__indicators {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    align-items: center;
+}
+
+.featured-carousel__indicator {
+    width: 1.5rem;
+    height: 0.35rem;
+    border-radius: 999px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.featured-carousel__indicator.is-active {
+    background: var(--color-accent-primary);
+    transform: scaleX(1.1);
+}
+
+.featured-carousel--brutalist {
+    border-width: var(--border-thick);
+    border-radius: var(--radius-none);
+    box-shadow: var(--shadow-brutalist);
+    background: var(--color-bg-muted);
+}
+
+.featured-carousel--brutalist .featured-carousel__title {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.featured-carousel--brutalist .featured-carousel__media {
+    border-radius: var(--radius-none);
+    box-shadow: 0.65rem 0.65rem 0 0 rgba(0, 0, 0, 0.65);
+}
+
+.featured-carousel--brutalist .featured-carousel__cta {
+    background: var(--color-accent-primary);
+    border-color: var(--color-border-strong);
+    color: #03050e;
+}
+
+.featured-carousel--brutalist .featured-carousel__nav {
+    border-width: var(--border-thick);
+    border-radius: var(--radius-none);
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow: 0.35rem 0.35rem 0 0 rgba(0, 0, 0, 0.85);
+}
+
+.featured-carousel--modern {
+    border-radius: var(--radius-lg);
+    border-width: var(--border-thin);
+    backdrop-filter: blur(40px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+    box-shadow: var(--shadow-modern);
+}
+
+.featured-carousel--modern .featured-carousel__media {
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 60px rgba(5, 6, 24, 0.7);
+}
+
+.featured-carousel--modern .featured-carousel__cta {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.35);
+    color: var(--color-text-primary);
+    backdrop-filter: blur(10px);
+}
+
+.featured-carousel--modern .featured-carousel__indicator {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+@media (max-width: 960px) {
+    .featured-carousel {
+        padding: var(--space-lg);
+    }
+
+    .featured-carousel__slide {
+        grid-template-columns: 1fr;
+    }
+
+    .featured-carousel__stage {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    .featured-carousel__nav {
+        width: var(--button-height-md);
+        height: var(--button-height-md);
+        justify-self: center;
+    }
+
+    .featured-carousel__viewport {
+        order: -1;
+        min-height: 20rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .featured-carousel {
+        margin: var(--space-lg) 0;
+    }
+
+    .featured-carousel__description {
+        font-size: var(--font-size-md);
+    }
+
+    .featured-carousel__cta {
+        width: 100%;
+        text-align: center;
+    }
+}
