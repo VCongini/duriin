@@ -1,15 +1,30 @@
+@use '../utilities' as *;
+
 #root {
     min-height: 100vh;
 }
 
 .app {
     min-height: 100vh;
-    padding: var(--space-xxl) var(--space-lg) var(--space-xl);
     display: flex;
     flex-direction: column;
-    gap: var(--space-xl);
-    width: min(1200px, 100%);
+    @include responsive-space(gap, var(--space-lg), var(--space-xl));
+    @include responsive-space(
+        padding,
+        var(--space-xl) var(--space-md) var(--space-lg),
+        var(--space-xxl) var(--space-xl) var(--space-xl),
+        var(--space-xxl) var(--space-xxl) var(--space-xxl)
+    );
+    width: min(100%, 1080px);
     margin: 0 auto;
+
+    @include respond(desktop) {
+        width: min(100%, 1200px);
+    }
+
+    @include respond(large-desktop) {
+        width: min(100%, 1400px);
+    }
 }
 
 .app__main {
@@ -19,9 +34,13 @@
 .page {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xl);
+    @include responsive-space(gap, var(--space-lg), var(--space-xl));
 }
 
 .page--stack {
     gap: var(--space-lg);
+
+    @include respond(tablet) {
+        gap: var(--space-xl);
+    }
 }

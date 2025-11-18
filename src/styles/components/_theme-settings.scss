@@ -1,7 +1,12 @@
+@use '../utilities' as *;
+
 .theme-settings {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
+    @include fluid-stack(column, var(--space-sm), row, var(--space-sm));
+    align-items: flex-start;
+
+    @include respond(tablet) {
+        align-items: center;
+    }
 }
 
 .theme-settings__group {
@@ -68,9 +73,3 @@
     letter-spacing: 0.1em;
 }
 
-@media (max-width: 768px) {
-    .theme-settings {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}

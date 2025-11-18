@@ -1,3 +1,5 @@
+@use '../utilities';
+
 [data-theme-layout='modern'][data-theme-mode='dark'] {
     --color-bg-page: #020307;
     --color-bg-muted: rgba(8, 12, 22, 0.9);

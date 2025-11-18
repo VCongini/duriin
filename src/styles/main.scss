@@ -1,5 +1,4 @@
-@use './tokens';
-@use './mixins';
+@use './utilities' as *;
 @use './base';
 @use './themes/brutalist-dark';
 @use './themes/brutalist-light';

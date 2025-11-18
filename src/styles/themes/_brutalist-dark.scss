@@ -1,3 +1,5 @@
+@use '../utilities';
+
 [data-theme-layout='brutalist'][data-theme-mode='dark'] {
     --color-bg-page: #03050e;
     --color-bg-muted: #060914;

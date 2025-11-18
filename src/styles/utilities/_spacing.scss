@@ -1,0 +1,23 @@
+@use './breakpoints' as *;
+
+@mixin responsive-space($property, $mobile, $tablet: null, $desktop: null, $large-desktop: null) {
+    #{$property}: $mobile;
+
+    @if $tablet != null {
+        @include respond(tablet) {
+            #{$property}: $tablet;
+        }
+    }
+
+    @if $desktop != null {
+        @include respond(desktop) {
+            #{$property}: $desktop;
+        }
+    }
+
+    @if $large-desktop != null {
+        @include respond(large-desktop) {
+            #{$property}: $large-desktop;
+        }
+    }
+}

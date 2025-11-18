@@ -1,10 +1,10 @@
-@use '../_mixins' as mixins;
+@use '../utilities' as *;
 
 .panel {
     border: var(--panel-border-width) solid var(--panel-outline);
     border-radius: var(--panel-radius);
     background: var(--color-surface);
-    padding: var(--space-xl);
+    @include responsive-space(padding, var(--space-lg), var(--space-xl));
     box-shadow: var(--shadow-brutalist);
 }
 
@@ -13,9 +13,7 @@
 }
 
 .panel--stacked {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
+    @include fluid-stack(column, var(--space-md));
 }
 
 .panel__label {
@@ -26,7 +24,7 @@
 }
 
 .panel__title {
-    @include mixins.heading-styles(var(--font-size-xl));
+    @include responsive-heading(1.8rem, 2.5rem);
     margin: var(--space-xs) 0 var(--space-lg);
 }
 
@@ -37,12 +35,12 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    @include responsive-space(gap, var(--space-md), var(--space-lg));
 }
 
 .episode {
     border: 1px solid var(--color-border);
-    padding: var(--space-md);
+    @include responsive-space(padding, var(--space-md), var(--space-lg));
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
@@ -55,9 +53,9 @@
 }
 
 .episode__header {
-    display: flex;
+    @include fluid-stack(column, var(--space-xxs), row, var(--space-sm));
     justify-content: space-between;
-    font-size: var(--font-size-sm);
+    @include responsive-text(0.85rem, 0.95rem);
 }
 
 .episode__label {
@@ -84,13 +82,11 @@
 .episode__title {
     color: var(--color-text-primary);
     text-decoration: none;
-    font-size: var(--font-size-lg);
+    @include responsive-heading(1.25rem, 1.65rem);
 }
 
 .episode__title-row {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
+    @include fluid-stack(column, var(--space-xs), row, var(--space-sm));
 }
 
 .episode__meta {
@@ -131,7 +127,7 @@
 
 .post {
     border: 1px solid var(--color-border);
-    padding: var(--space-md);
+    @include responsive-space(padding, var(--space-md), var(--space-lg));
     background: var(--color-bg-muted);
     display: flex;
     flex-direction: column;
@@ -139,20 +135,19 @@
 }
 
 .post__row {
-    display: flex;
+    @include fluid-stack(column, var(--space-xxs), row, var(--space-sm));
     justify-content: space-between;
-    gap: var(--space-sm);
     align-items: center;
 }
 
 .post__title {
-    font-size: var(--font-size-lg);
+    @include responsive-heading(1.3rem, 1.8rem);
     color: var(--color-text-primary);
     text-decoration: none;
 }
 
 .post__date {
-    font-size: var(--font-size-sm);
+    @include responsive-text(0.9rem, 1rem);
     color: var(--color-text-secondary);
 }
 
@@ -169,7 +164,7 @@
 }
 
 .tag {
-    @include mixins.pill-label;
+    @include pill-label;
     background: rgba(0, 0, 0, 0.05);
     color: var(--color-text-secondary);
 }
@@ -211,9 +206,11 @@
 }
 
 .filters {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--space-md);
+    @include fluid-grid(
+        1fr,
+        repeat(auto-fit, minmax(220px, 1fr)),
+        repeat(auto-fit, minmax(240px, 1fr))
+    );
     margin-bottom: var(--space-lg);
 }
 
@@ -240,11 +237,9 @@
 }
 
 .footer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
+    @include fluid-stack(column, var(--space-sm), row, var(--space-sm));
     border: var(--panel-border-width) solid var(--panel-outline);
-    padding: var(--space-md);
+    @include responsive-space(padding, var(--space-md), var(--space-lg));
     background: var(--color-surface);
     box-shadow: var(--shadow-brutalist);
     text-transform: uppercase;

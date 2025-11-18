@@ -1,0 +1,20 @@
+@mixin fluid-type($min-size, $max-size, $min-viewport: 20rem, $max-viewport: 90rem) {
+    font-size: clamp(
+        $min-size,
+        calc(
+            #{$min-size} + (#{$max-size} - #{$min-size}) * ((100vw - #{$min-viewport}) / (#{$max-viewport - $min-viewport}))
+        ),
+        $max-size
+    );
+}
+
+@mixin responsive-heading($min-size, $max-size) {
+    @include fluid-type($min-size, $max-size);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+@mixin responsive-text($min-size, $max-size) {
+    @include fluid-type($min-size, $max-size);
+    line-height: 1.5;
+}
