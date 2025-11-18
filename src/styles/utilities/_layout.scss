@@ -1,0 +1,64 @@
+@use './breakpoints' as *;
+
+@mixin fluid-stack(
+    $direction-mobile: column,
+    $gap-mobile: var(--space-md),
+    $direction-tablet: row,
+    $gap-tablet: null,
+    $gap-desktop: null
+) {
+    display: flex;
+    flex-direction: $direction-mobile;
+    gap: $gap-mobile;
+
+    @if $direction-tablet != null {
+        @include respond(tablet) {
+            flex-direction: $direction-tablet;
+
+            @if $gap-tablet != null {
+                gap: $gap-tablet;
+            }
+        }
+    }
+
+    @if $gap-desktop != null {
+        @include respond(desktop) {
+            gap: $gap-desktop;
+        }
+    }
+}
+
+@mixin fluid-grid(
+    $mobile-columns: 1fr,
+    $tablet-columns: null,
+    $desktop-columns: null,
+    $large-columns: null,
+    $gap-mobile: var(--space-md),
+    $gap-desktop: null
+) {
+    display: grid;
+    grid-template-columns: $mobile-columns;
+    gap: $gap-mobile;
+
+    @if $tablet-columns != null {
+        @include respond(tablet) {
+            grid-template-columns: $tablet-columns;
+        }
+    }
+
+    @if $desktop-columns != null {
+        @include respond(desktop) {
+            grid-template-columns: $desktop-columns;
+
+            @if $gap-desktop != null {
+                gap: $gap-desktop;
+            }
+        }
+    }
+
+    @if $large-columns != null {
+        @include respond(large-desktop) {
+            grid-template-columns: $large-columns;
+        }
+    }
+}

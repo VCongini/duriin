@@ -1,11 +1,9 @@
-@use '../_mixins' as mixins;
+@use '../utilities' as *;
 
 .header {
-    display: flex;
-    align-items: center;
+    @include fluid-stack(column, var(--space-md), row, var(--space-lg), var(--space-xl));
+    align-items: flex-start;
     justify-content: space-between;
-    gap: var(--space-lg);
-    padding: var(--space-md) var(--space-lg);
     border: var(--panel-border-width) solid var(--color-border);
     background: linear-gradient(135deg, var(--color-surface) 0, var(--color-surface-alt) 100%);
     box-shadow: var(--shadow-brutalist);
@@ -13,17 +11,27 @@
     top: var(--space-md);
     z-index: 10;
     backdrop-filter: blur(var(--header-blur));
+    @include responsive-space(
+        padding,
+        var(--space-md),
+        var(--space-md) var(--space-xl),
+        var(--space-lg) var(--space-xxl)
+    );
+
+    @include respond(tablet) {
+        align-items: center;
+    }
 }
 
 .header__left {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xxs);
+    @include responsive-space(gap, var(--space-xxs), var(--space-xs));
 }
 
 .header__logo {
     font-weight: 800;
-    font-size: var(--font-size-lg);
+    @include responsive-heading(1.25rem, 1.5rem);
     padding: 0.25rem 0.75rem;
     border: var(--border-base) solid var(--color-border-strong);
     box-shadow: 0.3rem 0.3rem 0 0 rgba(0, 0, 0, 0.65);
@@ -31,25 +39,30 @@
 }
 
 .header__tagline {
-    font-size: var(--font-size-xs);
+    @include responsive-text(0.65rem, 0.8rem);
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--color-text-secondary);
 }
 
 .header__nav {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
+    @include fluid-stack(row, var(--space-sm), row, var(--space-md));
+    flex-wrap: wrap;
+    width: 100%;
     text-transform: uppercase;
     letter-spacing: 0.15em;
+
+    @include respond(tablet) {
+        width: auto;
+        justify-content: flex-end;
+    }
 }
 
 .header__link {
     position: relative;
     text-decoration: none;
     color: var(--color-text-secondary);
-    font-size: var(--font-size-xs);
+    @include responsive-text(0.7rem, 0.85rem);
     padding-bottom: 0.2rem;
 }
 
@@ -110,7 +123,6 @@
     border: var(--panel-border-width) solid rgba(255, 255, 255, 0.15);
     box-shadow: var(--shadow-modern);
     background: rgba(6, 8, 15, 0.5);
-    padding: var(--space-md) var(--space-xl);
 }
 
 [data-theme-layout='modern'][data-theme-mode='light'] .header {

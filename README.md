@@ -20,11 +20,25 @@ mirrors them to `data-theme-layout` and `data-theme-mode` attributes on `<html>`
 
 All global styles live in `src/styles` and are composed inside `src/styles/main.scss`.
 
-- `src/styles/_tokens.scss` contains reusable spacing, typography, radius, and sizing tokens.
-- `src/styles/_mixins.scss` defines mixins for borders, headings, buttons, and labels.
+- `src/styles/utilities` centralizes variables, breakpoints, layout helpers, spacing utilities, and
+  component mixins so every theme consumes the same responsive primitives.
 - Theme overrides are stored per layout/mode combo inside `src/styles/themes` and only adjust CSS
   custom properties such as `--color-bg-page` or `--panel-radius`.
 - Component/layout styling lives inside `src/styles/components/*` and consumes the semantic tokens.
+
+```
+src/styles/
+├── utilities/
+│   ├── _index.scss          # forwards the global mixins/variables
+│   ├── _variables.scss      # CSS custom property tokens
+│   ├── _breakpoints.scss    # respond() mixin + breakpoint map
+│   ├── _typography.scss     # fluid typography helpers
+│   ├── _spacing.scss        # responsive spacing utilities
+│   ├── _layout.scss         # grid/flex helpers
+│   └── _components.scss     # button, border, pill helpers
+├── themes/                  # light/dark overrides per layout
+└── components/              # feature-specific partials
+```
 
 ### Adding a new theme
 
