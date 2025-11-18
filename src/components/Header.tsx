@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ThemeSettings } from './ThemeSettings';
 
-export const Header: React.FC = () => {
+const HeaderComponent: React.FC = () => {
     const location = useLocation();
     const isActive = (path: string) => (location.pathname === path ? 'header__link--active' : '');
 
@@ -30,3 +30,6 @@ export const Header: React.FC = () => {
         </header>
     );
 };
+
+export const Header = memo(HeaderComponent);
+Header.displayName = 'Header';

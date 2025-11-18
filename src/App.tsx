@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
-import { Videos } from './pages/Videos';
-import { About } from './pages/About';
 import { ThemeProvider, useTheme } from './theme/ThemeContext';
+
+// Lazily load heavier secondary routes so the initial bundle only ships
+// the Home experience and shared chrome.
+const Videos = lazy(() => import('./pages/Videos').then((module) => ({ default: module.Videos })));
+const About = lazy(() => import('./pages/About').then((module) => ({ default: module.About })));
 
 const AppShell: React.FC = () => {
     const { mode, layout } = useTheme();
@@ -13,12 +16,20 @@ const AppShell: React.FC = () => {
     return (
         <div className={`app app--${layout}`} data-theme-mode={mode} data-theme-layout={layout}>
             <Header />
-            <main className="app__main">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/videos" element={<Videos />} />
-                    <Route path="/about" element={<About />} />
-                </Routes>
+            <main className="app__main" id="main">
+                <Suspense
+                    fallback={
+                        <div className="app__loader" role="status" aria-live="polite">
+                            Loading experience…
+                        </div>
+                    }
+                >
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/videos" element={<Videos />} />
+                        <Route path="/about" element={<About />} />
+                    </Routes>
+                </Suspense>
             </main>
             <Footer />
         </div>

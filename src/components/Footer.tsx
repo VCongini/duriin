@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-export const Footer: React.FC = () => {
+const FooterComponent: React.FC = () => {
     return (
         <footer className="footer">
             <span className="footer__block">DURIIN'S CHANNEL NODE</span>
@@ -10,3 +10,6 @@ export const Footer: React.FC = () => {
         </footer>
     );
 };
+
+export const Footer = memo(FooterComponent);
+Footer.displayName = 'Footer';

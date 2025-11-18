@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useDeferredValue, useMemo, useState } from 'react';
 import { videos } from '../content';
 import { formatDate } from '../utils/format';
 
@@ -9,14 +9,15 @@ export const Videos: React.FC = () => {
     const [sort, setSort] = useState<SortOrder>('newest');
     const [activeTag, setActiveTag] = useState<string | null>(null);
 
-    const tags = Array.from(new Set(videos.flatMap((v) => v.tags))).sort();
+    const tags = useMemo(() => Array.from(new Set(videos.flatMap((v) => v.tags))).sort(), []);
+    const deferredQuery = useDeferredValue(query);
 
     const filtered = useMemo(() => {
         return [...videos]
             .filter((video) => {
                 const matchQuery =
-                    video.title.toLowerCase().includes(query.toLowerCase()) ||
-                    video.tags.some((t) => t.toLowerCase().includes(query.toLowerCase()));
+                    video.title.toLowerCase().includes(deferredQuery.toLowerCase()) ||
+                    video.tags.some((t) => t.toLowerCase().includes(deferredQuery.toLowerCase()));
                 const matchTag = activeTag ? video.tags.includes(activeTag) : true;
                 return matchQuery && matchTag;
             })
@@ -25,7 +26,7 @@ export const Videos: React.FC = () => {
                     new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
                 return sort === 'newest' ? -diff : diff;
             });
-    }, [activeTag, query, sort]);
+    }, [activeTag, deferredQuery, sort]);
 
     const resultText =
         filtered.length === 1

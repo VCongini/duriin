@@ -1,12 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { FeaturedTopic } from '../content/types';
 import { useTheme } from '../theme/ThemeContext';
+import { buildResponsiveImageSources } from '../utils/images';
 
 export type FeaturedCarouselProps = {
     items: FeaturedTopic[];
 };
 
-export const FeaturedCarousel: React.FC<FeaturedCarouselProps> = ({ items }) => {
+const FeaturedCarouselComponent: React.FC<FeaturedCarouselProps> = ({ items }) => {
     const { layout } = useTheme();
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -44,25 +45,41 @@ export const FeaturedCarousel: React.FC<FeaturedCarouselProps> = ({ items }) => 
                     <span aria-hidden="true">◀</span>
                 </button>
                 <div className="featured-carousel__viewport">
-                    {topics.map((topic, index) => (
-                        <article
-                            key={topic.id}
-                            className={`featured-carousel__slide ${index === activeIndex ? 'is-active' : ''}`}
-                            aria-hidden={index !== activeIndex}
-                        >
-                            <div className="featured-carousel__media">
-                                <img src={topic.image} alt={topic.title} loading="lazy" />
-                            </div>
-                            <div className="featured-carousel__body">
-                                <p className="featured-carousel__eyebrow">FEATURED</p>
-                                <h3 className="featured-carousel__title">{topic.title}</h3>
-                                <p className="featured-carousel__description">{topic.description}</p>
-                                <a href={topic.href} className="featured-carousel__cta">
-                                    {topic.ctaLabel ?? 'Explore topic'}
-                                </a>
-                            </div>
-                        </article>
-                    ))}
+                    {topics.map((topic, index) => {
+                        const sources = buildResponsiveImageSources(topic.image);
+                        const sizes = '(max-width: 768px) 100vw, 50vw';
+
+                        return (
+                            <article
+                                key={topic.id}
+                                className={`featured-carousel__slide ${index === activeIndex ? 'is-active' : ''}`}
+                                aria-hidden={index !== activeIndex}
+                            >
+                                <div className="featured-carousel__media">
+                                    <picture>
+                                        <source type="image/webp" srcSet={sources.webpSrcSet} sizes={sizes} />
+                                        <source type="image/jpeg" srcSet={sources.srcSet} sizes={sizes} />
+                                        <img
+                                            src={sources.defaultSrc}
+                                            alt={topic.title}
+                                            loading="lazy"
+                                            decoding="async"
+                                            width={sources.width}
+                                            height={sources.height}
+                                        />
+                                    </picture>
+                                </div>
+                                <div className="featured-carousel__body">
+                                    <p className="featured-carousel__eyebrow">FEATURED</p>
+                                    <h3 className="featured-carousel__title">{topic.title}</h3>
+                                    <p className="featured-carousel__description">{topic.description}</p>
+                                    <a href={topic.href} className="featured-carousel__cta">
+                                        {topic.ctaLabel ?? 'Explore topic'}
+                                    </a>
+                                </div>
+                            </article>
+                        );
+                    })}
                 </div>
                 <button
                     type="button"
@@ -90,3 +107,6 @@ export const FeaturedCarousel: React.FC<FeaturedCarouselProps> = ({ items }) => 
         </section>
     );
 };
+
+export const FeaturedCarousel = memo(FeaturedCarouselComponent);
+FeaturedCarousel.displayName = 'FeaturedCarousel';

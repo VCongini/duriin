@@ -84,6 +84,8 @@ $button-height-lg: 3.15rem;
     --theme-control-muted: rgba(255, 255, 255, 0.6);
     --theme-control-active: var(--color-accent-primary);
     --theme-control-active-text: #03050e;
+    --skeleton-base: rgba(255, 255, 255, 0.08);
+    --skeleton-highlight: rgba(255, 255, 255, 0.28);
     --button-ghost-bg: transparent;
     --button-ghost-hover: rgba(255, 255, 255, 0.08);
     --button-ghost-text: var(--color-text-primary);
