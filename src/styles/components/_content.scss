@@ -16,6 +16,58 @@
     @include fluid-stack(column, var(--space-md));
 }
 
+.panel--loading {
+    min-height: 12rem;
+    gap: var(--space-md);
+    background: linear-gradient(135deg, var(--color-bg-muted) 0%, var(--color-surface) 100%);
+    animation: panelPulse 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .panel--loading {
+        animation: none;
+    }
+}
+
+.skeleton-block {
+    width: 100%;
+    height: 1.25rem;
+    border-radius: var(--radius-md);
+    background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-highlight) 50%, var(--skeleton-base) 100%);
+    background-size: 300% 100%;
+    animation: skeletonPulse 1.4s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeleton-block {
+        animation: none;
+    }
+}
+
+@keyframes skeletonPulse {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
+
+@keyframes panelPulse {
+    0% {
+        opacity: 0.65;
+    }
+
+    50% {
+        opacity: 0.95;
+    }
+
+    100% {
+        opacity: 0.65;
+    }
+}
+
 .panel__label {
     font-size: var(--font-size-xs);
     letter-spacing: 0.35em;

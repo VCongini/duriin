@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { ThemeLayout, ThemeMode, useTheme } from '../theme/ThemeContext';
 
 const layoutLabels: Record<ThemeLayout, string> = {
@@ -6,16 +6,22 @@ const layoutLabels: Record<ThemeLayout, string> = {
     modern: 'Modern',
 };
 
-export const ThemeSettings: React.FC = () => {
+const ThemeSettingsComponent: React.FC = () => {
     const { layout, mode, setLayout, setMode } = useTheme();
 
-    const handleLayoutChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setLayout(event.target.value as ThemeLayout);
-    };
+    const handleLayoutChange = useCallback(
+        (event: React.ChangeEvent<HTMLSelectElement>) => {
+            setLayout(event.target.value as ThemeLayout);
+        },
+        [setLayout]
+    );
 
-    const handleModeChange = (nextMode: ThemeMode) => {
-        setMode(nextMode);
-    };
+    const handleModeChange = useCallback(
+        (nextMode: ThemeMode) => {
+            setMode(nextMode);
+        },
+        [setMode]
+    );
 
     return (
         <div className="theme-settings" aria-label="Appearance settings">
@@ -54,3 +60,6 @@ export const ThemeSettings: React.FC = () => {
         </div>
     );
 };
+
+export const ThemeSettings = memo(ThemeSettingsComponent);
+ThemeSettings.displayName = 'ThemeSettings';

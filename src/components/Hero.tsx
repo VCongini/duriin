@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { videos } from '../content';
 import { formatDate } from '../utils/format';
 
-export const Hero: React.FC = () => {
+const HeroComponent: React.FC = () => {
     const latestVideo = videos[0];
 
     return (
@@ -65,3 +65,6 @@ export const Hero: React.FC = () => {
         </section>
     );
 };
+
+export const Hero = memo(HeroComponent);
+Hero.displayName = 'Hero';

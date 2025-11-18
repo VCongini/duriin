@@ -1,17 +1,30 @@
-import React from 'react';
+import React, { Suspense, lazy, useMemo } from 'react';
 import { Hero } from '../components/Hero';
-import { FeaturedCarousel } from '../components/FeaturedCarousel';
 import { featuredTopics, posts, videos } from '../content';
 import { formatDate } from '../utils/format';
 
+const FeaturedCarousel = lazy(() =>
+    import('../components/FeaturedCarousel').then((module) => ({ default: module.FeaturedCarousel }))
+);
+
+const CarouselFallback: React.FC = () => (
+    <section className="panel panel--stacked panel--loading" aria-live="polite" aria-busy="true">
+        <div className="skeleton-block" style={{ width: '35%' }} />
+        <div className="skeleton-block" style={{ width: '65%', height: '2.5rem' }} />
+        <div className="skeleton-block" style={{ height: '10rem' }} />
+    </section>
+);
+
 export const Home: React.FC = () => {
-    const latestVideos = videos.slice(0, 3);
-    const latestPosts = posts.slice(0, 2);
+    const latestVideos = useMemo(() => videos.slice(0, 3), []);
+    const latestPosts = useMemo(() => posts.slice(0, 2), []);
 
     return (
         <div className="page page--stack">
             <Hero />
-            <FeaturedCarousel items={featuredTopics} />
+            <Suspense fallback={<CarouselFallback />}>
+                <FeaturedCarousel items={featuredTopics} />
+            </Suspense>
 
             <section className="panel panel--primary">
                 <div className="panel__label">Highlights</div>

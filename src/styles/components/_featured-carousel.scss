@@ -70,6 +70,12 @@
     box-shadow: var(--shadow-modern);
 }
 
+.featured-carousel__media picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .featured-carousel__media img {
     width: 100%;
     height: 100%;
