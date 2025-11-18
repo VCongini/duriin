@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
-import { Featured } from './pages/Featured';
 import { Videos } from './pages/Videos';
 import { About } from './pages/About';
 import { ThemeProvider, useTheme } from './theme/ThemeContext';
@@ -17,7 +16,6 @@ const AppShell: React.FC = () => {
             <main className="app__main">
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/featured" element={<Featured />} />
                     <Route path="/videos" element={<Videos />} />
                     <Route path="/about" element={<About />} />
                 </Routes>
