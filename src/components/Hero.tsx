@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { videos } from '../content';
-import { formatDate } from '../utils/format';
 
 const HeroComponent: React.FC = () => {
     const latestVideo = videos[0];
@@ -18,22 +17,6 @@ const HeroComponent: React.FC = () => {
                     edits, and devlogs behind the screen.
                 </p>
 
-                {latestVideo && (
-                    <div className="hero__now">
-                        <div className="hero__now-label">NOW PLAYING</div>
-                        <div className="hero__now-title">
-                            {latestVideo.episode} — {latestVideo.title}
-                        </div>
-                        <div className="hero__now-meta">
-                            <span className="chip chip--platform">{latestVideo.platform}</span>
-                            <span className="chip chip--duration">{latestVideo.duration}</span>
-                            <span className="chip chip--date">
-                                {formatDate(latestVideo.publishedAt)}
-                            </span>
-                        </div>
-                    </div>
-                )}
-
                 <div className="hero__cta-row">
                     <a
                         href={latestVideo?.url || 'https://www.youtube.com/@duriin'}
@@ -46,20 +29,6 @@ const HeroComponent: React.FC = () => {
                     <a href="/videos" className="btn btn--ghost">
                         Browse videos
                     </a>
-                </div>
-            </div>
-            <div className="hero__side">
-                <div className="hero__stat hero__stat--primary">
-                    <span className="hero__stat-label">MODE</span>
-                    <span className="hero__stat-value">ONLINE</span>
-                </div>
-                <div className="hero__stat">
-                    <span className="hero__stat-label">STATUS</span>
-                    <span className="hero__stat-value">LIVE</span>
-                </div>
-                <div className="hero__stat">
-                    <span className="hero__stat-label">FOCUS</span>
-                    <span className="hero__stat-value">GAMING</span>
                 </div>
             </div>
         </section>
