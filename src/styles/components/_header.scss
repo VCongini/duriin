@@ -7,10 +7,7 @@
     border: var(--panel-border-width) solid var(--color-border);
     background: linear-gradient(135deg, var(--color-surface) 0, var(--color-surface-alt) 100%);
     box-shadow: var(--shadow-brutalist);
-    position: sticky;
-    top: var(--space-md);
-    z-index: 10;
-    backdrop-filter: blur(var(--header-blur));
+    position: static;
     @include responsive-space(
         padding,
         var(--space-md),
