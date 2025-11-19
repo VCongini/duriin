@@ -42,16 +42,3 @@
     letter-spacing: 0.2em;
 }
 
-.page {
-    display: flex;
-    flex-direction: column;
-    @include responsive-space(gap, var(--space-lg), var(--space-xl));
-}
-
-.page--stack {
-    gap: var(--space-lg);
-
-    @include respond(tablet) {
-        gap: var(--space-xl);
-    }
-}

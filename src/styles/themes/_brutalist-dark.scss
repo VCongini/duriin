@@ -5,12 +5,14 @@
     --color-bg-muted: #060914;
     --color-surface: #101322;
     --color-surface-alt: #161a2d;
+    --color-bg-panel: var(--color-surface);
     --color-border: #272b3e;
     --color-border-strong: #5ff0ff;
     --color-text-primary: #f5f8ff;
     --color-text-secondary: #a0a6cc;
     --color-accent-primary: #16f2d6;
     --color-accent-secondary: #4ea3ff;
+    --color-accent: var(--color-accent-primary);
     --color-danger: #ff4b7d;
     --color-success: #34d399;
     --color-warning: #facc15;
@@ -42,7 +44,8 @@
     --shadow-modern: 0 30px 80px rgba(5, 6, 24, 0.9);
     --panel-radius: var(--radius-none);
     --panel-border-width: var(--border-base);
-    --panel-outline: var(--color-border);
+    --panel-outline: var(--color-border-strong);
+    --panel-shadow: none;
     --button-border-radius: var(--radius-none);
     --hero-outline-color: rgba(22, 242, 214, 0.5);
     --header-blur: 0;

@@ -1,5 +1,17 @@
 @use './breakpoints' as *;
 
+/* Page/layout utilities keep content readable on both themes */
+.u-page {
+    width: min(100%, 72rem);
+    margin-inline: auto;
+    padding-inline: clamp(var(--space-md), 4vw, var(--space-xl));
+}
+
+.u-readable {
+    width: 100%;
+    max-width: 38rem;
+}
+
 @mixin fluid-stack(
     $direction-mobile: column,
     $gap-mobile: var(--space-md),

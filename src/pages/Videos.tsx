@@ -34,10 +34,26 @@ export const Videos: React.FC = () => {
             : `${filtered.length} videos${activeTag ? ` tagged ${activeTag}` : ''}`;
 
     return (
-        <div className="page page--stack">
-            <section className="panel panel--primary">
-                <div className="panel__label">Archive</div>
-                <h1 className="panel__title">Videos</h1>
+        <div className="u-page u-stack-lg">
+            <section className="c-panel c-panel--primary u-stack">
+                <p className="c-panel__label u-text-caption">Archive</p>
+                <h1 className="c-panel__title u-text-heading-xl">Videos</h1>
+                <p className="c-panel__body u-text-body u-readable">
+                    Search every drop, filter by tag, and jump into the footage that matters most.
+                </p>
+                <div className="page-cta">
+                    <a
+                        href="https://www.youtube.com/@duriin"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn btn--primary"
+                    >
+                        Watch on YouTube
+                    </a>
+                    <a href="/about" className="page-cta__secondary">
+                        See what's coming next
+                    </a>
+                </div>
                 <form className="filters" aria-label="Video filters" onSubmit={(e) => e.preventDefault()}>
                     <label className="field">
                         <span className="field__label">Search</span>

@@ -1,16 +1,10 @@
 @use '../utilities' as *;
 
 .hero {
-    @include responsive-space(margin-top, var(--space-lg), var(--space-xl));
-    @include fluid-grid(1fr, null, null, null, var(--space-lg));
+    margin-top: clamp(var(--space-lg), 10vw, var(--space-xxl));
 }
 
 .hero__frame {
-    @include responsive-space(padding, var(--space-lg), var(--space-xl));
-    border: var(--panel-border-width) solid var(--panel-outline);
-    border-radius: var(--panel-radius);
-    background: linear-gradient(135deg, var(--color-surface) 0, var(--color-surface-alt) 100%);
-    box-shadow: var(--shadow-brutalist);
     position: relative;
     overflow: hidden;
 }
@@ -18,47 +12,35 @@
 .hero__frame::after {
     content: '';
     position: absolute;
-    inset: 0;
+    inset: clamp(0.35rem, 1vw, 0.75rem);
     border: 1px solid var(--hero-outline-color);
     opacity: 0.5;
     pointer-events: none;
 }
 
-.hero__label {
-    @include pill-label;
-    border: 1px solid var(--color-border-strong);
-    color: var(--color-text-primary);
-    background: transparent;
-    margin-bottom: var(--space-sm);
+.hero__content {
+    width: 100%;
 }
 
 .hero__title {
-    @include responsive-heading(2.35rem, 3.75rem);
-    margin: 0 0 var(--space-sm);
+    margin: 0;
+    color: var(--color-text-primary);
 }
 
 .hero__title-accent {
-    color: var(--color-accent-primary);
+    color: var(--color-accent);
 }
 
 .hero__subtitle {
-    @include responsive-text(1rem, 1.2rem);
-    color: var(--color-text-secondary);
-    margin: 0 0 var(--space-lg);
+    margin: 0;
 }
 
 .hero__cta-row {
-    @include fluid-stack(column, var(--space-sm), row, var(--space-sm));
-}
-[data-theme-layout='modern'] .hero {
-    grid-template-columns: 1fr;
+    width: 100%;
 }
 
-[data-theme-layout='modern'] .hero__frame {
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-modern);
-    border: var(--panel-border-width) solid var(--panel-outline);
-    background: var(--color-surface);
+.hero__secondary-link {
+    color: var(--color-text-secondary);
 }
 
 [data-theme-layout='modern'] .hero__frame::after {

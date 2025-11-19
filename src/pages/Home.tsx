@@ -8,7 +8,7 @@ const FeaturedCarousel = lazy(() =>
 );
 
 const CarouselFallback: React.FC = () => (
-    <section className="panel panel--stacked panel--loading" aria-live="polite" aria-busy="true">
+    <section className="c-panel c-panel--loading u-stack" aria-live="polite" aria-busy="true">
         <div className="skeleton-block" style={{ width: '35%' }} />
         <div className="skeleton-block" style={{ width: '65%', height: '2.5rem' }} />
         <div className="skeleton-block" style={{ height: '10rem' }} />
@@ -20,15 +20,15 @@ export const Home: React.FC = () => {
     const latestPosts = useMemo(() => posts.slice(0, 2), []);
 
     return (
-        <div className="page page--stack">
+        <div className="u-page u-stack-lg">
             <Hero />
             <Suspense fallback={<CarouselFallback />}>
                 <FeaturedCarousel items={featuredTopics} />
             </Suspense>
 
-            <section className="panel panel--primary">
-                <div className="panel__label">Highlights</div>
-                <h2 className="panel__title">Latest videos</h2>
+            <section className="c-panel c-panel--primary u-stack">
+                <p className="c-panel__label u-text-caption">Highlights</p>
+                <h2 className="c-panel__title u-text-heading-lg">Latest videos</h2>
                 <ul className="episode-list">
                     {latestVideos.map((video) => (
                         <li key={video.id} className="episode episode--compact">
@@ -60,9 +60,9 @@ export const Home: React.FC = () => {
                 </ul>
             </section>
 
-            <section className="panel panel--stacked">
-                <div className="panel__label">Blog + Updates</div>
-                <h2 className="panel__title">Latest posts</h2>
+            <section className="c-panel u-stack">
+                <p className="c-panel__label u-text-caption">Blog + Updates</p>
+                <h2 className="c-panel__title u-text-heading-lg">Latest posts</h2>
                 <ul className="post-list">
                     {latestPosts.map((post) => (
                         <li key={post.id} className="post">

@@ -1,3 +1,18 @@
+@use './variables' as *;
+
+:root {
+    /* Base typography scale */
+    --font-family-base: 'Space Grotesk', 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont,
+        'Segoe UI', system-ui, sans-serif;
+    --font-family-sans: var(--font-family-base);
+    --font-size-xs: #{$font-size-xs};
+    --font-size-sm: #{$font-size-sm};
+    --font-size-md: #{$font-size-md};
+    --font-size-lg: #{$font-size-lg};
+    --font-size-xl: #{$font-size-xl};
+    --font-size-xxl: #{$font-size-xxl};
+}
+
 @mixin fluid-type($min-size, $max-size, $min-viewport: 20rem, $max-viewport: 90rem) {
     font-size: clamp(
         $min-size,
@@ -6,6 +21,38 @@
         ),
         $max-size
     );
+}
+
+/* Single-source typography utilities keep headings/body copy consistent */
+.u-text-heading-xl {
+    font-family: var(--font-family-base);
+    font-size: clamp(var(--font-size-xl), 6vw, var(--font-size-xxl));
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.u-text-heading-lg {
+    font-family: var(--font-family-base);
+    font-size: clamp(var(--font-size-lg), 4vw, var(--font-size-xl));
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.u-text-body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-md);
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+}
+
+.u-text-caption {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
 }
 
 @mixin responsive-heading($min-size, $max-size) {
