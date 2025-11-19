@@ -5,12 +5,14 @@
     --color-bg-muted: rgba(249, 250, 255, 0.85);
     --color-surface: rgba(255, 255, 255, 0.85);
     --color-surface-alt: rgba(244, 248, 255, 0.85);
+    --color-bg-panel: var(--color-surface);
     --color-border: rgba(15, 23, 42, 0.08);
     --color-border-strong: rgba(15, 23, 42, 0.4);
     --color-text-primary: #0b1220;
     --color-text-secondary: #4b5569;
     --color-accent-primary: #2563eb;
     --color-accent-secondary: #7c3aed;
+    --color-accent: var(--color-accent-primary);
     --color-danger: #db2777;
     --color-success: #0f9d58;
     --color-warning: #b45309;
@@ -38,6 +40,7 @@
     --panel-radius: var(--radius-lg);
     --panel-border-width: var(--border-thin);
     --panel-outline: rgba(15, 23, 42, 0.08);
+    --panel-shadow: var(--shadow-modern);
     --button-border-radius: var(--radius-pill);
     --hero-outline-color: rgba(37, 99, 235, 0.28);
     --header-blur: 28px;

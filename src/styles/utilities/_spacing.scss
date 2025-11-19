@@ -1,4 +1,31 @@
 @use './breakpoints' as *;
+@use './variables' as *;
+
+:root {
+    /* Spacing tokens drive layout rhythm */
+    --space-xxs: #{$space-xxs};
+    --space-xs: #{$space-xs};
+    --space-sm: #{$space-sm};
+    --space-md: #{$space-md};
+    --space-lg: #{$space-lg};
+    --space-xl: #{$space-xl};
+    --space-xxl: #{$space-xxl};
+}
+
+/* Vertical stack utilities stay focused on spacing only */
+.u-stack,
+.u-stack-lg {
+    display: flex;
+    flex-direction: column;
+}
+
+.u-stack {
+    gap: var(--space-md);
+}
+
+.u-stack-lg {
+    gap: var(--space-xl);
+}
 
 @mixin responsive-space($property, $mobile, $tablet: null, $desktop: null, $large-desktop: null) {
     #{$property}: $mobile;

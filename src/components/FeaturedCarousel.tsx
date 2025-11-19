@@ -34,7 +34,10 @@ const FeaturedCarouselComponent: React.FC<FeaturedCarouselProps> = ({ items }) =
     const handleNext = () => goTo(activeIndex + 1);
 
     return (
-        <section className={`featured-carousel featured-carousel--${layout}`} aria-label="Featured topics">
+        <section
+            className={`featured-carousel c-panel u-stack featured-carousel--${layout}`}
+            aria-label="Featured topics"
+        >
             <div className="featured-carousel__stage">
                 <button
                     type="button"
@@ -70,9 +73,11 @@ const FeaturedCarouselComponent: React.FC<FeaturedCarouselProps> = ({ items }) =
                                     </picture>
                                 </div>
                                 <div className="featured-carousel__body">
-                                    <p className="featured-carousel__eyebrow">FEATURED</p>
-                                    <h3 className="featured-carousel__title">{topic.title}</h3>
-                                    <p className="featured-carousel__description">{topic.description}</p>
+                                    <p className="featured-carousel__eyebrow u-text-caption">FEATURED</p>
+                                    <h3 className="featured-carousel__title u-text-heading-lg">{topic.title}</h3>
+                                    <p className="featured-carousel__description u-text-body">
+                                        {topic.description}
+                                    </p>
                                     <a href={topic.href} className="featured-carousel__cta">
                                         {topic.ctaLabel ?? 'Explore topic'}
                                     </a>
