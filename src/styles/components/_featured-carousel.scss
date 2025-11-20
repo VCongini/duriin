@@ -59,7 +59,8 @@
     overflow: hidden;
     height: 100%;
     min-height: 16rem;
-    box-shadow: var(--shadow-modern);
+    box-shadow: var(--feature-card-shadow, var(--shadow-modern));
+    border: var(--feature-card-border, var(--border-thin) solid var(--color-border));
 }
 
 .featured-carousel__media picture {
@@ -73,6 +74,16 @@
     height: 100%;
     object-fit: cover;
     display: block;
+}
+
+[data-theme-layout='brutalist'] .featured-carousel__media {
+    --feature-card-shadow: var(--feature-card-shadow-brutalist, none);
+    --feature-card-border: var(--feature-border-strong, 3px solid var(--color-border-strong));
+}
+
+[data-theme-layout='modern'] .featured-carousel__media {
+    --feature-card-shadow: var(--feature-card-shadow-modern, var(--shadow-modern));
+    --feature-card-border: var(--feature-card-border-modern, var(--border-thin) solid var(--color-border-strong));
 }
 
 .featured-carousel__body {

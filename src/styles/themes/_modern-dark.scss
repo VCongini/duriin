@@ -37,6 +37,8 @@
         linear-gradient(140deg, #020307 0%, #050810 45%, #030307 100%);
     --shadow-brutalist: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 25px 60px rgba(2, 3, 7, 0.9);
     --shadow-modern: 0 40px 80px rgba(3, 5, 15, 0.85);
+    --feature-card-shadow-modern: var(--shadow-modern);
+    --feature-border-strong: var(--border-thin) solid var(--color-border-strong);
     --panel-radius: var(--radius-lg);
     --panel-border-width: var(--border-thin);
     --panel-outline: rgba(255, 255, 255, 0.07);
