@@ -7,6 +7,7 @@
 .hero__frame {
     position: relative;
     overflow: hidden;
+    padding-block: clamp(var(--space-xl), 4vw, var(--space-xxl));
 }
 
 .hero__frame::after {
