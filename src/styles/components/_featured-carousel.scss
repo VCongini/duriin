@@ -124,17 +124,29 @@
 }
 
 .featured-carousel__nav {
+    --carousel-nav-size: var(--button-height-md);
+    --carousel-nav-border: var(--border-base) solid var(--color-border);
+    --carousel-nav-radius: var(--radius-sm);
+    --carousel-nav-bg: var(--button-ghost-bg);
+    --carousel-nav-color: var(--color-text-primary);
+    --carousel-nav-shadow: none;
+    --carousel-nav-hover-bg: var(--button-ghost-hover);
+    --carousel-nav-hover-color: var(--color-accent-primary);
+    --carousel-nav-hover-border: var(--border-base) solid var(--color-border);
+    --carousel-nav-hover-shadow: var(--carousel-nav-shadow);
+
     align-self: center;
-    width: var(--button-height-md);
-    height: var(--button-height-md);
-    border-radius: var(--radius-sm);
-    border: var(--border-base) solid var(--color-border);
-    background: var(--button-ghost-bg);
-    color: var(--color-text-primary);
+    width: var(--carousel-nav-size);
+    height: var(--carousel-nav-size);
+    border-radius: var(--carousel-nav-radius);
+    border: var(--carousel-nav-border);
+    background: var(--carousel-nav-bg);
+    color: var(--carousel-nav-color);
     font-size: var(--font-size-lg);
     cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     justify-self: center;
+    box-shadow: var(--carousel-nav-shadow);
 
     @include respond(desktop) {
         width: var(--button-height-lg);
@@ -145,8 +157,44 @@
 
 .featured-carousel__nav:hover,
 .featured-carousel__nav:focus-visible {
+    background: var(--carousel-nav-hover-bg);
+    color: var(--carousel-nav-hover-color);
+    border: var(--carousel-nav-hover-border);
+    box-shadow: var(--carousel-nav-hover-shadow);
+}
+
+[data-theme-layout='brutalist'] .featured-carousel__nav {
+    --carousel-nav-radius: var(--radius-none);
+    --carousel-nav-border: 2px solid var(--color-border-strong);
+    --carousel-nav-bg: var(--color-surface);
+    --carousel-nav-color: var(--color-border-strong);
+    --carousel-nav-shadow: none;
+    --carousel-nav-hover-bg: var(--color-border-strong);
+    --carousel-nav-hover-color: var(--color-surface);
+    --carousel-nav-hover-border: 2px solid var(--color-border-strong);
+}
+
+[data-theme-layout='brutalist'] .featured-carousel__nav:hover,
+[data-theme-layout='brutalist'] .featured-carousel__nav:focus-visible {
+    border-color: var(--color-border-strong);
+}
+
+[data-theme-layout='modern'] .featured-carousel__nav {
+    --carousel-nav-radius: 9999px;
+    --carousel-nav-border: var(--border-thin) solid var(--color-border-strong);
+    --carousel-nav-bg: var(--button-ghost-bg);
+    --carousel-nav-shadow: var(--shadow-modern);
+    --carousel-nav-hover-bg: var(--button-ghost-hover);
+    --carousel-nav-hover-color: var(--color-accent-primary);
+    --carousel-nav-hover-border: var(--border-thin) solid var(--color-border-strong);
+    --carousel-nav-hover-shadow: var(--shadow-soft, var(--shadow-modern));
+}
+
+[data-theme-layout='modern'] .featured-carousel__nav:hover,
+[data-theme-layout='modern'] .featured-carousel__nav:focus-visible {
     background: var(--button-ghost-hover);
     color: var(--color-accent-primary);
+    box-shadow: var(--shadow-soft, var(--shadow-modern));
 }
 
 .featured-carousel__nav:focus-visible {
