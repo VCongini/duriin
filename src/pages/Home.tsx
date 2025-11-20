@@ -26,7 +26,7 @@ export const Home: React.FC = () => {
                 <FeaturedCarousel items={featuredTopics} />
             </Suspense>
 
-            <section className="c-panel c-panel--primary u-stack">
+            <section className="c-panel c-panel--primary c-panel--section u-stack">
                 <p className="c-panel__label u-text-caption">Highlights</p>
                 <h2 className="c-panel__title u-text-heading-lg">Latest videos</h2>
                 <ul className="episode-list">
@@ -60,7 +60,7 @@ export const Home: React.FC = () => {
                 </ul>
             </section>
 
-            <section className="c-panel u-stack">
+            <section className="c-panel c-panel--section u-stack">
                 <p className="c-panel__label u-text-caption">Blog + Updates</p>
                 <h2 className="c-panel__title u-text-heading-lg">Latest posts</h2>
                 <ul className="post-list">
