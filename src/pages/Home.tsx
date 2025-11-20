@@ -27,7 +27,7 @@ export const Home: React.FC = () => {
             </Suspense>
 
             <section className="c-panel c-panel--primary c-panel--section u-stack">
-                <header className="c-section-header">
+                <header className="c-section-header c-section-header--accent">
                     <p className="c-section-header__label">Highlights</p>
                     <h2 className="c-section-header__title">Latest videos</h2>
                 </header>
@@ -63,7 +63,7 @@ export const Home: React.FC = () => {
             </section>
 
             <section className="c-panel c-panel--section u-stack">
-                <header className="c-section-header">
+                <header className="c-section-header c-section-header--accent">
                     <p className="c-section-header__label">Blog + Updates</p>
                     <h2 className="c-section-header__title">Latest posts</h2>
                 </header>
