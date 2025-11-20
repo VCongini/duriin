@@ -32,12 +32,14 @@
     --button-ghost-bg: transparent;
     --button-ghost-hover: rgba(255, 255, 255, 0.08);
     --button-ghost-text: var(--color-text-primary);
+    --grid-line-color: 95, 240, 255;
+    --grid-line-opacity: 0.12;
     --app-bg-image: repeating-linear-gradient(
             to right,
-            #040610 0,
-            #040610 1px,
-            #02030a 1px,
-            #02030a 42px
+            rgba(var(--grid-line-color), calc(var(--grid-line-opacity) * 0.6)) 0,
+            rgba(var(--grid-line-color), calc(var(--grid-line-opacity) * 0.6)) 1px,
+            rgba(var(--grid-line-color), var(--grid-line-opacity)) 1px,
+            rgba(var(--grid-line-color), var(--grid-line-opacity)) 42px
         ),
         radial-gradient(circle at top, #111827 0, #050608 55%);
     --shadow-brutalist: 0 0 0 1px rgba(95, 240, 255, 0.35), 0.45rem 0.45rem 0 0 rgba(0, 0, 0, 0.95);
