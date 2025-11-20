@@ -55,7 +55,8 @@
 }
 
 .featured-carousel__media {
-    border-radius: clamp(var(--radius-sm), 1vw, var(--radius-lg));
+    --feature-card-radius: clamp(var(--radius-sm), 1vw, var(--radius-lg));
+    border-radius: var(--feature-card-radius);
     overflow: hidden;
     height: 100%;
     min-height: 16rem;
@@ -79,6 +80,7 @@
 [data-theme-layout='brutalist'] .featured-carousel__media {
     --feature-card-shadow: var(--feature-card-shadow-brutalist, none);
     --feature-card-border: var(--feature-border-strong, 3px solid var(--color-border-strong));
+    --feature-card-radius: var(--radius-none);
 }
 
 [data-theme-layout='modern'] .featured-carousel__media {
