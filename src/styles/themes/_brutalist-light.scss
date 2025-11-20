@@ -44,6 +44,9 @@
         radial-gradient(circle at top, #e8ecf7 0, #f5f7fb 55%);
     --shadow-brutalist: 0 0 0 1px rgba(17, 27, 47, 0.3), 0.4rem 0.4rem 0 0 rgba(15, 23, 42, 0.08);
     --shadow-modern: 0 25px 60px rgba(15, 23, 42, 0.15);
+    --feature-card-shadow-brutalist: none;
+    --feature-card-shadow-modern: var(--shadow-modern);
+    --feature-border-strong: 3px solid var(--color-border-strong);
     --panel-radius: var(--radius-none);
     --panel-border-width: var(--border-base);
     --panel-outline: var(--color-border-strong);
