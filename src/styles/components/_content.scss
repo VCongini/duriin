@@ -358,6 +358,7 @@
 
 .footer {
     @include fluid-stack(column, var(--space-sm), row, var(--space-sm));
+    margin-top: var(--space-xxl);
     border: var(--panel-border-width) solid var(--panel-outline);
     border-radius: var(--panel-radius);
     @include responsive-space(padding, var(--space-md), var(--space-lg));
@@ -365,12 +366,13 @@
     box-shadow: var(--panel-shadow);
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
 }
 
 .footer__block {
     padding: 0.35rem 0.75rem;
     border: 1px solid var(--panel-outline);
+    opacity: 0.6;
 }
 
 .footer__block--muted {
