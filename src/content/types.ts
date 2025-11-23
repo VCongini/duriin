@@ -6,9 +6,13 @@ export type Video = {
     title: string;
     platform: 'YouTube' | 'TikTok' | 'Twitch';
     url: string;
+    embedUrl?: string;
+    thumbnailUrl?: string;
     duration: string;
     status: VideoStatus;
     tags: string[];
+    description?: string;
+    viewCount?: number;
     publishedAt: string; // ISO date
 };
 

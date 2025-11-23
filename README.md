@@ -9,6 +9,24 @@ npm install
 npm run dev
 ```
 
+## Syncing YouTube uploads without exposing keys
+
+Use the provided content script as a tiny proxy so the YouTube API key never ships to the browser:
+
+1. Create `.env.local` (or set CI secrets) with:
+   ```
+   YOUTUBE_API_KEY=your_api_key
+   YOUTUBE_CHANNEL_ID=your_channel_id
+   # Optional: Twitch VODs
+   TWITCH_CLIENT_ID=...
+   TWITCH_CLIENT_SECRET=...
+   TWITCH_USER_ID=...
+   ```
+2. Run `npm run sync:content`. The script calls the YouTube Data API server-side, normalizes fields
+   like `thumbnailUrl`, `embedUrl`, `duration`, and writes `src/content/videos.json`.
+3. Commit the refreshed JSON (or run the script in CI) and the front end will render the latest
+   uploads with thumbnails and the inline player. Your keys remain only in environment variables.
+
 ## Theming and layouts
 
 The app now exposes a layout + mode system powered by the `ThemeProvider` in `src/theme/ThemeContext.tsx`.
