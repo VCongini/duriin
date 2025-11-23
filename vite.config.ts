@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 
-// Base must match the repo name for GitHub Pages (`https://user.github.io/<repo>/`)
-const base = '/duriin/';
+// Allow overriding the base for different hosting targets (e.g., Cloudflare Pages at root).
+const base = process.env.VITE_BASE ?? '/';
 
 export default defineConfig({
     plugins: [react()],
