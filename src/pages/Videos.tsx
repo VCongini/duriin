@@ -1,32 +1,60 @@
-import React, { useDeferredValue, useMemo, useState } from 'react';
+import React, { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { videos } from '../content';
+import { Video } from '../content/types';
 import { formatDate } from '../utils/format';
 
 type SortOrder = 'newest' | 'oldest';
+
+const sortVideos = (list: Video[], sort: SortOrder) =>
+    [...list].sort((a, b) => {
+        const diff = new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
+        return sort === 'newest' ? -diff : diff;
+    });
 
 export const Videos: React.FC = () => {
     const [query, setQuery] = useState('');
     const [sort, setSort] = useState<SortOrder>('newest');
     const [activeTag, setActiveTag] = useState<string | null>(null);
+    const [featuredId, setFeaturedId] = useState<string | null>(() => videos[0]?.id ?? null);
 
     const tags = useMemo(() => Array.from(new Set(videos.flatMap((v) => v.tags))).sort(), []);
     const deferredQuery = useDeferredValue(query);
 
     const filtered = useMemo(() => {
-        return [...videos]
+        const normalizedQuery = deferredQuery.trim().toLowerCase();
+        return sortVideos(videos, sort)
             .filter((video) => {
+                const haystack = `${video.title} ${video.description ?? ''}`.toLowerCase();
                 const matchQuery =
-                    video.title.toLowerCase().includes(deferredQuery.toLowerCase()) ||
-                    video.tags.some((t) => t.toLowerCase().includes(deferredQuery.toLowerCase()));
+                    !normalizedQuery ||
+                    haystack.includes(normalizedQuery) ||
+                    video.tags.some((t) => t.toLowerCase().includes(normalizedQuery));
                 const matchTag = activeTag ? video.tags.includes(activeTag) : true;
                 return matchQuery && matchTag;
             })
-            .sort((a, b) => {
-                const diff =
-                    new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
-                return sort === 'newest' ? -diff : diff;
-            });
+            .map((video) => ({
+                ...video,
+                description: video.description ?? `Watch on ${video.platform}`
+            }));
     }, [activeTag, deferredQuery, sort]);
+
+    useEffect(() => {
+        if (!filtered.length) {
+            setFeaturedId(null);
+            return;
+        }
+        setFeaturedId((current) => {
+            if (current && filtered.some((video) => video.id === current)) {
+                return current;
+            }
+            return filtered[0]?.id ?? null;
+        });
+    }, [filtered]);
+
+    const featuredVideo = filtered.find((video) => video.id === featuredId) ?? filtered[0];
+    const gridVideos = featuredVideo
+        ? filtered.filter((video) => video.id !== featuredVideo.id)
+        : filtered;
 
     const resultText =
         filtered.length === 1
@@ -100,48 +128,171 @@ export const Videos: React.FC = () => {
                     {resultText}
                 </div>
 
-                <ul className="episode-list">
-                    {filtered.map((video) => (
-                        <li key={video.id} className="episode">
+                {featuredVideo ? (
+                    <article className="video-spotlight">
+                        <div className="video-spotlight__media">
+                            {featuredVideo.platform === 'YouTube' && featuredVideo.embedUrl ? (
+                                <iframe
+                                    src={`${featuredVideo.embedUrl}?rel=0`}
+                                    title={featuredVideo.title}
+                                    allowFullScreen
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    loading="lazy"
+                                />
+                            ) : featuredVideo.thumbnailUrl ? (
+                                <img
+                                    src={featuredVideo.thumbnailUrl}
+                                    alt={featuredVideo.title}
+                                    loading="lazy"
+                                />
+                            ) : (
+                                <div className="video-spotlight__placeholder">{featuredVideo.platform}</div>
+                            )}
+                        </div>
+                        <div className="video-spotlight__body u-stack">
                             <div className="episode__header">
-                                <span className="episode__label">{video.episode}</span>
+                                <span className="episode__label">{featuredVideo.episode}</span>
                                 <span
-                                    className={`episode__status episode__status--${video.status.toLowerCase()}`}
+                                    className={`episode__status episode__status--${featuredVideo.status.toLowerCase()}`}
                                 >
-                                    {video.status}
+                                    {featuredVideo.status}
                                 </span>
                             </div>
-                            <div className="episode__title-row">
-                                <a
-                                    href={video.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="episode__title"
-                                >
-                                    {video.title}
-                                </a>
-                                <div className="episode__meta">
-                                    <span className="chip chip--platform">{video.platform}</span>
-                                    <span className="chip chip--duration">{video.duration}</span>
-                                    <span className="chip chip--date">
-                                        {formatDate(video.publishedAt, {
-                                            month: 'short',
-                                            day: '2-digit',
-                                            year: 'numeric'
-                                        })}
+                            <h2 className="video-spotlight__title u-text-heading-lg">{featuredVideo.title}</h2>
+                            <div className="episode__meta">
+                                <span className="chip chip--platform">{featuredVideo.platform}</span>
+                                <span className="chip chip--duration">{featuredVideo.duration}</span>
+                                <span className="chip chip--date">
+                                    {formatDate(featuredVideo.publishedAt, {
+                                        month: 'short',
+                                        day: '2-digit',
+                                        year: 'numeric'
+                                    })}
+                                </span>
+                                {featuredVideo.viewCount ? (
+                                    <span className="chip">
+                                        {featuredVideo.viewCount.toLocaleString()} views
                                     </span>
-                                </div>
+                                ) : null}
                             </div>
+                            <p className="video-spotlight__description u-text-body">{featuredVideo.description}</p>
                             <div className="episode__tags">
-                                {video.tags.map((tag) => (
-                                    <span key={tag} className="tag">
+                                {featuredVideo.tags.map((tag) => (
+                                    <button
+                                        key={tag}
+                                        type="button"
+                                        className={`tag ${activeTag === tag ? 'tag--active' : ''}`}
+                                        onClick={() => setActiveTag(tag)}
+                                        aria-pressed={activeTag === tag}
+                                    >
                                         #{tag}
-                                    </span>
+                                    </button>
                                 ))}
                             </div>
-                        </li>
-                    ))}
-                </ul>
+                            <div className="video-spotlight__actions page-cta">
+                                <a
+                                    href={featuredVideo.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="btn btn--primary"
+                                >
+                                    Watch on {featuredVideo.platform}
+                                </a>
+                                {gridVideos.length ? (
+                                    <button
+                                        type="button"
+                                        className="btn btn--ghost"
+                                        onClick={() => setFeaturedId(gridVideos[0].id)}
+                                    >
+                                        Next in queue
+                                    </button>
+                                ) : null}
+                            </div>
+                        </div>
+                    </article>
+                ) : (
+                    <div className="video-empty" role="status">
+                        No videos match that filter. Try clearing the search or switching tags.
+                    </div>
+                )}
+
+                {gridVideos.length ? (
+                    <div className="video-grid" role="list">
+                        {gridVideos.map((video) => (
+                            <article key={video.id} className="video-card" role="listitem">
+                                <button
+                                    type="button"
+                                    className="video-card__media"
+                                    onClick={() => setFeaturedId(video.id)}
+                                    aria-label={`Preview ${video.title} in the player`}
+                                >
+                                    {video.thumbnailUrl ? (
+                                        <img src={video.thumbnailUrl} alt="" loading="lazy" />
+                                    ) : (
+                                        <div className="video-card__placeholder">{video.platform}</div>
+                                    )}
+                                </button>
+                                <div className="video-card__body u-stack">
+                                    <div className="episode__header">
+                                        <span className="episode__label">{video.episode}</span>
+                                        <span
+                                            className={`episode__status episode__status--${video.status.toLowerCase()}`}
+                                        >
+                                            {video.status}
+                                        </span>
+                                    </div>
+                                    <h3 className="video-card__title">
+                                        <button type="button" onClick={() => setFeaturedId(video.id)}>
+                                            {video.title}
+                                        </button>
+                                    </h3>
+                                    <div className="episode__meta">
+                                        <span className="chip chip--platform">{video.platform}</span>
+                                        <span className="chip chip--duration">{video.duration}</span>
+                                        <span className="chip chip--date">
+                                            {formatDate(video.publishedAt, {
+                                                month: 'short',
+                                                day: '2-digit',
+                                                year: 'numeric'
+                                            })}
+                                        </span>
+                                    </div>
+                                    <p className="video-card__description u-text-body">{video.description}</p>
+                                    <div className="episode__tags">
+                                        {video.tags.map((tag) => (
+                                            <button
+                                                key={tag}
+                                                type="button"
+                                                className={`tag ${activeTag === tag ? 'tag--active' : ''}`}
+                                                onClick={() => setActiveTag(tag)}
+                                                aria-pressed={activeTag === tag}
+                                            >
+                                                #{tag}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="video-card__actions">
+                                        <button
+                                            type="button"
+                                            className="btn btn--ghost"
+                                            onClick={() => setFeaturedId(video.id)}
+                                        >
+                                            Play in spotlight
+                                        </button>
+                                        <a
+                                            href={video.url}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="page-cta__secondary"
+                                        >
+                                            Open on {video.platform}
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                ) : null}
             </section>
         </div>
     );

@@ -8,12 +8,41 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const videosPath = path.join(root, 'src/content/videos.json');
 
-const env = {
+let env = {
     youtubeApiKey: process.env.YOUTUBE_API_KEY,
     youtubeChannelId: process.env.YOUTUBE_CHANNEL_ID,
     twitchClientId: process.env.TWITCH_CLIENT_ID,
     twitchClientSecret: process.env.TWITCH_CLIENT_SECRET,
     twitchUserId: process.env.TWITCH_USER_ID
+};
+
+const loadLocalEnv = async () => {
+    const candidates = ['.env.local', '.env'];
+    for (const filename of candidates) {
+        const filePath = path.join(root, filename);
+        try {
+            const raw = await fs.readFile(filePath, 'utf8');
+            raw.split(/\r?\n/).forEach((line) => {
+                const trimmed = line.trim();
+                if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) return;
+                const [key, ...rest] = trimmed.split('=');
+                if (!process.env[key]) {
+                    process.env[key] = rest.join('=').trim();
+                }
+            });
+            break;
+        } catch {
+            // ignore missing file
+        }
+    }
+
+    env = {
+        youtubeApiKey: process.env.YOUTUBE_API_KEY,
+        youtubeChannelId: process.env.YOUTUBE_CHANNEL_ID,
+        twitchClientId: process.env.TWITCH_CLIENT_ID,
+        twitchClientSecret: process.env.TWITCH_CLIENT_SECRET,
+        twitchUserId: process.env.TWITCH_USER_ID
+    };
 };
 
 const readExisting = async () => {
@@ -49,6 +78,12 @@ const isoDurationToClock = (iso) => {
     return parts.join(':');
 };
 
+const truncate = (text, limit = 220) => {
+    if (!text) return '';
+    if (text.length <= limit) return text;
+    return text.slice(0, limit - 1).trimEnd() + '…';
+};
+
 const fetchJson = async (url, opts = {}) => {
     const res = await fetch(url, opts);
     if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
@@ -77,21 +112,31 @@ const fetchYouTubeUploads = async (existingLookup) => {
     const ids = playlistData.items?.map((item) => item.contentDetails?.videoId).filter(Boolean) || [];
     if (!ids.length) return [];
     const videosData = await fetchJson(
-        `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${ids.join(',')}&key=${env.youtubeApiKey}`
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${ids.join(',')}&key=${env.youtubeApiKey}`
     );
     return videosData.items
         ?.map((item) => {
             const duration = isoDurationToClock(item.contentDetails?.duration || '');
             const id = item.id;
+            const thumbnail =
+                item.snippet?.thumbnails?.maxres?.url ||
+                item.snippet?.thumbnails?.standard?.url ||
+                item.snippet?.thumbnails?.high?.url ||
+                item.snippet?.thumbnails?.medium?.url ||
+                item.snippet?.thumbnails?.default?.url;
             return {
                 id,
                 episode: existingLookup.get(id)?.episode || 'YOUTUBE',
                 title: item.snippet?.title || 'Untitled',
                 platform: 'YouTube',
                 url: `https://www.youtube.com/watch?v=${id}`,
+                embedUrl: `https://www.youtube.com/embed/${id}`,
+                thumbnailUrl: thumbnail,
                 duration: duration || '00:00',
                 status: 'LIVE',
                 tags: item.snippet?.tags?.slice(0, 6) || existingLookup.get(id)?.tags || [],
+                description: truncate(item.snippet?.description || existingLookup.get(id)?.description || ''),
+                viewCount: Number(item.statistics?.viewCount) || existingLookup.get(id)?.viewCount,
                 publishedAt: item.snippet?.publishedAt || existingLookup.get(id)?.publishedAt || ''
             };
         })
@@ -140,6 +185,7 @@ const mergeContent = (existing, incoming) => {
 };
 
 const main = async () => {
+    await loadLocalEnv();
     const existing = await readExisting();
     const existingLookup = new Map(existing.map((v) => [v.id, v]));
     const youtube = await fetchYouTubeUploads(existingLookup);
