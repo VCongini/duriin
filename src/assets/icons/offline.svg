@@ -1,0 +1,16 @@
+<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="16" cy="13" r="4" />
+  <line x1="16" y1="17" x2="16" y2="23" />
+  <line x1="16" y1="19" x2="10.5" y2="23" />
+  <line x1="16" y1="19" x2="20.5" y2="23.5" />
+  <line x1="16" y1="23" x2="11.5" y2="30" />
+  <line x1="16" y1="23" x2="20.5" y2="29.5" />
+  <polyline points="20 28.5 21.5 31.5 25.5 31.5" />
+  <circle cx="28" cy="12" r="6" />
+  <line x1="23.5" y1="7" x2="32.5" y2="16" />
+  <line x1="22" y1="29" x2="26.5" y2="29" />
+  <line x1="22" y1="29" x2="22" y2="31.5" />
+  <line x1="26.5" y1="29" x2="26.5" y2="31.5" />
+  <line x1="21" y1="31.5" x2="23.5" y2="31.5" />
+  <line x1="27.5" y1="31.5" x2="29.5" y2="31.5" />
+</svg>
