@@ -57,6 +57,7 @@ const ThemeSettingsComponent: React.FC = () => {
                     </button>
                 </span>
             </div>
+
         </div>
     );
 };
