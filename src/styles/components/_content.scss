@@ -208,46 +208,6 @@
     @include fluid-stack(column, var(--space-xs), row, var(--space-sm));
 }
 
-.episode__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xxs);
-}
-
-.episode__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xxs);
-}
-
-.episode__tags .tag {
-    cursor: pointer;
-}
-
-.chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: var(--font-size-xs);
-    padding: 0.2rem 0.75rem;
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--chip-border);
-    background: var(--chip-bg);
-    color: var(--chip-text);
-}
-
-.chip--platform {
-    border-color: var(--color-accent-primary);
-}
-
-.chip--duration {
-    border-color: var(--color-accent-secondary);
-}
-
-.chip--date {
-    border-color: var(--color-border);
-}
-
 .post {
     border: 1px solid var(--panel-outline);
     border-radius: calc(var(--panel-radius) - 0.25rem);
@@ -279,48 +239,6 @@
     margin: 0;
     color: var(--color-text-secondary);
     line-height: 1.6;
-}
-
-.post__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xxs);
-}
-
-.tag {
-    @include pill-label;
-    background: rgba(0, 0, 0, 0.05);
-    color: var(--color-text-secondary);
-}
-
-.tag--active {
-    background: var(--color-accent-primary);
-    color: #050608;
-}
-
-.tag-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs);
-}
-
-.field--tags .tag {
-    cursor: pointer;
-    border: 1px solid var(--color-border);
-    background: transparent;
-    color: var(--color-text-secondary);
-    transition: outline 120ms ease, color 120ms ease, border-color 120ms ease;
-}
-
-.field--tags .tag:focus-visible {
-    outline: 2px solid var(--color-accent-secondary);
-    outline-offset: 2px;
-}
-
-.field--tags .tag--active {
-    background: var(--color-accent-primary);
-    border-color: var(--color-accent-primary);
-    color: #050608;
 }
 
 .filter-summary {
@@ -532,7 +450,3 @@
     color: var(--color-text-secondary);
 }
 
-[data-theme-layout='modern'] .tag {
-    background: rgba(255, 255, 255, 0.12);
-    color: var(--color-text-primary);
-}
