@@ -20,6 +20,8 @@
 
     &:is(button, a) {
         cursor: pointer;
+        min-height: var(--tap-target);
+        padding: 0 var(--space-sm);
     }
 
     &:focus-visible {

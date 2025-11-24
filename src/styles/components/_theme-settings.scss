@@ -35,7 +35,7 @@
     border: 1px solid var(--theme-control-border);
     background: var(--theme-control-bg);
     color: var(--color-text-primary);
-    padding: 0.35rem 1rem;
+    padding: 0.45rem 1rem;
     font-size: var(--font-size-sm);
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -46,6 +46,7 @@
     gap: 0.45rem;
     min-width: 8.5rem;
     justify-content: space-between;
+    min-height: var(--tap-target);
     transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
 }
 
@@ -93,7 +94,7 @@
     font-size: var(--font-size-sm);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 0.45rem 0.7rem;
+    padding: 0.55rem 0.85rem;
     border-radius: var(--radius-sm);
     display: block;
     cursor: pointer;
@@ -125,7 +126,8 @@
     border: none;
     color: var(--theme-control-muted);
     font-size: var(--font-size-sm);
-    padding: 0.4rem 0.9rem;
+    padding: 0.6rem 1rem;
+    min-height: var(--tap-target);
     cursor: pointer;
     transition: background 200ms ease, color 200ms ease;
 }
