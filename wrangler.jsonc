@@ -1,6 +1,6 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "duriin-site",
+    "name": "duriin",
     "compatibility_date": "2025-11-23",
     "assets": {
         "directory": "./dist"
