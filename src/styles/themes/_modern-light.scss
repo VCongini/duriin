@@ -10,6 +10,7 @@
     --color-border-strong: rgba(15, 23, 42, 0.4);
     --color-text-primary: #0b1220;
     --color-text-secondary: #4b5569;
+    --color-text-tertiary: #6b7280;
     --color-accent-primary: #2563eb;
     --color-accent-secondary: #7c3aed;
     --color-accent: var(--color-accent-primary);
@@ -37,7 +38,7 @@
     --tag-focus-outline: var(--color-accent-secondary);
     --theme-control-bg: rgba(255, 255, 255, 0.85);
     --theme-control-border: rgba(15, 23, 42, 0.15);
-    --theme-control-muted: rgba(15, 23, 42, 0.65);
+    --theme-control-muted: var(--color-text-tertiary);
     --theme-control-active: rgba(37, 99, 235, 0.15);
     --theme-control-active-text: #0b1220;
     --skeleton-base: rgba(15, 23, 42, 0.08);
