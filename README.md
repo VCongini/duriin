@@ -15,8 +15,8 @@ Use the provided content script as a tiny proxy so the YouTube API key never shi
 
 1. Create `.env.local` (or set CI secrets) with:
    ```
-   YOUTUBE_API_KEY=your_api_key
-   YOUTUBE_CHANNEL_ID=your_channel_id
+   VITE_YOUTUBE_API_KEY=your_api_key
+   VITE_YOUTUBE_CHANNEL_ID=your_channel_id
    # Optional: Twitch VODs
    TWITCH_CLIENT_ID=...
    TWITCH_CLIENT_SECRET=...

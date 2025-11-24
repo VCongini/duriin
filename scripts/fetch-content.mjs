@@ -9,8 +9,8 @@ const root = path.resolve(__dirname, '..');
 const videosPath = path.join(root, 'src/content/videos.json');
 
 let env = {
-    youtubeApiKey: process.env.YOUTUBE_API_KEY,
-    youtubeChannelId: process.env.YOUTUBE_CHANNEL_ID,
+    youtubeApiKey: process.env.VITE_YOUTUBE_API_KEY,
+    youtubeChannelId: process.env.VITE_YOUTUBE_CHANNEL_ID,
     twitchClientId: process.env.TWITCH_CLIENT_ID,
     twitchClientSecret: process.env.TWITCH_CLIENT_SECRET,
     twitchUserId: process.env.TWITCH_USER_ID
@@ -37,8 +37,8 @@ const loadLocalEnv = async () => {
     }
 
     env = {
-        youtubeApiKey: process.env.YOUTUBE_API_KEY,
-        youtubeChannelId: process.env.YOUTUBE_CHANNEL_ID,
+        youtubeApiKey: process.env.VITE_YOUTUBE_API_KEY,
+        youtubeChannelId: process.env.VITE_YOUTUBE_CHANNEL_ID,
         twitchClientId: process.env.TWITCH_CLIENT_ID,
         twitchClientSecret: process.env.TWITCH_CLIENT_SECRET,
         twitchUserId: process.env.TWITCH_USER_ID
@@ -92,7 +92,7 @@ const fetchJson = async (url, opts = {}) => {
 
 const fetchYouTubeUploads = async (existingLookup) => {
     if (!env.youtubeApiKey || !env.youtubeChannelId) {
-        console.log('YouTube: missing YOUTUBE_API_KEY or YOUTUBE_CHANNEL_ID, skipping.');
+        console.log('YouTube: missing VITE_YOUTUBE_API_KEY or VITE_YOUTUBE_CHANNEL_ID, skipping.');
         return [];
     }
     console.log('YouTube: fetching uploads…');
