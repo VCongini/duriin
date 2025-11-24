@@ -57,6 +57,8 @@ $button-height-lg: 3.15rem;
     --color-accent-secondary: #4ea3ff;
     --color-accent: var(--color-accent-primary);
     --color-accent-section: var(--color-accent-primary);
+    --focus-outline-color: var(--color-accent-secondary);
+    --focus-outline-offset: 2px;
     --color-danger: #ff4b7d;
     --color-success: #34d399;
     --color-warning: #facc15;
