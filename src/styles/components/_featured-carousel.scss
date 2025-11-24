@@ -198,8 +198,8 @@
 }
 
 .featured-carousel__nav:focus-visible {
-    outline: 2px solid var(--color-accent-secondary);
-    outline-offset: 4px;
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
 }
 
 .featured-carousel__indicators {

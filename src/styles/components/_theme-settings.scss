@@ -51,7 +51,6 @@
 
 .theme-settings__select:hover,
 .theme-settings__select:focus-visible {
-    outline: none;
     border-color: var(--color-border-strong);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
@@ -103,7 +102,6 @@
 
 .theme-settings__option:hover,
 .theme-settings__option:focus-visible {
-    outline: none;
     background: var(--theme-control-active);
     color: var(--theme-control-active-text);
 }
