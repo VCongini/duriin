@@ -246,47 +246,51 @@ export const Videos: React.FC = () => {
                                             {video.title}
                                         </button>
                                     </h3>
-                                    <div className="episode__meta">
-                                        <span className="tag tag--platform">#{video.platform.toUpperCase()}</span>
-                                        <span className="tag tag--meta">{video.duration}</span>
-                                        <span className="tag tag--meta">
-                                            {formatDate(video.publishedAt, {
-                                                month: 'short',
-                                                day: '2-digit',
-                                                year: 'numeric'
-                                            })}
-                                        </span>
-                                    </div>
                                     <p className="video-card__description u-text-body">{video.description}</p>
-                                    <div className="episode__tags">
-                                        {video.tags.map((tag) => (
+                                    <div className="video-card__footer">
+                                        <div className="episode__meta">
+                                            <span className="tag tag--platform">#{video.platform.toUpperCase()}</span>
+                                            <span className="tag tag--meta">{video.duration}</span>
+                                            <span className="tag tag--meta">
+                                                {formatDate(video.publishedAt, {
+                                                    month: 'short',
+                                                    day: '2-digit',
+                                                    year: 'numeric'
+                                                })}
+                                            </span>
+                                        </div>
+                                        <div className="episode__tags">
+                                            {video.tags.map((tag) => (
+                                                <button
+                                                    key={tag}
+                                                    type="button"
+                                                    className={`tag tag--content ${
+                                                        activeTag === tag ? 'tag--active' : ''
+                                                    }`}
+                                                    onClick={() => setActiveTag(tag)}
+                                                    aria-pressed={activeTag === tag}
+                                                >
+                                                    #{tag}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <div className="video-card__actions">
                                             <button
-                                                key={tag}
                                                 type="button"
-                                                className={`tag tag--content ${activeTag === tag ? 'tag--active' : ''}`}
-                                                onClick={() => setActiveTag(tag)}
-                                                aria-pressed={activeTag === tag}
+                                                className="btn btn--ghost"
+                                                onClick={() => setFeaturedId(video.id)}
                                             >
-                                                #{tag}
+                                                Play in spotlight
                                             </button>
-                                        ))}
-                                    </div>
-                                    <div className="video-card__actions">
-                                        <button
-                                            type="button"
-                                            className="btn btn--ghost"
-                                            onClick={() => setFeaturedId(video.id)}
-                                        >
-                                            Play in spotlight
-                                        </button>
-                                        <a
-                                            href={video.url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="page-cta__secondary"
-                                        >
-                                            Open on {video.platform}
-                                        </a>
+                                            <a
+                                                href={video.url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="page-cta__secondary"
+                                            >
+                                                Open on {video.platform}
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </article>
