@@ -104,7 +104,11 @@
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-xxs);
+    min-height: var(--tap-target);
+    padding: 0 0.75rem;
+    border-radius: var(--radius-sm);
 }
 
 .page-cta__secondary::after {
@@ -292,11 +296,12 @@
     font-size: var(--font-size-sm);
     background: var(--color-bg-muted);
     color: var(--color-text-primary);
+    min-height: var(--tap-target);
 }
 
 .video-spotlight {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-columns: 1fr;
     gap: clamp(var(--space-md), 3vw, var(--space-xl));
     padding: clamp(var(--space-lg), 3vw, var(--space-xl));
     border: 1px solid var(--panel-outline);
@@ -307,7 +312,8 @@
 
 @include respond(tablet) {
     .video-spotlight {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+        align-items: center;
     }
 }
 
@@ -355,8 +361,11 @@
 }
 
 .video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    @include fluid-grid(
+        1fr,
+        repeat(auto-fit, minmax(16rem, 1fr)),
+        repeat(auto-fit, minmax(18rem, 1fr))
+    );
     gap: clamp(var(--space-md), 3vw, var(--space-xl));
 }
 

@@ -138,6 +138,8 @@
     align-self: center;
     width: var(--carousel-nav-size);
     height: var(--carousel-nav-size);
+    min-width: var(--tap-target);
+    min-height: var(--tap-target);
     border-radius: var(--carousel-nav-radius);
     border: var(--carousel-nav-border);
     background: var(--carousel-nav-bg);
@@ -207,19 +209,39 @@
     gap: var(--space-sm);
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .featured-carousel__indicator {
-    width: 1.5rem;
-    height: 0.35rem;
-    border-radius: 999px;
-    border: 0;
-    background: rgba(255, 255, 255, 0.2);
+    --indicator-bar-width: 1.65rem;
+    --indicator-bar-height: 0.35rem;
+    min-width: var(--tap-target);
+    min-height: var(--tap-target);
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid transparent;
+    background: transparent;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.featured-carousel__indicator::after {
+    content: '';
+    width: var(--indicator-bar-width);
+    height: var(--indicator-bar-height);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .featured-carousel__indicator.is-active {
+    border-color: var(--color-border);
+}
+
+.featured-carousel__indicator.is-active::after {
     background: var(--color-accent-section);
     transform: scaleX(1.1);
 }

@@ -26,6 +26,7 @@ $border-thick: 3px;
 $button-height-sm: 2.35rem;
 $button-height-md: 2.75rem;
 $button-height-lg: 3.15rem;
+$tap-target: $button-height-md;
 
 :root {
     --radius-none: #{$radius-none};
@@ -41,6 +42,7 @@ $button-height-lg: 3.15rem;
     --button-height-sm: #{$button-height-sm};
     --button-height-md: #{$button-height-md};
     --button-height-lg: #{$button-height-lg};
+    --tap-target: #{$tap-target};
 
     /* Default color tokens (brutalist dark fallback) */
     --color-bg-page: #03050e;
