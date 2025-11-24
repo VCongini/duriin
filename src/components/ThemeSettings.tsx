@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { ThemeLayout, ThemeMode, useTheme } from '../theme/ThemeContext';
 
 const layoutLabels: Record<ThemeLayout, string> = {
@@ -8,12 +8,19 @@ const layoutLabels: Record<ThemeLayout, string> = {
 
 const ThemeSettingsComponent: React.FC = () => {
     const { layout, mode, setLayout, setMode } = useTheme();
+    const [isLayoutMenuOpen, setLayoutMenuOpen] = useState(false);
+    const layoutMenuRef = useRef<HTMLSpanElement>(null);
 
-    const handleLayoutChange = useCallback(
-        (event: React.ChangeEvent<HTMLSelectElement>) => {
-            setLayout(event.target.value as ThemeLayout);
+    const closeLayoutMenu = useCallback(() => {
+        setLayoutMenuOpen(false);
+    }, []);
+
+    const handleLayoutSelect = useCallback(
+        (nextLayout: ThemeLayout) => {
+            setLayout(nextLayout);
+            closeLayoutMenu();
         },
-        [setLayout]
+        [closeLayoutMenu, setLayout]
     );
 
     const handleModeChange = useCallback(
@@ -23,18 +30,88 @@ const ThemeSettingsComponent: React.FC = () => {
         [setMode]
     );
 
+    const handleLayoutTriggerKeyDown = useCallback(
+        (event: React.KeyboardEvent<HTMLButtonElement>) => {
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                setLayoutMenuOpen(true);
+            }
+        },
+        []
+    );
+
+    const handleLayoutBlur = useCallback(
+        (event: React.FocusEvent<HTMLElement>) => {
+            if (layoutMenuRef.current && !layoutMenuRef.current.contains(event.relatedTarget as Node | null)) {
+                closeLayoutMenu();
+            }
+        },
+        [closeLayoutMenu]
+    );
+
+    useEffect(() => {
+        if (!isLayoutMenuOpen) {
+            return undefined;
+        }
+
+        const handleClickOutside = (event: MouseEvent) => {
+            if (layoutMenuRef.current && !layoutMenuRef.current.contains(event.target as Node)) {
+                closeLayoutMenu();
+            }
+        };
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                closeLayoutMenu();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [closeLayoutMenu, isLayoutMenuOpen]);
+
     return (
         <div className="theme-settings" aria-label="Appearance settings">
             <label className="theme-settings__group">
                 <span className="theme-settings__label">Layout</span>
-                <span className="theme-settings__control">
-                    <select className="theme-settings__select" value={layout} onChange={handleLayoutChange}>
-                        {Object.entries(layoutLabels).map(([value, label]) => (
-                            <option key={value} value={value}>
-                                {label}
-                            </option>
-                        ))}
-                    </select>
+                <span
+                    className="theme-settings__control theme-settings__control--layout"
+                    ref={layoutMenuRef}
+                    onBlur={handleLayoutBlur}
+                >
+                    <button
+                        type="button"
+                        className="theme-settings__select"
+                        aria-haspopup="listbox"
+                        aria-expanded={isLayoutMenuOpen}
+                        aria-controls="layout-menu"
+                        onClick={() => setLayoutMenuOpen((open) => !open)}
+                        onKeyDown={handleLayoutTriggerKeyDown}
+                    >
+                        <span className="theme-settings__select-label">{layoutLabels[layout]}</span>
+                        <span className="theme-settings__select-icon" aria-hidden="true" />
+                    </button>
+                    {isLayoutMenuOpen && (
+                        <div id="layout-menu" role="listbox" aria-label="Layout options" className="theme-settings__dropdown">
+                            {Object.entries(layoutLabels).map(([value, label]) => (
+                                <button
+                                    key={value}
+                                    type="button"
+                                    role="option"
+                                    aria-selected={layout === value}
+                                    className={`theme-settings__option ${layout === value ? 'is-active' : ''}`}
+                                    onClick={() => handleLayoutSelect(value as ThemeLayout)}
+                                >
+                                    {label}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </span>
             </label>
 
