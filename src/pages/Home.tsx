@@ -52,9 +52,9 @@ export const Home: React.FC = () => {
                                     {video.title}
                                 </a>
                                 <div className="episode__meta">
-                                    <span className="chip chip--platform">{video.platform}</span>
-                                    <span className="chip chip--duration">{video.duration}</span>
-                                    <span className="chip chip--date">{formatDate(video.publishedAt)}</span>
+                                    <span className="tag tag--platform">#{video.platform.toUpperCase()}</span>
+                                    <span className="tag tag--meta">{video.duration}</span>
+                                    <span className="tag tag--meta">{formatDate(video.publishedAt)}</span>
                                 </div>
                             </div>
                         </li>
@@ -79,7 +79,7 @@ export const Home: React.FC = () => {
                             <p className="post__excerpt">{post.excerpt}</p>
                             <div className="post__tags">
                                 {post.tags.map((tag) => (
-                                    <span key={tag} className="tag">
+                                    <span key={tag} className="tag tag--content">
                                         #{tag}
                                     </span>
                                 ))}

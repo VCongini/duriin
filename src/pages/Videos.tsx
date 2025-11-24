@@ -104,7 +104,7 @@ export const Videos: React.FC = () => {
                         <div className="tag-grid" role="list">
                             <button
                                 type="button"
-                                className={`tag ${activeTag === null ? 'tag--active' : ''}`}
+                                className={`tag tag--content ${activeTag === null ? 'tag--active' : ''}`}
                                 onClick={() => setActiveTag(null)}
                                 aria-pressed={activeTag === null}
                             >
@@ -114,7 +114,7 @@ export const Videos: React.FC = () => {
                                 <button
                                     key={tag}
                                     type="button"
-                                    className={`tag ${activeTag === tag ? 'tag--active' : ''}`}
+                                    className={`tag tag--content ${activeTag === tag ? 'tag--active' : ''}`}
                                     onClick={() => setActiveTag(tag)}
                                     aria-pressed={activeTag === tag}
                                 >
@@ -160,9 +160,9 @@ export const Videos: React.FC = () => {
                             </div>
                             <h2 className="video-spotlight__title u-text-heading-lg">{featuredVideo.title}</h2>
                             <div className="episode__meta">
-                                <span className="chip chip--platform">{featuredVideo.platform}</span>
-                                <span className="chip chip--duration">{featuredVideo.duration}</span>
-                                <span className="chip chip--date">
+                                <span className="tag tag--platform">#{featuredVideo.platform.toUpperCase()}</span>
+                                <span className="tag tag--meta">{featuredVideo.duration}</span>
+                                <span className="tag tag--meta">
                                     {formatDate(featuredVideo.publishedAt, {
                                         month: 'short',
                                         day: '2-digit',
@@ -170,7 +170,7 @@ export const Videos: React.FC = () => {
                                     })}
                                 </span>
                                 {featuredVideo.viewCount ? (
-                                    <span className="chip">
+                                    <span className="tag tag--meta">
                                         {featuredVideo.viewCount.toLocaleString()} views
                                     </span>
                                 ) : null}
@@ -181,7 +181,7 @@ export const Videos: React.FC = () => {
                                     <button
                                         key={tag}
                                         type="button"
-                                        className={`tag ${activeTag === tag ? 'tag--active' : ''}`}
+                                        className={`tag tag--content ${activeTag === tag ? 'tag--active' : ''}`}
                                         onClick={() => setActiveTag(tag)}
                                         aria-pressed={activeTag === tag}
                                     >
@@ -247,9 +247,9 @@ export const Videos: React.FC = () => {
                                         </button>
                                     </h3>
                                     <div className="episode__meta">
-                                        <span className="chip chip--platform">{video.platform}</span>
-                                        <span className="chip chip--duration">{video.duration}</span>
-                                        <span className="chip chip--date">
+                                        <span className="tag tag--platform">#{video.platform.toUpperCase()}</span>
+                                        <span className="tag tag--meta">{video.duration}</span>
+                                        <span className="tag tag--meta">
                                             {formatDate(video.publishedAt, {
                                                 month: 'short',
                                                 day: '2-digit',
@@ -263,7 +263,7 @@ export const Videos: React.FC = () => {
                                             <button
                                                 key={tag}
                                                 type="button"
-                                                className={`tag ${activeTag === tag ? 'tag--active' : ''}`}
+                                                className={`tag tag--content ${activeTag === tag ? 'tag--active' : ''}`}
                                                 onClick={() => setActiveTag(tag)}
                                                 aria-pressed={activeTag === tag}
                                             >
