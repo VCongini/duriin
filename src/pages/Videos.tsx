@@ -1,4 +1,4 @@
-import React, { useDeferredValue, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useDeferredValue, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { videos } from '../content';
 import { Video } from '../content/types';
 import { formatDate } from '../utils/format';
@@ -15,10 +15,13 @@ export const Videos: React.FC = () => {
     const [query, setQuery] = useState('');
     const [sort, setSort] = useState<SortOrder>('newest');
     const [activeTag, setActiveTag] = useState<string | null>(null);
+    const [isTagMenuOpen, setTagMenuOpen] = useState(false);
     const [featuredId, setFeaturedId] = useState<string | null>(() => videos[0]?.id ?? null);
 
     const tags = useMemo(() => Array.from(new Set(videos.flatMap((v) => v.tags))).sort(), []);
     const deferredQuery = useDeferredValue(query);
+    const tagFilterId = useId();
+    const tagMenuRef = useRef<HTMLSpanElement>(null);
 
     const filtered = useMemo(() => {
         const normalizedQuery = deferredQuery.trim().toLowerCase();
@@ -61,6 +64,62 @@ export const Videos: React.FC = () => {
             ? '1 video'
             : `${filtered.length} videos${activeTag ? ` tagged ${activeTag}` : ''}`;
 
+    const tagOptions = useMemo(() => [{ value: null, label: 'All' }, ...tags.map((tag) => ({ value: tag, label: `#${tag}` }))], [tags]);
+
+    const closeTagMenu = useCallback(() => {
+        setTagMenuOpen(false);
+    }, []);
+
+    const handleTagSelect = useCallback(
+        (value: string | null) => {
+            setActiveTag(value);
+            closeTagMenu();
+        },
+        [closeTagMenu]
+    );
+
+    const handleTagTriggerKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>) => {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            setTagMenuOpen(true);
+        }
+    }, []);
+
+    const handleTagBlur = useCallback(
+        (event: React.FocusEvent<HTMLElement>) => {
+            if (tagMenuRef.current && !tagMenuRef.current.contains(event.relatedTarget as Node | null)) {
+                closeTagMenu();
+            }
+        },
+        [closeTagMenu]
+    );
+
+    useEffect(() => {
+        if (!isTagMenuOpen) {
+            return undefined;
+        }
+
+        const handleClickOutside = (event: MouseEvent) => {
+            if (tagMenuRef.current && !tagMenuRef.current.contains(event.target as Node)) {
+                closeTagMenu();
+            }
+        };
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                closeTagMenu();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [closeTagMenu, isTagMenuOpen]);
+
     return (
         <div className="u-page u-stack-lg">
             <section className="c-panel c-panel--primary u-stack">
@@ -99,30 +158,54 @@ export const Videos: React.FC = () => {
                             <option value="oldest">Oldest first</option>
                         </select>
                     </label>
-                    <div className="field field--tags">
-                        <span className="field__label">Tags</span>
-                        <div className="tag-grid" role="list">
+                    <label className="field field--tags" htmlFor={tagFilterId}>
+                        <span className="field__label">Filter by tag</span>
+                        {/* Tag filter: pills replaced by single dropdown for condensed UI (brutalist + modern themes supported) */}
+                        <span
+                            className="filters__dropdown"
+                            ref={tagMenuRef}
+                            onBlur={handleTagBlur}
+                            aria-label="Tag filter dropdown"
+                        >
                             <button
+                                id={tagFilterId}
                                 type="button"
-                                className={`tag tag--content ${activeTag === null ? 'tag--active' : ''}`}
-                                onClick={() => setActiveTag(null)}
-                                aria-pressed={activeTag === null}
+                                className="filters__select"
+                                aria-haspopup="listbox"
+                                aria-expanded={isTagMenuOpen}
+                                aria-controls={`${tagFilterId}-menu`}
+                                onClick={() => setTagMenuOpen((open) => !open)}
+                                onKeyDown={handleTagTriggerKeyDown}
                             >
-                                All
+                                <span className="filters__select-label">{activeTag ? `#${activeTag}` : "All"}</span>
+                                <span className="filters__select-icon" aria-hidden="true" />
                             </button>
-                            {tags.map((tag) => (
-                                <button
-                                    key={tag}
-                                    type="button"
-                                    className={`tag tag--content ${activeTag === tag ? 'tag--active' : ''}`}
-                                    onClick={() => setActiveTag(tag)}
-                                    aria-pressed={activeTag === tag}
+                            {isTagMenuOpen && (
+                                <div
+                                    id={`${tagFilterId}-menu`}
+                                    role="listbox"
+                                    aria-label="Tag options"
+                                    className="filters__dropdown-menu"
                                 >
-                                    #{tag}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                                    {tagOptions.map(({ value, label }) => {
+                                        const isActive = (!activeTag && value === null) || activeTag === value;
+                                        return (
+                                            <button
+                                                key={value ?? "all"}
+                                                type="button"
+                                                role="option"
+                                                aria-selected={isActive}
+                                                className={`filters__option ${isActive ? "is-active" : ""}`}
+                                                onClick={() => handleTagSelect(value)}
+                                            >
+                                                {label}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </span>
+                    </label>
                 </form>
                 <div className="filter-summary" role="status" aria-live="polite">
                     {resultText}
