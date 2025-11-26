@@ -54,8 +54,65 @@ body {
     outline-offset: var(--focus-outline-offset);
 }
 
+/* FIX: Make links accessible and obvious */
 a {
-    color: inherit;
+    --link-color: var(--color-accent-primary);
+    --link-hover-color: var(--color-accent-secondary);
+    --link-underline-color: color-mix(in srgb, var(--link-color) 75%, currentColor 25%);
+    --link-underline-hover-color: var(--link-hover-color);
+    --link-underline-thickness: 1px;
+    --link-underline-hover-thickness: 2px;
+    --link-underline-offset: 2px;
+
+    color: var(--link-color);
+    text-decoration: underline;
+    text-decoration-color: var(--link-underline-color);
+    text-decoration-thickness: var(--link-underline-thickness);
+    text-underline-offset: var(--link-underline-offset);
+    transition:
+        color 0.2s ease,
+        text-decoration-color 0.2s ease,
+        text-decoration-thickness 0.2s ease;
+}
+
+a:hover {
+    color: var(--link-hover-color);
+    text-decoration-color: var(--link-underline-hover-color);
+    text-decoration-thickness: var(--link-underline-hover-thickness);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+    border-radius: 2px;
+}
+
+/* For button-style links */
+a.button {
+    --link-button-text: var(--color-text-on-accent);
+
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-accent-primary);
+    color: var(--link-button-text);
+    text-decoration: none;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+a.button:hover {
+    background-color: var(--color-accent-secondary);
+    color: var(--link-button-text);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+a.button:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
 }
 
 img {

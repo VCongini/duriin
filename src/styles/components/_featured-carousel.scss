@@ -228,6 +228,9 @@
 }
 
 .featured-carousel__indicator {
+    --carousel-indicator-bg: rgba(255, 255, 255, 0.2);
+    --carousel-indicator-active-bg: var(--color-accent-section);
+
     --indicator-bar-width: 1.65rem;
     --indicator-bar-height: 0.35rem;
     min-width: var(--tap-target);
@@ -248,7 +251,7 @@
     width: var(--indicator-bar-width);
     height: var(--indicator-bar-height);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--carousel-indicator-bg);
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
@@ -257,8 +260,12 @@
 }
 
 .featured-carousel__indicator.is-active::after {
-    background: var(--color-accent-section);
+    background: var(--carousel-indicator-active-bg);
     transform: scaleX(1.1);
+}
+
+[data-theme-mode='light'] .featured-carousel__indicator {
+    --carousel-indicator-bg: rgba(15, 23, 42, 0.16);
 }
 
 @include respond(desktop) {
