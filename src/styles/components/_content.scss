@@ -495,8 +495,17 @@
     background: transparent;
     cursor: pointer;
     aspect-ratio: 16 / 9;
+    min-height: 14rem;
     overflow: hidden;
     position: relative;
+
+    @include respond(tablet) {
+        min-height: 15.5rem;
+    }
+
+    @include respond(desktop) {
+        min-height: 17rem;
+    }
 }
 
 .video-card__media img {

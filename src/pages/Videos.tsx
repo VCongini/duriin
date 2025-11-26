@@ -16,12 +16,15 @@ export const Videos: React.FC = () => {
     const [sort, setSort] = useState<SortOrder>('newest');
     const [activeTag, setActiveTag] = useState<string | null>(null);
     const [isTagMenuOpen, setTagMenuOpen] = useState(false);
+    const [isSortMenuOpen, setSortMenuOpen] = useState(false);
     const [featuredId, setFeaturedId] = useState<string | null>(() => videos[0]?.id ?? null);
 
     const tags = useMemo(() => Array.from(new Set(videos.flatMap((v) => v.tags))).sort(), []);
     const deferredQuery = useDeferredValue(query);
     const tagFilterId = useId();
     const tagMenuRef = useRef<HTMLSpanElement>(null);
+    const sortMenuRef = useRef<HTMLDivElement>(null);
+    const sortMenuId = useId();
 
     const filtered = useMemo(() => {
         const normalizedQuery = deferredQuery.trim().toLowerCase();
@@ -78,10 +81,22 @@ export const Videos: React.FC = () => {
         [closeTagMenu]
     );
 
+    const handleSortSelect = useCallback((value: SortOrder) => {
+        setSort(value);
+        setSortMenuOpen(false);
+    }, []);
+
     const handleTagTriggerKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
             event.preventDefault();
             setTagMenuOpen(true);
+        }
+    }, []);
+
+    const handleSortTriggerKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>) => {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            setSortMenuOpen(true);
         }
     }, []);
 
@@ -94,8 +109,14 @@ export const Videos: React.FC = () => {
         [closeTagMenu]
     );
 
+    const handleSortBlur = useCallback((event: React.FocusEvent<HTMLElement>) => {
+        if (sortMenuRef.current && !sortMenuRef.current.contains(event.relatedTarget as Node | null)) {
+            setSortMenuOpen(false);
+        }
+    }, []);
+
     useEffect(() => {
-        if (!isTagMenuOpen) {
+        if (!isTagMenuOpen && !isSortMenuOpen) {
             return undefined;
         }
 
@@ -103,11 +124,16 @@ export const Videos: React.FC = () => {
             if (tagMenuRef.current && !tagMenuRef.current.contains(event.target as Node)) {
                 closeTagMenu();
             }
+
+            if (sortMenuRef.current && !sortMenuRef.current.contains(event.target as Node)) {
+                setSortMenuOpen(false);
+            }
         };
 
         const handleEscape = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 closeTagMenu();
+                setSortMenuOpen(false);
             }
         };
 
@@ -118,7 +144,7 @@ export const Videos: React.FC = () => {
             document.removeEventListener('mousedown', handleClickOutside);
             document.removeEventListener('keydown', handleEscape);
         };
-    }, [closeTagMenu, isTagMenuOpen]);
+    }, [closeTagMenu, isSortMenuOpen, isTagMenuOpen]);
 
     return (
         <div className="u-page u-stack-lg">
@@ -153,10 +179,54 @@ export const Videos: React.FC = () => {
                     </label>
                     <label className="field">
                         <span className="field__label">Sort</span>
-                        <select value={sort} onChange={(e) => setSort(e.target.value as SortOrder)}>
-                            <option value="newest">Newest first</option>
-                            <option value="oldest">Oldest first</option>
-                        </select>
+                        <div
+                            className="filters__dropdown"
+                            ref={sortMenuRef}
+                            onBlur={handleSortBlur}
+                            aria-label="Sort dropdown"
+                        >
+                            <button
+                                type="button"
+                                className="filters__select"
+                                aria-haspopup="listbox"
+                                aria-expanded={isSortMenuOpen}
+                                aria-controls={`${sortMenuId}-menu`}
+                                onClick={() => setSortMenuOpen((open) => !open)}
+                                onKeyDown={handleSortTriggerKeyDown}
+                            >
+                                <span className="filters__select-label">
+                                    {sort === 'newest' ? 'Newest first' : 'Oldest first'}
+                                </span>
+                                <span className="filters__select-icon" aria-hidden="true" />
+                            </button>
+                            {isSortMenuOpen && (
+                                <div
+                                    id={`${sortMenuId}-menu`}
+                                    role="listbox"
+                                    aria-label="Sort options"
+                                    className="filters__dropdown-menu"
+                                >
+                                    <button
+                                        type="button"
+                                        role="option"
+                                        aria-selected={sort === 'newest'}
+                                        className={`filters__option ${sort === 'newest' ? 'is-active' : ''}`}
+                                        onClick={() => handleSortSelect('newest')}
+                                    >
+                                        Newest first
+                                    </button>
+                                    <button
+                                        type="button"
+                                        role="option"
+                                        aria-selected={sort === 'oldest'}
+                                        className={`filters__option ${sort === 'oldest' ? 'is-active' : ''}`}
+                                        onClick={() => handleSortSelect('oldest')}
+                                    >
+                                        Oldest first
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </label>
                     <label className="field field--tags" htmlFor={tagFilterId}>
                         <span className="field__label">Filter by tag</span>
@@ -303,6 +373,10 @@ export const Videos: React.FC = () => {
                     <div className="video-grid" role="list">
                         {gridVideos.map((video) => (
                             <article key={video.id} className="video-card" role="listitem">
+                                {/*
+                                 * Enhanced thumbnail sizing for better mobile prominence — image now uses full-width,
+                                 * larger min-height, object-fit: cover, theme compatible.
+                                 */}
                                 <button
                                     type="button"
                                     className="video-card__media"
