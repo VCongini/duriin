@@ -52,6 +52,15 @@
         linear-gradient(140deg, #f5f7fb 0%, #ffffff 50%, #eff4ff 100%);
     --shadow-brutalist: 0 15px 35px rgba(15, 23, 42, 0.15);
     --shadow-modern: 0 40px 80px rgba(15, 23, 42, 0.15);
+    --video-border-width-active: var(--video-border-width);
+    --video-active-outline: var(--panel-outline);
+    --video-active-title: #102041;
+    --video-active-surface: linear-gradient(160deg, rgba(82, 141, 255, 0.18), rgba(150, 190, 255, 0.14)),
+        color-mix(in srgb, var(--color-bg-panel) 60%, #edf3ff 40%);
+    --video-active-overlay: linear-gradient(150deg, rgba(110, 166, 255, 0.18), rgba(160, 196, 255, 0.12)),
+        radial-gradient(circle at 22% 18%, rgba(79, 70, 229, 0.08), transparent 46%),
+        radial-gradient(circle at 82% 14%, rgba(59, 130, 246, 0.12), transparent 52%);
+    --video-active-shadow: 0 16px 40px rgba(15, 23, 42, 0.14);
     --feature-card-shadow-modern: var(--shadow-modern);
     --feature-border-strong: var(--border-thin) solid var(--color-border-strong);
     --panel-radius: var(--radius-lg);

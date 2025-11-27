@@ -1,4 +1,12 @@
-import React, { useCallback, useDeferredValue, useEffect, useId, useMemo, useRef, useState } from 'react';
+import React, {
+    useCallback,
+    useDeferredValue,
+    useEffect,
+    useId,
+    useMemo,
+    useRef,
+    useState
+} from 'react';
 import { videos } from '../content';
 import { Video } from '../content/types';
 import { formatDate } from '../utils/format';
@@ -58,9 +66,8 @@ export const Videos: React.FC = () => {
     }, [filtered]);
 
     const featuredVideo = filtered.find((video) => video.id === featuredId) ?? filtered[0];
-    const gridVideos = featuredVideo
-        ? filtered.filter((video) => video.id !== featuredVideo.id)
-        : filtered;
+    const gridVideos = filtered;
+    const nextVideo = gridVideos.find((video) => video.id !== featuredVideo?.id);
 
     const resultText =
         filtered.length === 1
@@ -113,6 +120,10 @@ export const Videos: React.FC = () => {
         if (sortMenuRef.current && !sortMenuRef.current.contains(event.relatedTarget as Node | null)) {
             setSortMenuOpen(false);
         }
+    }, []);
+
+    const handleVideoSelect = useCallback((id: string) => {
+        setFeaturedId(id);
     }, []);
 
     useEffect(() => {
@@ -282,7 +293,14 @@ export const Videos: React.FC = () => {
                 </div>
 
                 {featuredVideo ? (
-                    <article className="video-spotlight">
+                    <article
+                        key={featuredVideo.id}
+                        className="video-spotlight"
+                        role="region"
+                        aria-live="polite"
+                        aria-atomic="false"
+                        aria-label="Selected video"
+                    >
                         <div className="video-spotlight__media">
                             {featuredVideo.platform === 'YouTube' && featuredVideo.embedUrl ? (
                                 <iframe
@@ -351,11 +369,11 @@ export const Videos: React.FC = () => {
                                 >
                                     Watch on {featuredVideo.platform}
                                 </a>
-                                {gridVideos.length ? (
+                                {nextVideo ? (
                                     <button
                                         type="button"
                                         className="btn btn--ghost"
-                                        onClick={() => setFeaturedId(gridVideos[0].id)}
+                                        onClick={() => handleVideoSelect(nextVideo.id)}
                                     >
                                         Next in queue
                                     </button>
@@ -371,8 +389,17 @@ export const Videos: React.FC = () => {
 
                 {gridVideos.length ? (
                     <div className="video-grid" role="list">
-                        {gridVideos.map((video) => (
-                            <article key={video.id} className="video-card" role="listitem">
+                        {gridVideos.map((video) => {
+                            const isActive = video.id === featuredId;
+
+                            return (
+                                <article
+                                    key={video.id}
+                                    className={`video-card ${isActive ? 'is-active' : ''}`}
+                                    role="listitem"
+                                    aria-current={isActive ? 'true' : undefined}
+                                    onClick={() => handleVideoSelect(video.id)}
+                                >
                                 {/*
                                  * Enhanced thumbnail sizing for better mobile prominence — image now uses full-width,
                                  * larger min-height, object-fit: cover, theme compatible.
@@ -380,8 +407,9 @@ export const Videos: React.FC = () => {
                                 <button
                                     type="button"
                                     className="video-card__media"
-                                    onClick={() => setFeaturedId(video.id)}
+                                    onClick={() => handleVideoSelect(video.id)}
                                     aria-label={`Preview ${video.title} in the player`}
+                                    aria-pressed={isActive}
                                 >
                                     {video.thumbnailUrl ? (
                                         <img src={video.thumbnailUrl} alt="" loading="lazy" />
@@ -399,7 +427,11 @@ export const Videos: React.FC = () => {
                                         </span>
                                     </div>
                                     <h3 className="video-card__title">
-                                        <button type="button" onClick={() => setFeaturedId(video.id)}>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleVideoSelect(video.id)}
+                                            aria-pressed={isActive}
+                                        >
                                             {video.title}
                                         </button>
                                     </h3>
@@ -435,7 +467,8 @@ export const Videos: React.FC = () => {
                                             <button
                                                 type="button"
                                                 className="btn btn--ghost"
-                                                onClick={() => setFeaturedId(video.id)}
+                                                onClick={() => handleVideoSelect(video.id)}
+                                                aria-pressed={isActive}
                                             >
                                                 Play in spotlight
                                             </button>
@@ -451,7 +484,8 @@ export const Videos: React.FC = () => {
                                     </div>
                                 </div>
                             </article>
-                        ))}
+                        );
+                        })}
                     </div>
                 ) : null}
             </section>

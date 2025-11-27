@@ -1,7 +1,9 @@
 @use '../utilities' as *;
 
 .header {
-    @include fluid-stack(column, var(--space-md), row, var(--space-lg), var(--space-xl));
+    display: flex;
+    flex-direction: column;
+    @include fluid-stack(column, var(--space-md), column, var(--space-lg), var(--space-xl));
     align-items: flex-start;
     justify-content: space-between;
     border: var(--panel-border-width) solid var(--color-border);
@@ -123,12 +125,13 @@
     @include fluid-stack(row, var(--space-sm), row, var(--space-md));
     flex-wrap: wrap;
     width: 100%;
+    align-self: stretch;
     align-items: stretch;
     text-transform: uppercase;
     letter-spacing: 0.15em;
 
     @include respond(tablet) {
-        width: auto;
+        width: 100%;
         justify-content: flex-end;
     }
 }
@@ -270,7 +273,7 @@
         padding: 0;
         border: none;
         box-shadow: none;
-        background: inherit;
+        background: transparent;
         margin-left: auto;
         margin-top: 0;
         max-width: none;
