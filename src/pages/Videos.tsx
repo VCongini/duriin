@@ -19,6 +19,37 @@ const sortVideos = (list: Video[], sort: SortOrder) =>
         return sort === 'newest' ? -diff : diff;
     });
 
+const createTeaser = (description: string, maxLength = 110) => {
+    const text = description?.trim();
+
+    if (!text) return '';
+
+    if (text.length <= maxLength) return text;
+
+    const clipped = text.slice(0, maxLength).trimEnd();
+    return clipped.replace(/[.,;:\-\s]+$/, '') + '…';
+};
+
+const getExternalCtaLabel = (platform: string) => platform;
+
+const formatRelativeDate = (iso: string) => {
+    const published = new Date(iso);
+    const now = new Date();
+    const diffDays = Math.max(0, Math.floor((now.getTime() - published.getTime()) / (1000 * 60 * 60 * 24)));
+
+    if (diffDays === 0) return 'Today';
+    if (diffDays < 7) return `${diffDays}d ago`;
+
+    const weeks = Math.floor(diffDays / 7);
+    if (weeks < 5) return `${weeks}w ago`;
+
+    const months = Math.floor(diffDays / 30);
+    if (months < 12) return `${months}mo ago`;
+
+    const years = Math.floor(diffDays / 365);
+    return `${years}y ago`;
+};
+
 export const Videos: React.FC = () => {
     const [query, setQuery] = useState('');
     const [sort, setSort] = useState<SortOrder>('newest');
@@ -68,6 +99,8 @@ export const Videos: React.FC = () => {
     const featuredVideo = filtered.find((video) => video.id === featuredId) ?? filtered[0];
     const gridVideos = filtered;
     const nextVideo = gridVideos.find((video) => video.id !== featuredVideo?.id);
+
+    const shouldShowStatus = (status?: string) => status && status.toLowerCase() !== 'live';
 
     const resultText =
         filtered.length === 1
@@ -323,11 +356,13 @@ export const Videos: React.FC = () => {
                         <div className="video-spotlight__body u-stack">
                             <div className="episode__header">
                                 <span className="episode__label">{featuredVideo.episode}</span>
-                                <span
-                                    className={`episode__status episode__status--${featuredVideo.status.toLowerCase()}`}
-                                >
-                                    {featuredVideo.status}
-                                </span>
+                                {shouldShowStatus(featuredVideo.status) ? (
+                                    <span
+                                        className={`episode__status episode__status--${featuredVideo.status.toLowerCase()}`}
+                                    >
+                                        {featuredVideo.status}
+                                    </span>
+                                ) : null}
                             </div>
                             <h2 className="video-spotlight__title u-text-heading-lg">{featuredVideo.title}</h2>
                             <div className="episode__meta">
@@ -392,6 +427,9 @@ export const Videos: React.FC = () => {
                         {gridVideos.map((video) => {
                             const isActive = video.id === featuredId;
 
+                            const teaser = createTeaser(video.description ?? video.title);
+                            const tagCount = video.tags?.length ?? 0;
+
                             return (
                                 <article
                                     key={video.id}
@@ -400,91 +438,75 @@ export const Videos: React.FC = () => {
                                     aria-current={isActive ? 'true' : undefined}
                                     onClick={() => handleVideoSelect(video.id)}
                                 >
-                                {/*
-                                 * Enhanced thumbnail sizing for better mobile prominence — image now uses full-width,
-                                 * larger min-height, object-fit: cover, theme compatible.
-                                 */}
-                                <button
-                                    type="button"
-                                    className="video-card__media"
-                                    onClick={() => handleVideoSelect(video.id)}
-                                    aria-label={`Preview ${video.title} in the player`}
-                                    aria-pressed={isActive}
-                                >
-                                    {video.thumbnailUrl ? (
-                                        <img src={video.thumbnailUrl} alt="" loading="lazy" />
-                                    ) : (
-                                        <div className="video-card__placeholder">{video.platform}</div>
-                                    )}
-                                </button>
-                                <div className="video-card__body u-stack">
-                                    <div className="episode__header">
-                                        <span className="episode__label">{video.episode}</span>
-                                        <span
-                                            className={`episode__status episode__status--${video.status.toLowerCase()}`}
-                                        >
-                                            {video.status}
-                                        </span>
-                                    </div>
-                                    <h3 className="video-card__title">
-                                        <button
-                                            type="button"
-                                            onClick={() => handleVideoSelect(video.id)}
-                                            aria-pressed={isActive}
-                                        >
-                                            {video.title}
-                                        </button>
-                                    </h3>
-                                    <p className="video-card__description u-text-body">{video.description}</p>
-                                    <div className="video-card__footer">
-                                        <div className="episode__meta">
+                                    {/* Video cards trimmed to preview mode; full metadata now exclusive to spotlight. */}
+                                    <button
+                                        type="button"
+                                        className="video-card__media"
+                                        onClick={() => handleVideoSelect(video.id)}
+                                        aria-label={`Preview ${video.title} in the player`}
+                                        aria-pressed={isActive}
+                                    >
+                                        {video.thumbnailUrl ? (
+                                            <img src={video.thumbnailUrl} alt="" loading="lazy" />
+                                        ) : (
+                                            <div className="video-card__placeholder">{video.platform}</div>
+                                        )}
+                                    </button>
+                                    <div className="video-card__body u-stack">
+                                        <div className="video-card__eyebrow">
                                             <span className="tag tag--platform">#{video.platform.toUpperCase()}</span>
-                                            <span className="tag tag--meta">{video.duration}</span>
-                                            <span className="tag tag--meta">
-                                                {formatDate(video.publishedAt, {
-                                                    month: 'short',
-                                                    day: '2-digit',
-                                                    year: 'numeric'
-                                                })}
-                                            </span>
-                                        </div>
-                                        <div className="episode__tags">
-                                            {video.tags.map((tag) => (
-                                                <button
-                                                    key={tag}
-                                                    type="button"
-                                                    className={`tag tag--content ${
-                                                        activeTag === tag ? 'tag--active' : ''
-                                                    }`}
-                                                    onClick={() => setActiveTag(tag)}
-                                                    aria-pressed={activeTag === tag}
+                                            {shouldShowStatus(video.status) ? (
+                                                <span
+                                                    className={`episode__status episode__status--${video.status.toLowerCase()}`}
                                                 >
-                                                    #{tag}
-                                                </button>
-                                            ))}
+                                                    {video.status}
+                                                </span>
+                                            ) : null}
+                                            {video.duration ? <span className="tag tag--meta">{video.duration}</span> : null}
+                                            <span className="tag tag--meta">{formatRelativeDate(video.publishedAt)}</span>
                                         </div>
-                                        <div className="video-card__actions">
+                                        <h3 className="video-card__title">
                                             <button
                                                 type="button"
-                                                className="btn btn--ghost"
                                                 onClick={() => handleVideoSelect(video.id)}
                                                 aria-pressed={isActive}
                                             >
-                                                Play in spotlight
+                                                {video.title}
                                             </button>
-                                            <a
-                                                href={video.url}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="page-cta__secondary"
-                                            >
-                                                Open on {video.platform}
-                                            </a>
+                                        </h3>
+                                        <p className="video-card__teaser u-text-body">{teaser}</p>
+                                        <div className="video-card__footer">
+                                            {tagCount > 0 ? (
+                                                <div className="video-card__tag-counter" aria-label={`${tagCount} tags`}>
+                                                    <span className="video-card__tag-count">{tagCount}</span>
+                                                    <div className="video-card__tag-popover" role="presentation">
+                                                        <div className="video-card__tag-popover-inner">
+                                                            <div className="video-card__tag-popover-title">Tags</div>
+                                                            <div className="video-card__tag-grid">
+                                                                {video.tags.map((tag) => (
+                                                                    <span key={tag} className="tag tag--content">
+                                                                        #{tag}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : null}
+                                            <div className="video-card__actions">
+                                                <a
+                                                    href={video.url}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="page-cta__secondary"
+                                                >
+                                                    {getExternalCtaLabel(video.platform)}
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </article>
-                        );
+                                </article>
+                            );
                         })}
                     </div>
                 ) : null}
