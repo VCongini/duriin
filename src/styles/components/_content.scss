@@ -161,7 +161,7 @@
 }
 
 .episode {
-    border: 1px solid var(--panel-outline);
+    border: var(--video-border-width) solid var(--panel-outline);
     border-radius: calc(var(--panel-radius) - 0.25rem);
     @include responsive-space(padding, var(--space-md), var(--space-lg));
     display: flex;
@@ -215,7 +215,7 @@
 .post {
     --card-padding: 1.5rem;
     --card-block-gap: 1rem;
-    border: 1px solid var(--panel-outline);
+    border: var(--video-border-width) solid var(--panel-outline);
     border-radius: calc(var(--panel-radius) - 0.25rem);
     padding: var(--card-padding);
     background: var(--color-bg-muted);
@@ -409,10 +409,11 @@
     grid-template-columns: 1fr;
     gap: clamp(var(--space-md), 3vw, var(--space-xl));
     padding: clamp(var(--space-lg), 3vw, var(--space-xl));
-    border: 1px solid var(--panel-outline);
+    border: var(--video-border-width) solid var(--panel-outline);
     border-radius: var(--panel-radius);
     background: var(--color-bg-muted);
     box-shadow: var(--panel-shadow);
+    animation: spotlightFade 0.4s ease;
 }
 
 @include respond(tablet) {
@@ -429,6 +430,7 @@
     border-radius: calc(var(--panel-radius) - 0.35rem);
     background: linear-gradient(145deg, var(--color-bg-panel), var(--color-bg-muted));
     box-shadow: inset 0 0 0 1px var(--panel-outline);
+    animation: spotlightFade 0.4s ease;
 }
 
 .video-spotlight__media iframe,
@@ -479,13 +481,48 @@
     --card-block-gap: 1rem;
     display: flex;
     flex-direction: column;
+    position: relative;
+    isolation: isolate;
     background: var(--color-bg-panel);
-    border: 1px solid var(--panel-outline);
+    border: var(--video-border-width) solid var(--panel-outline);
     border-radius: var(--panel-radius);
     overflow: hidden;
     box-shadow: var(--panel-shadow);
     cursor: pointer;
-    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 200ms ease,
+        border-color 200ms ease;
+    will-change: transform, box-shadow;
+}
+
+.video-card.is-active {
+    border: var(--video-border-width-active) solid var(--video-active-outline);
+    box-shadow: var(--video-active-shadow), var(--panel-shadow);
+    background: var(--video-active-surface);
+    transform: translateY(-2px) scale(1.03);
+}
+
+.video-card.is-active:hover,
+.video-card.is-active:focus-within {
+    border-color: var(--video-active-outline);
+    box-shadow: var(--video-active-shadow), var(--panel-shadow);
+}
+
+.video-card.is-active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--video-active-overlay);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.video-card.is-active .video-card__media img {
+    transform: scale(1.02);
+}
+
+.video-card.is-active .video-card__title button {
+    color: var(--video-active-title);
 }
 
 .video-card__media {
@@ -498,6 +535,7 @@
     min-height: 14rem;
     overflow: hidden;
     position: relative;
+    z-index: 1;
 
     @include respond(tablet) {
         min-height: 15.5rem;
@@ -534,6 +572,8 @@
     flex-direction: column;
     gap: var(--card-block-gap);
     height: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 .video-card__title {
@@ -572,11 +612,16 @@
     gap: var(--space-sm);
 }
 
-.video-card:hover,
-.video-card:focus-within {
+.video-card:not(.is-active):hover,
+.video-card:not(.is-active):focus-within {
     transform: translateY(-4px);
     border-color: var(--color-border-strong);
     box-shadow: var(--panel-shadow), 0 18px 40px rgba(0, 0, 0, 0.32);
+}
+
+.video-card.is-active:hover,
+.video-card.is-active:focus-within {
+    transform: scale(1.02);
 }
 
 .video-card:hover .video-card__media img,
@@ -605,6 +650,23 @@
     .video-card:hover .video-card__media img,
     .video-card:focus-within .video-card__media img {
         transform: none;
+    }
+
+    .video-spotlight,
+    .video-spotlight__media {
+        animation: none;
+    }
+}
+
+@keyframes spotlightFade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

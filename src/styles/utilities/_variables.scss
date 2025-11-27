@@ -102,6 +102,14 @@ $tap-target: $button-height-md;
     --app-bg-image: radial-gradient(circle at top, #111827 0, #050608 55%);
     --shadow-brutalist: 0 0 0 1px rgba(95, 240, 255, 0.35), 0.45rem 0.45rem 0 0 rgba(0, 0, 0, 0.95);
     --shadow-modern: 0 30px 80px rgba(5, 6, 24, 0.9);
+    --video-border-width: var(--border-thin);
+    --video-border-width-active: var(--border-base);
+    --video-active-outline: var(--color-accent);
+    --video-active-title: var(--video-active-outline);
+    --video-active-surface: var(--color-bg-panel);
+    --video-active-overlay: radial-gradient(circle at 20% 20%, rgba(22, 242, 214, 0.12), transparent 35%),
+        radial-gradient(circle at 80% 10%, rgba(78, 163, 255, 0.18), transparent 40%);
+    --video-active-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
     --panel-radius: var(--radius-none);
     --panel-border-width: var(--border-base);
     --panel-outline: var(--color-border);
