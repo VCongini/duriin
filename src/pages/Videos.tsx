@@ -7,9 +7,11 @@ import React, {
     useRef,
     useState
 } from 'react';
+import { VideoCard } from '../components/videos/VideoCard';
 import { videos } from '../content';
 import { Video } from '../content/types';
 import { formatDate } from '../utils/format';
+import { shouldShowStatus } from '../components/videos/VideoCard/videoCard.utils';
 
 type SortOrder = 'newest' | 'oldest';
 
@@ -18,37 +20,6 @@ const sortVideos = (list: Video[], sort: SortOrder) =>
         const diff = new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
         return sort === 'newest' ? -diff : diff;
     });
-
-const createTeaser = (description: string, maxLength = 110) => {
-    const text = description?.trim();
-
-    if (!text) return '';
-
-    if (text.length <= maxLength) return text;
-
-    const clipped = text.slice(0, maxLength).trimEnd();
-    return clipped.replace(/[.,;:\-\s]+$/, '') + '…';
-};
-
-const getExternalCtaLabel = (platform: string) => platform;
-
-const formatRelativeDate = (iso: string) => {
-    const published = new Date(iso);
-    const now = new Date();
-    const diffDays = Math.max(0, Math.floor((now.getTime() - published.getTime()) / (1000 * 60 * 60 * 24)));
-
-    if (diffDays === 0) return 'Today';
-    if (diffDays < 7) return `${diffDays}d ago`;
-
-    const weeks = Math.floor(diffDays / 7);
-    if (weeks < 5) return `${weeks}w ago`;
-
-    const months = Math.floor(diffDays / 30);
-    if (months < 12) return `${months}mo ago`;
-
-    const years = Math.floor(diffDays / 365);
-    return `${years}y ago`;
-};
 
 export const Videos: React.FC = () => {
     const [query, setQuery] = useState('');
@@ -99,8 +70,6 @@ export const Videos: React.FC = () => {
     const featuredVideo = filtered.find((video) => video.id === featuredId) ?? filtered[0];
     const gridVideos = filtered;
     const nextVideo = gridVideos.find((video) => video.id !== featuredVideo?.id);
-
-    const shouldShowStatus = (status?: string) => status && status.toLowerCase() !== 'live';
 
     const resultText =
         filtered.length === 1
@@ -427,85 +396,13 @@ export const Videos: React.FC = () => {
                         {gridVideos.map((video) => {
                             const isActive = video.id === featuredId;
 
-                            const teaser = createTeaser(video.description ?? video.title);
-                            const tagCount = video.tags?.length ?? 0;
-
                             return (
-                                <article
+                                <VideoCard
                                     key={video.id}
-                                    className={`video-card ${isActive ? 'is-active' : ''}`}
-                                    role="listitem"
-                                    aria-current={isActive ? 'true' : undefined}
-                                    onClick={() => handleVideoSelect(video.id)}
-                                >
-                                    {/* Video cards trimmed to preview mode; full metadata now exclusive to spotlight. */}
-                                    <button
-                                        type="button"
-                                        className="video-card__media"
-                                        onClick={() => handleVideoSelect(video.id)}
-                                        aria-label={`Preview ${video.title} in the player`}
-                                        aria-pressed={isActive}
-                                    >
-                                        {video.thumbnailUrl ? (
-                                            <img src={video.thumbnailUrl} alt="" loading="lazy" />
-                                        ) : (
-                                            <div className="video-card__placeholder">{video.platform}</div>
-                                        )}
-                                    </button>
-                                    <div className="video-card__body u-stack">
-                                        <div className="video-card__eyebrow">
-                                            <span className="tag tag--platform">#{video.platform.toUpperCase()}</span>
-                                            {shouldShowStatus(video.status) ? (
-                                                <span
-                                                    className={`episode__status episode__status--${video.status.toLowerCase()}`}
-                                                >
-                                                    {video.status}
-                                                </span>
-                                            ) : null}
-                                            {video.duration ? <span className="tag tag--meta">{video.duration}</span> : null}
-                                            <span className="tag tag--meta">{formatRelativeDate(video.publishedAt)}</span>
-                                        </div>
-                                        <h3 className="video-card__title">
-                                            <button
-                                                type="button"
-                                                onClick={() => handleVideoSelect(video.id)}
-                                                aria-pressed={isActive}
-                                            >
-                                                {video.title}
-                                            </button>
-                                        </h3>
-                                        <p className="video-card__teaser u-text-body">{teaser}</p>
-                                        <div className="video-card__footer">
-                                            {tagCount > 0 ? (
-                                                <div className="video-card__tag-counter" aria-label={`${tagCount} tags`}>
-                                                    <span className="video-card__tag-count">{tagCount}</span>
-                                                    <div className="video-card__tag-popover" role="presentation">
-                                                        <div className="video-card__tag-popover-inner">
-                                                            <div className="video-card__tag-popover-title">Tags</div>
-                                                            <div className="video-card__tag-grid">
-                                                                {video.tags.map((tag) => (
-                                                                    <span key={tag} className="tag tag--content">
-                                                                        #{tag}
-                                                                    </span>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ) : null}
-                                            <div className="video-card__actions">
-                                                <a
-                                                    href={video.url}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="page-cta__secondary"
-                                                >
-                                                    {getExternalCtaLabel(video.platform)}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
+                                    video={video}
+                                    isActive={isActive}
+                                    onSelect={handleVideoSelect}
+                                />
                             );
                         })}
                     </div>
