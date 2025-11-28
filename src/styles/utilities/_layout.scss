@@ -2,9 +2,9 @@
 
 /* Page/layout utilities keep content readable on both themes */
 .u-page {
-    width: min(100%, 72rem);
+    width: min(100%, 78rem);
     margin-inline: auto;
-    padding-inline: clamp(var(--space-md), 4vw, var(--space-xl));
+    padding-inline: clamp(var(--space-sm), 3vw, var(--space-xl));
 }
 
 .u-readable {
