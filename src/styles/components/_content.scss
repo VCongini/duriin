@@ -591,6 +591,13 @@
     font-size: inherit;
 }
 
+.video-card__meta {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+}
+
 .video-card__title {
     margin: 0;
     font-size: clamp(1.1rem, 3vw, 1.35rem);
@@ -697,7 +704,8 @@
 }
 
 .video-card__tag-counter:hover .video-card__tag-popover,
-.video-card__tag-counter:focus-within .video-card__tag-popover {
+.video-card__tag-counter:focus-within .video-card__tag-popover,
+.video-card__tag-counter.is-open .video-card__tag-popover {
     opacity: 1;
     transform: translate(10px, -50%);
 }
