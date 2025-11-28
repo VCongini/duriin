@@ -2,7 +2,7 @@
 
 /* Page/layout utilities keep content readable on both themes */
 .u-page {
-    width: min(100%, 78rem);
+    width: min(100%, 88rem);
     margin-inline: auto;
     padding-inline: clamp(var(--space-sm), 3vw, var(--space-xl));
 }

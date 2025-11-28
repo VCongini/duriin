@@ -1,19 +1,19 @@
 @use '../utilities';
 
 [data-theme-layout='modern'][data-theme-mode='light'] {
-    --color-bg-page: #f5f7fb;
-    --color-bg-muted: rgba(249, 250, 255, 0.85);
-    --color-surface: rgba(255, 255, 255, 0.85);
-    --color-surface-alt: rgba(244, 248, 255, 0.85);
-    --color-bg-panel: var(--color-surface);
-    --color-border: rgba(15, 23, 42, 0.08);
-    --color-border-strong: rgba(15, 23, 42, 0.4);
+    --color-bg-page: #f7f8fc;
+    --color-bg-muted: rgba(255, 255, 255, 0.82);
+    --color-surface: rgba(255, 255, 255, 0.9);
+    --color-surface-alt: rgba(243, 246, 255, 0.94);
+    --color-bg-panel: color-mix(in srgb, var(--color-surface) 82%, #f3f6ff 18%);
+    --color-border: rgba(12, 20, 40, 0.06);
+    --color-border-strong: rgba(12, 20, 40, 0.38);
     --color-text-primary: #0b1220;
-    --color-text-secondary: #4b5569;
-    --color-text-tertiary: #6b7280;
+    --color-text-secondary: #4a5365;
+    --color-text-tertiary: #6f7584;
     --color-text-on-accent: #f8fafc;
-    --color-accent-primary: #2563eb;
-    --color-accent-secondary: #7c3aed;
+    --color-accent-primary: #0a84ff;
+    --color-accent-secondary: #6f7cff;
     --color-accent: var(--color-accent-primary);
     --color-accent-section: var(--color-accent-primary);
     --color-danger: #db2777;
@@ -22,14 +22,14 @@
     --color-status-live: #2563eb;
     --color-status-premiere: #db2777;
     --color-status-draft: #7c3aed;
-    --tag-base-bg: rgba(15, 23, 42, 0.05);
-    --tag-base-border: rgba(15, 23, 42, 0.12);
+    --tag-base-bg: rgba(12, 20, 40, 0.04);
+    --tag-base-border: rgba(12, 20, 40, 0.12);
     --tag-base-text: var(--color-text-secondary);
     --tag-platform-bg: var(--color-accent-primary);
     --tag-platform-border: var(--color-accent-primary);
     --tag-platform-text: #0b1220;
-    --tag-meta-bg: rgba(15, 23, 42, 0.02);
-    --tag-meta-border: rgba(15, 23, 42, 0.16);
+    --tag-meta-bg: rgba(12, 20, 40, 0.03);
+    --tag-meta-border: rgba(12, 20, 40, 0.12);
     --tag-meta-text: var(--color-text-secondary);
     --tag-content-bg: rgba(37, 99, 235, 0.12);
     --tag-content-border: rgba(37, 99, 235, 0.28);
@@ -37,35 +37,35 @@
     --tag-content-active-bg: var(--color-accent-primary);
     --tag-content-active-text: #0b1220;
     --tag-focus-outline: var(--color-accent-secondary);
-    --theme-control-bg: rgba(255, 255, 255, 0.85);
-    --theme-control-border: rgba(15, 23, 42, 0.15);
+    --theme-control-bg: rgba(255, 255, 255, 0.92);
+    --theme-control-border: rgba(12, 20, 40, 0.12);
     --theme-control-muted: var(--color-text-tertiary);
-    --theme-control-active: rgba(37, 99, 235, 0.15);
+    --theme-control-active: rgba(10, 132, 255, 0.16);
     --theme-control-active-text: #0b1220;
-    --skeleton-base: rgba(15, 23, 42, 0.08);
-    --skeleton-highlight: rgba(59, 130, 246, 0.25);
-    --button-ghost-bg: rgba(15, 23, 42, 0.05);
-    --button-ghost-hover: rgba(15, 23, 42, 0.1);
+    --skeleton-base: rgba(12, 20, 40, 0.08);
+    --skeleton-highlight: rgba(10, 132, 255, 0.25);
+    --button-ghost-bg: rgba(12, 20, 40, 0.04);
+    --button-ghost-hover: rgba(12, 20, 40, 0.08);
     --button-ghost-text: #0b1220;
-    --app-bg-image: radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.22), transparent 45%),
-        radial-gradient(circle at 90% 0%, rgba(59, 130, 246, 0.28), transparent 40%),
-        linear-gradient(140deg, #f5f7fb 0%, #ffffff 50%, #eff4ff 100%);
-    --shadow-brutalist: 0 15px 35px rgba(15, 23, 42, 0.15);
-    --shadow-modern: 0 40px 80px rgba(15, 23, 42, 0.15);
+    --app-bg-image: radial-gradient(circle at 18% 18%, rgba(129, 140, 248, 0.22), transparent 36%),
+        radial-gradient(circle at 86% 4%, rgba(10, 132, 255, 0.32), transparent 42%),
+        linear-gradient(150deg, #f9fbff 0%, #eef2ff 36%, #f6f8ff 100%);
+    --shadow-brutalist: 0 18px 40px rgba(12, 20, 40, 0.12);
+    --shadow-modern: 0 38px 80px rgba(12, 20, 40, 0.14);
     --video-border-width-active: var(--video-border-width);
     --video-active-outline: var(--panel-outline);
     --video-active-title: #102041;
-    --video-active-surface: linear-gradient(160deg, rgba(82, 141, 255, 0.18), rgba(150, 190, 255, 0.14)),
-        color-mix(in srgb, var(--color-bg-panel) 60%, #edf3ff 40%);
-    --video-active-overlay: linear-gradient(150deg, rgba(110, 166, 255, 0.18), rgba(160, 196, 255, 0.12)),
-        radial-gradient(circle at 22% 18%, rgba(79, 70, 229, 0.08), transparent 46%),
-        radial-gradient(circle at 82% 14%, rgba(59, 130, 246, 0.12), transparent 52%);
+    --video-active-surface: linear-gradient(165deg, rgba(10, 132, 255, 0.16), rgba(111, 124, 255, 0.1)),
+        color-mix(in srgb, var(--color-bg-panel) 65%, #e9f1ff 35%);
+    --video-active-overlay: linear-gradient(145deg, rgba(10, 132, 255, 0.16), rgba(129, 140, 248, 0.12)),
+        radial-gradient(circle at 22% 18%, rgba(111, 124, 255, 0.12), transparent 46%),
+        radial-gradient(circle at 82% 14%, rgba(10, 132, 255, 0.12), transparent 52%);
     --video-active-shadow: 0 16px 40px rgba(15, 23, 42, 0.14);
     --feature-card-shadow-modern: var(--shadow-modern);
     --feature-border-strong: var(--border-thin) solid var(--color-border-strong);
     --panel-radius: var(--radius-lg);
-    --panel-border-width: var(--border-thin);
-    --panel-outline: rgba(15, 23, 42, 0.08);
+    --panel-border-width: 0;
+    --panel-outline: transparent;
     --panel-shadow: var(--shadow-modern);
     --button-border-radius: var(--radius-pill);
     --hero-outline-color: rgba(37, 99, 235, 0.28);

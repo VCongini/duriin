@@ -512,6 +512,7 @@
     content: '';
     position: absolute;
     inset: 0;
+    border-radius: inherit;
     background: var(--video-active-overlay);
     pointer-events: none;
     z-index: 0;
