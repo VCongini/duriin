@@ -404,6 +404,25 @@
     border-radius: var(--radius-none);
 }
 
+// Mobile fix: ensure video cards and page container use full responsive width with no horizontal overflow.
+.videos-page {
+    width: 100%;
+    padding-inline: clamp(var(--space-sm), 3vw, var(--space-lg));
+
+    .c-panel {
+        width: 100%;
+        max-width: min(100%, 88rem);
+        margin-inline: auto;
+        padding-inline: clamp(var(--space-sm), 4vw, var(--space-xl));
+    }
+
+    .video-spotlight,
+    .video-grid {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
 .video-spotlight {
     display: grid;
     grid-template-columns: 1fr;
@@ -414,6 +433,7 @@
     background: var(--color-bg-muted);
     box-shadow: var(--panel-shadow);
     animation: spotlightFade 0.4s ease;
+    min-width: 0;
 }
 
 @include respond(tablet) {
@@ -453,6 +473,13 @@
     letter-spacing: 0.12em;
 }
 
+.video-spotlight__body {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--space-sm), 1vw, var(--space-lg));
+    min-width: 0;
+}
+
 .video-spotlight__title {
     margin: 0;
 }
@@ -474,6 +501,10 @@
         repeat(auto-fit, minmax(18rem, 1fr))
     );
     gap: clamp(var(--space-md), 3vw, var(--space-xl));
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+    padding-inline: clamp(var(--space-sm), 3vw, var(--space-xl));
 }
 
 .video-card {
@@ -493,6 +524,9 @@
         box-shadow 200ms ease,
         border-color 200ms ease;
     will-change: transform, box-shadow;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .video-card.is-active {
@@ -576,6 +610,7 @@
     height: 100%;
     position: relative;
     z-index: 1;
+    min-width: 0;
 }
 
 .video-card__eyebrow {
