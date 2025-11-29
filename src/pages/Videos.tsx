@@ -160,7 +160,7 @@ export const Videos: React.FC = () => {
     }, [closeTagMenu, isSortMenuOpen, isTagMenuOpen]);
 
     return (
-        <div className="u-page u-stack-lg">
+        <div className="u-page u-stack-lg videos-page">
             <section className="c-panel c-panel--primary u-stack">
                 <p className="c-panel__label u-text-caption">Archive</p>
                 <h1 className="c-panel__title u-text-heading-xl">Videos</h1>
