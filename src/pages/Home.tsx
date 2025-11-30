@@ -1,4 +1,5 @@
 import React, { Suspense, lazy, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Hero } from '../components/Hero';
 import { featuredTopics, posts, videos } from '../content';
 import { formatDate } from '../utils/format';
@@ -67,6 +68,11 @@ export const Home: React.FC = () => {
                     <p className="c-section-header__label">Blog + Updates</p>
                     <h2 className="c-section-header__title">Latest posts</h2>
                 </header>
+                <div className="page-cta">
+                    <Link className="page-cta__secondary" to="/blog">
+                        View all posts
+                    </Link>
+                </div>
                 <ul className="post-list">
                     {latestPosts.map((post) => (
                         <li key={post.id} className="post">

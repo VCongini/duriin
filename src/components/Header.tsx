@@ -44,6 +44,12 @@ const HeaderComponent: React.FC = () => {
                             Videos
                         </NavLink>
                         <NavLink
+                            to="/blog"
+                            className={({ isActive }) => `header__link ${isActive ? 'header__link--active' : ''}`}
+                        >
+                            Blog
+                        </NavLink>
+                        <NavLink
                             to="/about"
                             className={({ isActive }) => `header__link ${isActive ? 'header__link--active' : ''}`}
                         >

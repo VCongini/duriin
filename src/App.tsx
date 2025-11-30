@@ -9,6 +9,7 @@ import { ThemeProvider, useTheme } from './theme/ThemeContext';
 // the Home experience and shared chrome.
 const Videos = lazy(() => import('./pages/Videos').then((module) => ({ default: module.Videos })));
 const About = lazy(() => import('./pages/About').then((module) => ({ default: module.About })));
+const Blog = lazy(() => import('./pages/Blog').then((module) => ({ default: module.Blog })));
 
 const AppShell: React.FC = () => {
     const { mode, layout } = useTheme();
@@ -26,6 +27,7 @@ const AppShell: React.FC = () => {
                 >
                     <Routes>
                         <Route path="/" element={<Home />} />
+                        <Route path="/blog" element={<Blog />} />
                         <Route path="/videos" element={<Videos />} />
                         <Route path="/about" element={<About />} />
                     </Routes>
