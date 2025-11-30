@@ -1,29 +1,21 @@
-import React, { memo, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { memo } from 'react';
+import { NavLink } from 'react-router-dom';
 import onlineIcon from '../assets/icons/online.svg?raw';
 import offlineIcon from '../assets/icons/offline.svg?raw';
 import { ThemeSettings } from './ThemeSettings';
 
 const HeaderComponent: React.FC = () => {
-    const location = useLocation();
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const isActive = (path: string) => (location.pathname === path ? 'header__link--active' : '');
-
     const isOnline = true;
 
-    useEffect(() => {
-        setIsSettingsOpen(false);
-    }, [location.pathname]);
-
     return (
-        <header className={`header ${isSettingsOpen ? 'is-settings-open' : ''}`}>
+        <header className="header">
             <a href="#main" className="skip-link">
                 Skip to main content
             </a>
-            <div className="header__top">
-                <div className="header__left">
+            <div className="header__primary">
+                <div className="header__brand" aria-live="polite" role="status">
                     <span className="header__logo">DURIIN</span>
-                    <div className="header__status" aria-live="polite" role="status">
+                    <div className="header__status">
                         <span
                             className={`header__status-light header__status-light--${isOnline ? 'online' : 'offline'}`}
                             aria-label={isOnline ? 'Online' : 'Offline'}
@@ -36,70 +28,33 @@ const HeaderComponent: React.FC = () => {
                         />
                     </div>
                 </div>
-                <div className="header__actions">
-                    <button
-                        type="button"
-                        className={`header__menu-toggle ${isSettingsOpen ? 'is-open' : ''}`}
-                        aria-expanded={isSettingsOpen}
-                        aria-controls="header-theme-settings"
-                        onClick={() => setIsSettingsOpen((open) => !open)}
-                    >
-                        <span className="sr-only">Toggle theme settings</span>
-                        <svg
-                            className="header__menu-icon"
-                            width="22"
-                            height="22"
-                            viewBox="0 0 24 24"
-                            role="img"
-                            aria-hidden="true"
-                            focusable="false"
+                <div className="header__nav-controls">
+                    <nav className="header__nav" aria-label="Primary">
+                        <NavLink
+                            to="/"
+                            end
+                            className={({ isActive }) => `header__link ${isActive ? 'header__link--active' : ''}`}
                         >
-                            <rect
-                                className="header__menu-icon-bar header__menu-icon-bar--top"
-                                x="4"
-                                y="7"
-                                width="16"
-                                height="2"
-                                rx="1"
-                            />
-                            <rect
-                                className="header__menu-icon-bar header__menu-icon-bar--middle"
-                                x="4"
-                                y="11"
-                                width="16"
-                                height="2"
-                                rx="1"
-                            />
-                            <rect
-                                className="header__menu-icon-bar header__menu-icon-bar--bottom"
-                                x="4"
-                                y="15"
-                                width="16"
-                                height="2"
-                                rx="1"
-                            />
-                        </svg>
-                    </button>
-                    <div
-                        id="header-theme-settings"
-                        className={`header__settings ${isSettingsOpen ? 'is-open' : ''}`}
-                        aria-live="polite"
-                    >
+                            Home
+                        </NavLink>
+                        <NavLink
+                            to="/videos"
+                            className={({ isActive }) => `header__link ${isActive ? 'header__link--active' : ''}`}
+                        >
+                            Videos
+                        </NavLink>
+                        <NavLink
+                            to="/about"
+                            className={({ isActive }) => `header__link ${isActive ? 'header__link--active' : ''}`}
+                        >
+                            About
+                        </NavLink>
+                    </nav>
+                    <div className="header__controls" aria-label="Theme and layout settings">
                         <ThemeSettings />
                     </div>
                 </div>
             </div>
-            <nav className="header__nav" aria-label="Primary">
-                <Link to="/" className={`header__link ${isActive('/')}`}>
-                    Home
-                </Link>
-                <Link to="/videos" className={`header__link ${isActive('/videos')}`}>
-                    Videos
-                </Link>
-                <Link to="/about" className={`header__link ${isActive('/about')}`}>
-                    About
-                </Link>
-            </nav>
         </header>
     );
 };
