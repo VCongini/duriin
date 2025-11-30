@@ -7,6 +7,7 @@
     --color-surface-alt: #161a2d;
     --color-bg-panel: var(--color-surface);
     --color-border: #272b3e;
+    --color-border-subtle: rgba(95, 240, 255, 0.24);
     --color-border-strong: #5ff0ff;
     --color-text-primary: #f5f8ff;
     --color-text-secondary: #cbd5e1;
@@ -48,23 +49,24 @@
     --button-ghost-hover: rgba(255, 255, 255, 0.08);
     --button-ghost-text: var(--color-text-primary);
     --grid-line-color: 95, 240, 255;
-    --grid-line-opacity: 0.12;
-    --app-bg-image: repeating-linear-gradient(
-            to right,
-            rgba(var(--grid-line-color), calc(var(--grid-line-opacity) * 0.6)) 0,
-            rgba(var(--grid-line-color), calc(var(--grid-line-opacity) * 0.6)) 1px,
-            rgba(var(--grid-line-color), var(--grid-line-opacity)) 1px,
-            rgba(var(--grid-line-color), var(--grid-line-opacity)) 42px
-        ),
-        radial-gradient(circle at top, #111827 0, #050608 55%);
-    --shadow-brutalist: 0 0 0 1px rgba(95, 240, 255, 0.35), 0.45rem 0.45rem 0 0 rgba(0, 0, 0, 0.95);
+    --grid-line-opacity: 0.06;
+    --app-bg-image: radial-gradient(circle at 14% 18%, rgba(22, 242, 214, 0.14), transparent 36%),
+        radial-gradient(circle at 82% 10%, rgba(78, 163, 255, 0.12), transparent 42%),
+        linear-gradient(160deg, #05070f 0%, #0a0f1d 55%, #03050d 100%);
+    --shadow-brutalist: none;
     --shadow-modern: 0 30px 80px rgba(5, 6, 24, 0.9);
+    --page-section-bg: transparent;
+    --page-section-border: var(--color-border-subtle);
+    --page-section-shadow: none;
+    --page-card-bg: var(--color-bg-muted);
+    --page-card-border: var(--color-border);
+    --page-card-shadow: none;
     --video-border-width: var(--border-base);
     --video-border-width-active: var(--border-thick);
     --video-active-outline: #ff2bd0;
     --video-active-surface: var(--color-bg-panel);
     --video-active-overlay: transparent;
-    --video-active-shadow: var(--shadow-brutalist);
+    --video-active-shadow: none;
     --feature-card-shadow-brutalist: none;
     --feature-card-shadow-modern: var(--shadow-modern);
     --feature-border-strong: 3px solid var(--color-border-strong);

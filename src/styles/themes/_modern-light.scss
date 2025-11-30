@@ -7,6 +7,7 @@
     --color-surface-alt: rgba(243, 246, 255, 0.94);
     --color-bg-panel: color-mix(in srgb, var(--color-surface) 82%, #f3f6ff 18%);
     --color-border: rgba(12, 20, 40, 0.06);
+    --color-border-subtle: rgba(12, 20, 40, 0.12);
     --color-border-strong: rgba(12, 20, 40, 0.38);
     --color-text-primary: #0b1220;
     --color-text-secondary: #4a5365;
@@ -52,6 +53,12 @@
         linear-gradient(150deg, #f9fbff 0%, #eef2ff 36%, #f6f8ff 100%);
     --shadow-brutalist: 0 18px 40px rgba(12, 20, 40, 0.12);
     --shadow-modern: 0 38px 80px rgba(12, 20, 40, 0.14);
+    --page-section-bg: transparent;
+    --page-section-border: var(--color-border-subtle);
+    --page-section-shadow: none;
+    --page-card-bg: var(--color-bg-panel);
+    --page-card-border: var(--color-border);
+    --page-card-shadow: var(--shadow-modern);
     --video-border-width-active: var(--video-border-width);
     --video-active-outline: var(--panel-outline);
     --video-active-title: #102041;

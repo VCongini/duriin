@@ -161,10 +161,12 @@ export const Videos: React.FC = () => {
 
     return (
         <div className="u-page u-stack-lg videos-page">
-            <section className="c-panel c-panel--primary u-stack">
-                <p className="c-panel__label u-text-caption">Archive</p>
-                <h1 className="c-panel__title u-text-heading-xl">Videos</h1>
-                <p className="c-panel__body u-text-body u-readable">
+            <section className="page-section u-stack">
+                <header className="c-section-header c-section-header--accent">
+                    <p className="c-section-header__label">Archive</p>
+                    <h1 className="c-section-header__title">Videos</h1>
+                </header>
+                <p className="u-text-body u-readable">
                     Search every drop, filter by tag, and jump into the footage that matters most.
                 </p>
                 <div className="page-cta">
@@ -180,118 +182,120 @@ export const Videos: React.FC = () => {
                         See what's coming next
                     </a>
                 </div>
-                <form className="filters" aria-label="Video filters" onSubmit={(e) => e.preventDefault()}>
-                    <label className="field">
-                        <span className="field__label">Search</span>
-                        <input
-                            type="search"
-                            placeholder="Title or keyword"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                        />
-                    </label>
-                    <label className="field">
-                        <span className="field__label">Sort</span>
-                        <div
-                            className="filters__dropdown"
-                            ref={sortMenuRef}
-                            onBlur={handleSortBlur}
-                            aria-label="Sort dropdown"
-                        >
-                            <button
-                                type="button"
-                                className="filters__select"
-                                aria-haspopup="listbox"
-                                aria-expanded={isSortMenuOpen}
-                                aria-controls={`${sortMenuId}-menu`}
-                                onClick={() => setSortMenuOpen((open) => !open)}
-                                onKeyDown={handleSortTriggerKeyDown}
+                <div className="page-card u-stack">
+                    <form className="filters" aria-label="Video filters" onSubmit={(e) => e.preventDefault()}>
+                        <label className="field">
+                            <span className="field__label">Search</span>
+                            <input
+                                type="search"
+                                placeholder="Title or keyword"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                            />
+                        </label>
+                        <label className="field">
+                            <span className="field__label">Sort</span>
+                            <div
+                                className="filters__dropdown"
+                                ref={sortMenuRef}
+                                onBlur={handleSortBlur}
+                                aria-label="Sort dropdown"
                             >
-                                <span className="filters__select-label">
-                                    {sort === 'newest' ? 'Newest first' : 'Oldest first'}
-                                </span>
-                                <span className="filters__select-icon" aria-hidden="true" />
-                            </button>
-                            {isSortMenuOpen && (
-                                <div
-                                    id={`${sortMenuId}-menu`}
-                                    role="listbox"
-                                    aria-label="Sort options"
-                                    className="filters__dropdown-menu"
+                                <button
+                                    type="button"
+                                    className="filters__select"
+                                    aria-haspopup="listbox"
+                                    aria-expanded={isSortMenuOpen}
+                                    aria-controls={`${sortMenuId}-menu`}
+                                    onClick={() => setSortMenuOpen((open) => !open)}
+                                    onKeyDown={handleSortTriggerKeyDown}
                                 >
-                                    <button
-                                        type="button"
-                                        role="option"
-                                        aria-selected={sort === 'newest'}
-                                        className={`filters__option ${sort === 'newest' ? 'is-active' : ''}`}
-                                        onClick={() => handleSortSelect('newest')}
+                                    <span className="filters__select-label">
+                                        {sort === 'newest' ? 'Newest first' : 'Oldest first'}
+                                    </span>
+                                    <span className="filters__select-icon" aria-hidden="true" />
+                                </button>
+                                {isSortMenuOpen && (
+                                    <div
+                                        id={`${sortMenuId}-menu`}
+                                        role="listbox"
+                                        aria-label="Sort options"
+                                        className="filters__dropdown-menu"
                                     >
-                                        Newest first
-                                    </button>
-                                    <button
-                                        type="button"
-                                        role="option"
-                                        aria-selected={sort === 'oldest'}
-                                        className={`filters__option ${sort === 'oldest' ? 'is-active' : ''}`}
-                                        onClick={() => handleSortSelect('oldest')}
-                                    >
-                                        Oldest first
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </label>
-                    <label className="field field--tags" htmlFor={tagFilterId}>
-                        <span className="field__label">Filter by tag</span>
-                        {/* Tag filter: pills replaced by single dropdown for condensed UI (brutalist + modern themes supported) */}
-                        <span
-                            className="filters__dropdown"
-                            ref={tagMenuRef}
-                            onBlur={handleTagBlur}
-                            aria-label="Tag filter dropdown"
-                        >
-                            <button
-                                id={tagFilterId}
-                                type="button"
-                                className="filters__select"
-                                aria-haspopup="listbox"
-                                aria-expanded={isTagMenuOpen}
-                                aria-controls={`${tagFilterId}-menu`}
-                                onClick={() => setTagMenuOpen((open) => !open)}
-                                onKeyDown={handleTagTriggerKeyDown}
+                                        <button
+                                            type="button"
+                                            role="option"
+                                            aria-selected={sort === 'newest'}
+                                            className={`filters__option ${sort === 'newest' ? 'is-active' : ''}`}
+                                            onClick={() => handleSortSelect('newest')}
+                                        >
+                                            Newest first
+                                        </button>
+                                        <button
+                                            type="button"
+                                            role="option"
+                                            aria-selected={sort === 'oldest'}
+                                            className={`filters__option ${sort === 'oldest' ? 'is-active' : ''}`}
+                                            onClick={() => handleSortSelect('oldest')}
+                                        >
+                                            Oldest first
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </label>
+                        <label className="field field--tags" htmlFor={tagFilterId}>
+                            <span className="field__label">Filter by tag</span>
+                            {/* Tag filter: pills replaced by single dropdown for condensed UI (brutalist + modern themes supported) */}
+                            <span
+                                className="filters__dropdown"
+                                ref={tagMenuRef}
+                                onBlur={handleTagBlur}
+                                aria-label="Tag filter dropdown"
                             >
-                                <span className="filters__select-label">{activeTag ? `#${activeTag}` : "All"}</span>
-                                <span className="filters__select-icon" aria-hidden="true" />
-                            </button>
-                            {isTagMenuOpen && (
-                                <div
-                                    id={`${tagFilterId}-menu`}
-                                    role="listbox"
-                                    aria-label="Tag options"
-                                    className="filters__dropdown-menu"
+                                <button
+                                    id={tagFilterId}
+                                    type="button"
+                                    className="filters__select"
+                                    aria-haspopup="listbox"
+                                    aria-expanded={isTagMenuOpen}
+                                    aria-controls={`${tagFilterId}-menu`}
+                                    onClick={() => setTagMenuOpen((open) => !open)}
+                                    onKeyDown={handleTagTriggerKeyDown}
                                 >
-                                    {tagOptions.map(({ value, label }) => {
-                                        const isActive = (!activeTag && value === null) || activeTag === value;
-                                        return (
-                                            <button
-                                                key={value ?? "all"}
-                                                type="button"
-                                                role="option"
-                                                aria-selected={isActive}
-                                                className={`filters__option ${isActive ? "is-active" : ""}`}
-                                                onClick={() => handleTagSelect(value)}
-                                            >
-                                                {label}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                        </span>
-                    </label>
-                </form>
-                <div className="filter-summary" role="status" aria-live="polite">
-                    {resultText}
+                                    <span className="filters__select-label">{activeTag ? `#${activeTag}` : 'All'}</span>
+                                    <span className="filters__select-icon" aria-hidden="true" />
+                                </button>
+                                {isTagMenuOpen && (
+                                    <div
+                                        id={`${tagFilterId}-menu`}
+                                        role="listbox"
+                                        aria-label="Tag options"
+                                        className="filters__dropdown-menu"
+                                    >
+                                        {tagOptions.map(({ value, label }) => {
+                                            const isActive = (!activeTag && value === null) || activeTag === value;
+                                            return (
+                                                <button
+                                                    key={value ?? 'all'}
+                                                    type="button"
+                                                    role="option"
+                                                    aria-selected={isActive}
+                                                    className={`filters__option ${isActive ? 'is-active' : ''}`}
+                                                    onClick={() => handleTagSelect(value)}
+                                                >
+                                                    {label}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </span>
+                        </label>
+                    </form>
+                    <div className="filter-summary" role="status" aria-live="polite">
+                        {resultText}
+                    </div>
                 </div>
 
                 {featuredVideo ? (
