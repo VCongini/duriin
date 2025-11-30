@@ -20,7 +20,7 @@ export const Blog: React.FC = () => {
 
     return (
         <div className="u-page u-stack-lg">
-            <section className="c-panel c-panel--section u-stack">
+            <section className="page-section u-stack">
                 <header className="c-section-header c-section-header--accent">
                     <p className="c-section-header__label">Devlog</p>
                     <h2 className="c-section-header__title">All posts &amp; updates</h2>
