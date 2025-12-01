@@ -4,28 +4,58 @@ export interface VideoCardThumbnailProps {
     thumbnailUrl?: string;
     platform: string;
     title: string;
-    isActive: boolean;
-    onSelect: () => void;
+    embedUrl?: string;
+    externalUrl: string;
+    isPlaying: boolean;
+    onPlay: () => void;
 }
 
 export const VideoCardThumbnail: React.FC<VideoCardThumbnailProps> = ({
     thumbnailUrl,
     platform,
     title,
-    isActive,
-    onSelect
+    embedUrl,
+    externalUrl,
+    isPlaying,
+    onPlay
 }) => (
-    <button
-        type="button"
-        className="video-card__media"
-        onClick={onSelect}
-        aria-label={`Preview ${title} in the player`}
-        aria-pressed={isActive}
-    >
-        {thumbnailUrl ? (
-            <img src={thumbnailUrl} alt="" loading="lazy" />
+    <div className="video-card__media" aria-live="polite">
+        {isPlaying && embedUrl ? (
+            <iframe
+                src={`${embedUrl}${embedUrl.includes('?') ? '&' : '?'}autoplay=1&rel=0`}
+                title={title}
+                allowFullScreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                loading="lazy"
+            />
         ) : (
-            <div className="video-card__placeholder">{platform}</div>
+            <button
+                type="button"
+                className="video-card__media-trigger"
+                onClick={onPlay}
+                aria-label={`Play ${title}`}
+                aria-pressed={isPlaying}
+            >
+                {thumbnailUrl ? (
+                    <img src={thumbnailUrl} alt="" loading="lazy" />
+                ) : (
+                    <div className="video-card__placeholder">{platform}</div>
+                )}
+                <span className="video-card__play">Play</span>
+                {!embedUrl ? (
+                    <span className="video-card__external-hint">Opens {platform}</span>
+                ) : null}
+            </button>
         )}
-    </button>
+        {!embedUrl && isPlaying ? (
+            <a
+                className="video-card__external-link"
+                href={externalUrl}
+                target="_blank"
+                rel="noreferrer"
+            >
+                Watch on {platform}
+            </a>
+        ) : null}
+    </div>
 );
