@@ -10,8 +10,6 @@ import React, {
 import { VideoCard } from '../components/videos/VideoCard';
 import { videos } from '../content';
 import { Video } from '../content/types';
-import { formatDate } from '../utils/format';
-import { shouldShowStatus } from '../components/videos/VideoCard/videoCard.utils';
 
 type SortOrder = 'newest' | 'oldest';
 
@@ -27,7 +25,7 @@ export const Videos: React.FC = () => {
     const [activeTag, setActiveTag] = useState<string | null>(null);
     const [isTagMenuOpen, setTagMenuOpen] = useState(false);
     const [isSortMenuOpen, setSortMenuOpen] = useState(false);
-    const [featuredId, setFeaturedId] = useState<string | null>(() => videos[0]?.id ?? null);
+    const [playingId, setPlayingId] = useState<string | null>(null);
 
     const tags = useMemo(() => Array.from(new Set(videos.flatMap((v) => v.tags))).sort(), []);
     const deferredQuery = useDeferredValue(query);
@@ -54,29 +52,28 @@ export const Videos: React.FC = () => {
             }));
     }, [activeTag, deferredQuery, sort]);
 
+    const isPlayingInFilter = playingId ? filtered.some((video) => video.id === playingId) : false;
+    const activePlayerId = isPlayingInFilter ? playingId : null;
+
     useEffect(() => {
-        if (!filtered.length) {
-            setFeaturedId(null);
+        if (!playingId) {
             return;
         }
-        setFeaturedId((current) => {
-            if (current && filtered.some((video) => video.id === current)) {
-                return current;
-            }
-            return filtered[0]?.id ?? null;
-        });
-    }, [filtered]);
 
-    const featuredVideo = filtered.find((video) => video.id === featuredId) ?? filtered[0];
-    const gridVideos = filtered;
-    const nextVideo = gridVideos.find((video) => video.id !== featuredVideo?.id);
+        if (!filtered.some((video) => video.id === playingId)) {
+            setPlayingId(null);
+        }
+    }, [filtered, playingId]);
 
     const resultText =
         filtered.length === 1
             ? '1 video'
             : `${filtered.length} videos${activeTag ? ` tagged ${activeTag}` : ''}`;
 
-    const tagOptions = useMemo(() => [{ value: null, label: 'All' }, ...tags.map((tag) => ({ value: tag, label: `#${tag}` }))], [tags]);
+    const tagOptions = useMemo(
+        () => [{ value: null, label: 'All' }, ...tags.map((tag) => ({ value: tag, label: `#${tag}` }))],
+        [tags]
+    );
 
     const closeTagMenu = useCallback(() => {
         setTagMenuOpen(false);
@@ -124,8 +121,8 @@ export const Videos: React.FC = () => {
         }
     }, []);
 
-    const handleVideoSelect = useCallback((id: string) => {
-        setFeaturedId(id);
+    const handleVideoPlay = useCallback((id: string) => {
+        setPlayingId((current) => (current === id ? null : id));
     }, []);
 
     useEffect(() => {
@@ -298,119 +295,23 @@ export const Videos: React.FC = () => {
                     </div>
                 </div>
 
-                {featuredVideo ? (
-                    <article
-                        key={featuredVideo.id}
-                        className="video-spotlight"
-                        role="region"
-                        aria-live="polite"
-                        aria-atomic="false"
-                        aria-label="Selected video"
-                    >
-                        <div className="video-spotlight__media">
-                            {featuredVideo.platform === 'YouTube' && featuredVideo.embedUrl ? (
-                                <iframe
-                                    src={`${featuredVideo.embedUrl}?rel=0`}
-                                    title={featuredVideo.title}
-                                    allowFullScreen
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    loading="lazy"
-                                />
-                            ) : featuredVideo.thumbnailUrl ? (
-                                <img
-                                    src={featuredVideo.thumbnailUrl}
-                                    alt={featuredVideo.title}
-                                    loading="lazy"
-                                />
-                            ) : (
-                                <div className="video-spotlight__placeholder">{featuredVideo.platform}</div>
-                            )}
-                        </div>
-                        <div className="video-spotlight__body u-stack">
-                            <div className="episode__header">
-                                <span className="episode__label">{featuredVideo.episode}</span>
-                                {shouldShowStatus(featuredVideo.status) ? (
-                                    <span
-                                        className={`episode__status episode__status--${featuredVideo.status.toLowerCase()}`}
-                                    >
-                                        {featuredVideo.status}
-                                    </span>
-                                ) : null}
-                            </div>
-                            <h2 className="video-spotlight__title u-text-heading-lg">{featuredVideo.title}</h2>
-                            <div className="episode__meta">
-                                <span className="tag tag--platform">#{featuredVideo.platform.toUpperCase()}</span>
-                                <span className="tag tag--meta">{featuredVideo.duration}</span>
-                                <span className="tag tag--meta">
-                                    {formatDate(featuredVideo.publishedAt, {
-                                        month: 'short',
-                                        day: '2-digit',
-                                        year: 'numeric'
-                                    })}
-                                </span>
-                                {featuredVideo.viewCount ? (
-                                    <span className="tag tag--meta">
-                                        {featuredVideo.viewCount.toLocaleString()} views
-                                    </span>
-                                ) : null}
-                            </div>
-                            <p className="video-spotlight__description u-text-body">{featuredVideo.description}</p>
-                            <div className="episode__tags">
-                                {featuredVideo.tags.map((tag) => (
-                                    <button
-                                        key={tag}
-                                        type="button"
-                                        className={`tag tag--content ${activeTag === tag ? 'tag--active' : ''}`}
-                                        onClick={() => setActiveTag(tag)}
-                                        aria-pressed={activeTag === tag}
-                                    >
-                                        #{tag}
-                                    </button>
-                                ))}
-                            </div>
-                            <div className="video-spotlight__actions page-cta">
-                                <a
-                                    href={featuredVideo.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="btn btn--primary"
-                                >
-                                    Watch on {featuredVideo.platform}
-                                </a>
-                                {nextVideo ? (
-                                    <button
-                                        type="button"
-                                        className="btn btn--ghost"
-                                        onClick={() => handleVideoSelect(nextVideo.id)}
-                                    >
-                                        Next in queue
-                                    </button>
-                                ) : null}
-                            </div>
-                        </div>
-                    </article>
+
+                {filtered.length ? (
+                    <div className="video-grid" role="list">
+                        {filtered.map((video) => (
+                            <VideoCard
+                                key={video.id}
+                                video={video}
+                                isPlaying={activePlayerId === video.id}
+                                onPlay={handleVideoPlay}
+                            />
+                        ))}
+                    </div>
                 ) : (
                     <div className="video-empty" role="status">
                         No videos match that filter. Try clearing the search or switching tags.
                     </div>
                 )}
-
-                {gridVideos.length ? (
-                    <div className="video-grid" role="list">
-                        {gridVideos.map((video) => {
-                            const isActive = video.id === featuredId;
-
-                            return (
-                                <VideoCard
-                                    key={video.id}
-                                    video={video}
-                                    isActive={isActive}
-                                    onSelect={handleVideoSelect}
-                                />
-                            );
-                        })}
-                    </div>
-                ) : null}
             </section>
         </div>
     );
