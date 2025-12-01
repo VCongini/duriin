@@ -1,7 +1,7 @@
 import React from 'react';
 
 const socials = [
-    { name: 'YouTube', url: 'https://www.youtube.com/@duriin' },
+    { name: 'YouTube', url: 'https://www.youtube.com/@duriin6656' },
     { name: 'Twitch', url: 'https://www.twitch.tv' },
     { name: 'TikTok', url: 'https://www.tiktok.com/@duriin' },
     { name: 'Twitter / X', url: 'https://twitter.com' },
@@ -31,7 +31,7 @@ export const About: React.FC = () => {
                 </div>
                 <div className="page-cta">
                     <a
-                        href="https://www.youtube.com/@duriin"
+                        href="https://www.youtube.com/@duriin6656"
                         target="_blank"
                         rel="noreferrer"
                         className="btn btn--primary"

@@ -21,7 +21,7 @@ const HeroComponent: React.FC = () => {
 
                 <div className="hero__cta-row page-cta">
                     <a
-                        href={latestVideo?.url || 'https://www.youtube.com/@duriin'}
+                        href={latestVideo?.url || 'https://www.youtube.com/@duriin6656'}
                         target="_blank"
                         rel="noreferrer"
                         className="btn btn--primary"

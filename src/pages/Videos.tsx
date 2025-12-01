@@ -171,7 +171,7 @@ export const Videos: React.FC = () => {
                 </p>
                 <div className="page-cta">
                     <a
-                        href="https://www.youtube.com/@duriin"
+                        href="https://www.youtube.com/@duriin6656"
                         target="_blank"
                         rel="noreferrer"
                         className="btn btn--primary"

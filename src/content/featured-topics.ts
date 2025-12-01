@@ -22,7 +22,7 @@ export const featuredTopics: FeaturedTopic[] = [
         title: 'Labs + Experiments',
         description: 'Unreleased tools, shader passes, and prototypes that power the channel.',
         image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80',
-        href: 'https://www.youtube.com/@duriin',
+        href: 'https://www.youtube.com/@duriin6656',
         ctaLabel: 'See experiments',
     },
     {
