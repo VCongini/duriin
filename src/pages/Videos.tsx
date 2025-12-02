@@ -8,6 +8,7 @@ import React, {
     useState
 } from 'react';
 import { VideoCard } from '../components/videos/VideoCard';
+import { useViewedVideos } from '../components/videos/useViewedVideos';
 import { videos } from '../content';
 import { Video } from '../content/types';
 
@@ -26,6 +27,14 @@ export const Videos: React.FC = () => {
     const [isTagMenuOpen, setTagMenuOpen] = useState(false);
     const [isSortMenuOpen, setSortMenuOpen] = useState(false);
     const [playingId, setPlayingId] = useState<string | null>(null);
+    const [isCompactMode, setIsCompactMode] = useState(() => {
+        if (typeof window === 'undefined') {
+            return false;
+        }
+
+        return window.localStorage.getItem('videos:compact-mode') === 'true';
+    });
+    const { isViewed, markViewed } = useViewedVideos();
 
     const tags = useMemo(() => Array.from(new Set(videos.flatMap((v) => v.tags))).sort(), []);
     const deferredQuery = useDeferredValue(query);
@@ -64,6 +73,14 @@ export const Videos: React.FC = () => {
             setPlayingId(null);
         }
     }, [filtered, playingId]);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        window.localStorage.setItem('videos:compact-mode', String(isCompactMode));
+    }, [isCompactMode]);
 
     const resultText =
         filtered.length === 1
@@ -121,9 +138,20 @@ export const Videos: React.FC = () => {
         }
     }, []);
 
-    const handleVideoPlay = useCallback((id: string) => {
-        setPlayingId((current) => (current === id ? null : id));
-    }, []);
+    const handleVideoPlay = useCallback(
+        (id: string) => {
+            setPlayingId((current) => {
+                const next = current === id ? null : id;
+
+                if (next === id) {
+                    markViewed(id);
+                }
+
+                return next;
+            });
+        },
+        [markViewed]
+    );
 
     useEffect(() => {
         if (!isTagMenuOpen && !isSortMenuOpen) {
@@ -156,8 +184,12 @@ export const Videos: React.FC = () => {
         };
     }, [closeTagMenu, isSortMenuOpen, isTagMenuOpen]);
 
+    const handleCompactToggle = useCallback(() => {
+        setIsCompactMode((current) => !current);
+    }, []);
+
     return (
-        <div className="u-page u-stack-lg videos-page">
+        <div className={`u-page u-stack-lg videos-page ${isCompactMode ? 'videos-page--compact' : ''}`}>
             <section className="page-section u-stack">
                 <header className="c-section-header c-section-header--accent">
                     <p className="c-section-header__label">Archive</p>
@@ -180,6 +212,17 @@ export const Videos: React.FC = () => {
                     </a>
                 </div>
                 <div className="page-card u-stack">
+                    <div className="videos-page__toolbar">
+                        <div className="compact-toggle">
+                            <input
+                                type="checkbox"
+                                id="compact-mode"
+                                checked={isCompactMode}
+                                onChange={handleCompactToggle}
+                            />
+                            <label htmlFor="compact-mode">Compact mode</label>
+                        </div>
+                    </div>
                     <form className="filters" aria-label="Video filters" onSubmit={(e) => e.preventDefault()}>
                         <label className="field">
                             <span className="field__label">Search</span>
@@ -302,8 +345,10 @@ export const Videos: React.FC = () => {
                             <VideoCard
                                 key={video.id}
                                 video={video}
+                                isViewed={isViewed(video.id)}
                                 isPlaying={activePlayerId === video.id}
                                 onPlay={handleVideoPlay}
+                                isCompact={isCompactMode}
                             />
                         ))}
                     </div>
