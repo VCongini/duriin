@@ -21,8 +21,8 @@
     border-radius: 0;
     background: var(--page-section-bg);
     box-shadow: var(--page-section-shadow);
-    padding: clamp(var(--space-lg), 3vw, var(--space-xxl));
-    padding-top: clamp(var(--space-xl), 4vw, var(--space-xxl));
+    padding: clamp(var(--space-sm), 3vw, var(--space-lg));
+    padding-top: clamp(var(--space-lg), 4vw, var(--space-xl));
 }
 
 .page-section {
@@ -413,4 +413,3 @@
 .footer__block--muted {
     color: var(--color-text-secondary);
 }
-

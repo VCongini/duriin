@@ -2,6 +2,7 @@
 
 .videos-page {
     width: 100%;
+    padding-inline: clamp(var(--space-xs), 2.5vw, var(--space-md));
 }
 
 .videos-page__toolbar {
