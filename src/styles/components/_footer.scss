@@ -1,0 +1,113 @@
+@use '../utilities' as *;
+
+.footer {
+    margin-top: var(--space-xxl);
+    padding: var(--space-lg) 0 var(--space-xl);
+    border-top: var(--border-thin) solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    background: transparent;
+}
+
+.footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.footer__section {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.footer__identity {
+    color: var(--color-text-secondary);
+}
+
+.footer__copy {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+}
+
+.footer__links,
+.footer__signals {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.footer__links {
+    justify-content: flex-start;
+}
+
+.footer__signals {
+    justify-content: flex-start;
+}
+
+.footer__link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    line-height: 1.5;
+    padding: 0.1rem 0;
+    transition: color 150ms ease, text-decoration-color 150ms ease;
+    text-underline-offset: 0.2em;
+}
+
+.footer__link:hover,
+.footer__link:focus-visible,
+.footer__link.is-active {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+}
+
+.footer__link:focus-visible {
+    outline: var(--border-thin) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+}
+
+.footer__link--signal {
+    letter-spacing: 0.04em;
+}
+
+@include respond(tablet) {
+    .footer__inner {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--space-xl);
+    }
+
+    .footer__identity,
+    .footer__links,
+    .footer__signals {
+        flex: 1 1 0;
+    }
+
+    .footer__links {
+        justify-content: center;
+    }
+
+    .footer__signals {
+        justify-content: flex-end;
+        text-align: right;
+    }
+}
+
+[data-theme-layout='brutalist'] .footer {
+    border-top-width: var(--border-base);
+    border-color: var(--panel-outline);
+    letter-spacing: 0.08em;
+}
+
+[data-theme-layout='brutalist'] .footer__links,
+[data-theme-layout='brutalist'] .footer__signals {
+    text-transform: uppercase;
+}
+
+[data-theme-layout='modern'] .footer {
+    border-top-width: var(--border-thin);
+    border-color: var(--color-border-subtle);
+    letter-spacing: 0.02em;
+}
