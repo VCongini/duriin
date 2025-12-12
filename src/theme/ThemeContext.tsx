@@ -17,6 +17,13 @@ const LAYOUT_STORAGE_KEY = 'duriin-theme-layout';
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 const getPreferredMode = (): ThemeMode => {
+    if (typeof document !== 'undefined') {
+        const preset = document.documentElement.getAttribute('data-theme-mode');
+        if (preset === 'light' || preset === 'dark') {
+            return preset;
+        }
+    }
+
     if (typeof window === 'undefined') {
         return 'dark';
     }
@@ -30,6 +37,13 @@ const getPreferredMode = (): ThemeMode => {
 };
 
 const getPreferredLayout = (): ThemeLayout => {
+    if (typeof document !== 'undefined') {
+        const preset = document.documentElement.getAttribute('data-theme-layout');
+        if (preset === 'modern' || preset === 'brutalist') {
+            return preset;
+        }
+    }
+
     if (typeof window === 'undefined') {
         return 'brutalist';
     }
