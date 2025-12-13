@@ -33,9 +33,13 @@ const HeroComponent: React.FC = () => {
                         <span className="hero__title-accent">_ONLINE</span>
                     </h1>
                     <p className="hero__subtitle u-text-body">
-                        Sharp cuts, late-night sessions, and game-first breakdowns. A hub for the
-                        drops, edits, and devlogs behind the screen.
+                        Fast-moving cuts, late-night builds, and breakdowns from the games-in-progress feed.
                     </p>
+                    <ul className="hero__badges" aria-label="Content types">
+                        <li className="hero__badge">Clips</li>
+                        <li className="hero__badge">Breakdowns</li>
+                        <li className="hero__badge">Devlogs</li>
+                    </ul>
                 </div>
 
                 <div className="hero__cta-row page-cta">
@@ -50,6 +54,10 @@ const HeroComponent: React.FC = () => {
                     <a href="/videos" className="page-cta__secondary hero__secondary-link">
                         Browse the archive
                     </a>
+                </div>
+
+                <div className="hero__social-proof" aria-label="Channel highlights">
+                    <p className="u-text-caption">15k subscribers · Hit 2M+ views this year · New uploads weekly</p>
                 </div>
             </div>
         </section>

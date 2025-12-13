@@ -7,7 +7,7 @@
 .hero__frame {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(var(--space-xl), 4vw, var(--space-xxl));
+    padding-block: clamp(var(--space-lg), 3vw, var(--space-xl));
 }
 
 .hero__frame::after {
@@ -38,10 +38,46 @@
 
 .hero__cta-row {
     width: 100%;
+    margin-top: var(--space-md);
 }
 
 .hero__secondary-link {
     color: var(--color-text-secondary);
+    padding: 0;
+    background-color: transparent;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.hero__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xxs);
+    padding: 0.35rem 0.7rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-subtle);
+    color: var(--color-text-primary);
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.01em;
+}
+
+.hero__social-proof {
+    margin-top: var(--space-sm);
+    color: var(--color-text-secondary);
+}
+
+.hero__social-proof p {
+    margin: 0;
 }
 
 [data-theme-layout='modern'] .hero__frame::after {
