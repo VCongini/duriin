@@ -212,6 +212,12 @@
     @include responsive-text(0.85rem, 0.95rem);
 }
 
+.episode__header-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
 .episode__label {
     color: var(--color-text-secondary);
 }
@@ -241,6 +247,92 @@
 
 .episode__title-row {
     @include fluid-stack(column, var(--space-xs), row, var(--space-sm));
+}
+
+.episode__title-stack {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.episode__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xxs);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--color-accent-section) 18%, transparent);
+    color: var(--color-text-primary);
+    border: 1px solid var(--panel-outline);
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.episode__submeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-text-secondary);
+}
+
+.episode__secondary-meta,
+.episode__secondary-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xxs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.episode__secondary-meta--muted {
+    color: var(--color-text-tertiary);
+}
+
+.episode__secondary-link {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    border-bottom: 1px dotted color-mix(in srgb, var(--color-text-primary) 70%, transparent);
+    padding-bottom: 0.05rem;
+}
+
+.episode__secondary-link:hover {
+    color: var(--color-accent-section);
+    border-color: color-mix(in srgb, var(--color-accent-section) 80%, transparent);
+}
+.episode__platform-glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.65rem;
+    height: 1.65rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-border-strong) 24%, transparent);
+    color: var(--color-text-primary);
+    padding: 0.2rem;
+}
+
+.episode__platform-glyph svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.episode__platform-glyph--youtube {
+    background: color-mix(in srgb, #ff0000 70%, transparent);
+    color: #fff;
+}
+
+.episode__platform-glyph--twitch {
+    background: color-mix(in srgb, #9146ff 70%, transparent);
+    color: #fff;
+}
+
+.episode__platform-glyph--tiktok {
+    background: color-mix(in srgb, #23f2ea 70%, transparent);
+    color: #111;
 }
 
 .filter-summary {
