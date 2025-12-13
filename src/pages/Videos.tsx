@@ -9,16 +9,17 @@ import React, {
 } from 'react';
 import { VideoCard } from '../components/videos/VideoCard';
 import { useViewedVideos } from '../components/videos/useViewedVideos';
-import { videos } from '../content';
+import { getVideos } from '../content';
 import { Video } from '../content/types';
 
 type SortOrder = 'newest' | 'oldest';
 
 const sortVideos = (list: Video[], sort: SortOrder) =>
-    [...list].sort((a, b) => {
-        const diff = new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
-        return sort === 'newest' ? -diff : diff;
-    });
+    sort === 'newest'
+        ? list
+        : [...list].sort(
+              (a, b) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
+          );
 
 export const Videos: React.FC = () => {
     const [query, setQuery] = useState('');
@@ -27,6 +28,9 @@ export const Videos: React.FC = () => {
     const [isTagMenuOpen, setTagMenuOpen] = useState(false);
     const [isSortMenuOpen, setSortMenuOpen] = useState(false);
     const [playingId, setPlayingId] = useState<string | null>(null);
+    const [videos, setVideos] = useState<Video[] | null>(null);
+    const [isLoadingVideos, setIsLoadingVideos] = useState(true);
+    const [loadError, setLoadError] = useState<string | null>(null);
     const [isCompactMode, setIsCompactMode] = useState(() => {
         if (typeof window === 'undefined') {
             return false;
@@ -36,7 +40,10 @@ export const Videos: React.FC = () => {
     });
     const { isViewed, markViewed } = useViewedVideos();
 
-    const tags = useMemo(() => Array.from(new Set(videos.flatMap((v) => v.tags))).sort(), []);
+    const tags = useMemo(
+        () => Array.from(new Set((videos ?? []).flatMap((v) => v.tags))).sort(),
+        [videos]
+    );
     const deferredQuery = useDeferredValue(query);
     const tagFilterId = useId();
     const tagMenuRef = useRef<HTMLSpanElement>(null);
@@ -44,6 +51,10 @@ export const Videos: React.FC = () => {
     const sortMenuId = useId();
 
     const filtered = useMemo(() => {
+        if (!videos) {
+            return [];
+        }
+
         const normalizedQuery = deferredQuery.trim().toLowerCase();
         return sortVideos(videos, sort)
             .filter((video) => {
@@ -59,7 +70,7 @@ export const Videos: React.FC = () => {
                 ...video,
                 description: video.description ?? `Watch on ${video.platform}`
             }));
-    }, [activeTag, deferredQuery, sort]);
+    }, [activeTag, deferredQuery, sort, videos]);
 
     const isPlayingInFilter = playingId ? filtered.some((video) => video.id === playingId) : false;
     const activePlayerId = isPlayingInFilter ? playingId : null;
@@ -82,10 +93,45 @@ export const Videos: React.FC = () => {
         window.localStorage.setItem('videos:compact-mode', String(isCompactMode));
     }, [isCompactMode]);
 
-    const resultText =
-        filtered.length === 1
-            ? '1 video'
-            : `${filtered.length} videos${activeTag ? ` tagged ${activeTag}` : ''}`;
+    useEffect(() => {
+        let isMounted = true;
+        setIsLoadingVideos(true);
+        setLoadError(null);
+
+        getVideos()
+            .then((loadedVideos) => {
+                if (!isMounted) {
+                    return;
+                }
+
+                setVideos(loadedVideos);
+            })
+            .catch((error) => {
+                console.error('Unable to load videos', error);
+                if (!isMounted) {
+                    return;
+                }
+
+                setLoadError('Unable to load videos right now.');
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setIsLoadingVideos(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    const resultText = loadError
+        ? loadError
+        : isLoadingVideos
+            ? 'Loading videos…'
+            : filtered.length === 1
+                ? '1 video'
+                : `${filtered.length} videos${activeTag ? ` tagged ${activeTag}` : ''}`;
 
     const tagOptions = useMemo(
         () => [{ value: null, label: 'All' }, ...tags.map((tag) => ({ value: tag, label: `#${tag}` }))],
@@ -339,7 +385,15 @@ export const Videos: React.FC = () => {
                 </div>
 
 
-                {filtered.length ? (
+                {loadError ? (
+                    <div className="video-empty" role="status">
+                        {loadError}
+                    </div>
+                ) : isLoadingVideos ? (
+                    <div className="video-empty" role="status">
+                        Loading videos…
+                    </div>
+                ) : filtered.length ? (
                     <div className="video-grid" role="list">
                         {filtered.map((video) => (
                             <VideoCard
