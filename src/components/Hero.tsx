@@ -1,8 +1,27 @@
-import React, { memo } from 'react';
-import { videos } from '../content';
+import React, { memo, useEffect, useState } from 'react';
+import { getVideos } from '../content';
+import { Video } from '../content/types';
 
 const HeroComponent: React.FC = () => {
-    const latestVideo = videos[0];
+    const [latestVideo, setLatestVideo] = useState<Video | null>(null);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        getVideos()
+            .then((videos) => {
+                if (isMounted) {
+                    setLatestVideo(videos[0] ?? null);
+                }
+            })
+            .catch((error) => {
+                console.error('Unable to load videos', error);
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     return (
         <section className="hero" id="featured">

@@ -1,7 +1,8 @@
-import React, { Suspense, lazy, useMemo } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Hero } from '../components/Hero';
-import { featuredTopics, posts, videos } from '../content';
+import { featuredTopics, getVideos, posts } from '../content';
+import { Video } from '../content/types';
 import { formatDate } from '../utils/format';
 
 const FeaturedCarousel = lazy(() =>
@@ -17,8 +18,36 @@ const CarouselFallback: React.FC = () => (
 );
 
 export const Home: React.FC = () => {
-    const latestVideos = useMemo(() => videos.slice(0, 3), []);
+    const [latestVideos, setLatestVideos] = useState<Video[]>([]);
+    const [isLoadingVideos, setIsLoadingVideos] = useState(true);
     const latestPosts = useMemo(() => posts.slice(0, 2), []);
+
+    useEffect(() => {
+        let isMounted = true;
+        setIsLoadingVideos(true);
+
+        getVideos()
+            .then((videos) => {
+                if (isMounted) {
+                    setLatestVideos(videos.slice(0, 3));
+                }
+            })
+            .catch((error) => {
+                console.error('Unable to load videos', error);
+                if (isMounted) {
+                    setLatestVideos([]);
+                }
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setIsLoadingVideos(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     return (
         <div className="u-page u-stack-lg">
@@ -33,33 +62,37 @@ export const Home: React.FC = () => {
                     <h2 className="c-section-header__title">Latest videos</h2>
                 </header>
                 <ul className="episode-list">
-                    {latestVideos.map((video) => (
-                        <li key={video.id} className="episode episode--compact">
-                            <div className="episode__header">
-                                <span className="episode__label">{video.episode}</span>
-                                <span
-                                    className={`episode__status episode__status--${video.status.toLowerCase()}`}
-                                >
-                                    {video.status}
-                                </span>
-                            </div>
-                            <div className="episode__title-row">
-                                <a
-                                    href={video.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="episode__title"
-                                >
-                                    {video.title}
-                                </a>
-                                <div className="episode__meta">
-                                    <span className="tag tag--platform">#{video.platform.toUpperCase()}</span>
-                                    <span className="tag tag--meta">{video.duration}</span>
-                                    <span className="tag tag--meta">{formatDate(video.publishedAt)}</span>
+                    {isLoadingVideos ? (
+                        <li className="episode episode--compact">Loading videos…</li>
+                    ) : (
+                        latestVideos.map((video) => (
+                            <li key={video.id} className="episode episode--compact">
+                                <div className="episode__header">
+                                    <span className="episode__label">{video.episode}</span>
+                                    <span
+                                        className={`episode__status episode__status--${video.status.toLowerCase()}`}
+                                    >
+                                        {video.status}
+                                    </span>
                                 </div>
-                            </div>
-                        </li>
-                    ))}
+                                <div className="episode__title-row">
+                                    <a
+                                        href={video.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="episode__title"
+                                    >
+                                        {video.title}
+                                    </a>
+                                    <div className="episode__meta">
+                                        <span className="tag tag--platform">#{video.platform.toUpperCase()}</span>
+                                        <span className="tag tag--meta">{video.duration}</span>
+                                        <span className="tag tag--meta">{formatDate(video.publishedAt)}</span>
+                                    </div>
+                                </div>
+                            </li>
+                        ))
+                    )}
                 </ul>
             </section>
 
