@@ -57,7 +57,7 @@ const HeroComponent: React.FC = () => {
                 </div>
 
                 <div className="hero__social-proof" aria-label="Channel highlights">
-                    <p className="u-text-caption">15k subscribers · Hit 2M+ views this year · New uploads weekly</p>
+                    <p className="u-text-caption">Small but growing crew here—sharing builds in the open and posting fresh drops each week.</p>
                 </div>
             </div>
         </section>
