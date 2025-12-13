@@ -1,11 +1,44 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import onlineIcon from '../assets/icons/online.svg?raw';
 import offlineIcon from '../assets/icons/offline.svg?raw';
 import { ThemeSettings } from './ThemeSettings';
 
+const STATUS_DEBOUNCE_MS = 150;
+
 const HeaderComponent: React.FC = () => {
-    const isOnline = true;
+    const [isOnline, setIsOnline] = useState(() => (typeof navigator !== 'undefined' ? navigator.onLine : true));
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return undefined;
+
+        let debounceId: ReturnType<typeof setTimeout> | undefined;
+
+        const updateStatus = (online: boolean) => {
+            if (debounceId) {
+                clearTimeout(debounceId);
+            }
+
+            debounceId = setTimeout(() => {
+                setIsOnline((previous) => (previous === online ? previous : online));
+            }, STATUS_DEBOUNCE_MS);
+        };
+
+        const handleOnline = () => updateStatus(true);
+        const handleOffline = () => updateStatus(false);
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            if (debounceId) {
+                clearTimeout(debounceId);
+            }
+
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, []);
 
     return (
         <header className="header">
