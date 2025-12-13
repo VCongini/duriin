@@ -7,6 +7,12 @@
     margin-bottom: var(--space-md);
 }
 
+.c-section-header__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
 .c-section-header__label {
     margin: 0;
     font-size: var(--font-size-xs);
@@ -43,4 +49,16 @@
     border-radius: var(--radius-pill);
     background: var(--color-accent-section);
     opacity: 0.95;
+}
+
+.c-section-header--with-cta {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.c-section-header__action {
+    align-self: flex-end;
 }
