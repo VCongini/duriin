@@ -1,0 +1,114 @@
+@use '../utilities' as *;
+
+.announcement-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    @include responsive-space(gap, var(--space-md), var(--space-lg));
+}
+
+.announcement {
+    --card-padding: 1.5rem;
+    border: var(--video-border-width) solid var(--panel-outline);
+    border-radius: calc(var(--panel-radius) - 0.25rem);
+    padding: var(--card-padding);
+    background: var(--color-bg-muted);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.announcement--compact {
+    --card-padding: 1.25rem;
+    gap: var(--space-xs);
+}
+
+.announcement:hover,
+.announcement:focus-within {
+    transform: translateY(-4px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--panel-shadow), 0 16px 36px rgba(0, 0, 0, 0.25);
+}
+
+.announcement__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: var(--font-size-xs);
+}
+
+.announcement__label {
+    @include pill-label;
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg);
+}
+
+.announcement__date {
+    color: var(--color-text-secondary);
+}
+
+.announcement__title {
+    margin: 0;
+    @include responsive-heading(1.2rem, 1.6rem);
+    color: var(--color-text-primary);
+}
+
+.announcement__title a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 120ms ease;
+}
+
+.announcement__title a:hover,
+.announcement__title a:focus-visible {
+    border-color: var(--color-border-strong);
+}
+
+.announcement__summary {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.announcement__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xxs);
+    color: var(--color-text-primary);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: var(--font-size-sm);
+}
+
+.announcement__link::after {
+    content: '↗';
+}
+
+.announcement-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+}
+
+.announcement-body--muted {
+    color: var(--color-text-tertiary);
+}
+
+.announcement-spotlight .page-cta {
+    justify-content: flex-start;
+}
+
+.announcement-spotlight .page-cta__secondary {
+    color: var(--color-text-tertiary);
+}

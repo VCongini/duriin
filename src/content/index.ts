@@ -1,15 +1,16 @@
-import postsData from './posts.json';
-import { Post, Video } from './types';
+import announcementsData from './announcements.json';
+import { Announcement, Video } from './types';
 export { featuredTopics } from './featured-topics';
 
-const sortByDateDesc = <T extends { publishedAt: string }>(items: T[]): T[] =>
-    [...items].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+const sortByDateDesc = <T>(items: T[], key: keyof T): T[] =>
+    [...items].sort((a, b) => new Date(String(b[key])).getTime() - new Date(String(a[key])).getTime());
 
 let videosCache: Video[] | null = null;
 let videosPromise: Promise<Video[]> | null = null;
 
 // Keep videos.json in newest-first order to avoid extra runtime work; we still sort once as a fallback.
-const sortVideos = (items: Video[]): Video[] => sortByDateDesc(items);
+const sortVideos = (items: Video[]): Video[] => sortByDateDesc(items, 'publishedAt');
+const sortAnnouncements = (items: Announcement[]): Announcement[] => sortByDateDesc(items, 'date');
 
 export const getVideos = async (): Promise<Video[]> => {
     if (videosCache) {
@@ -27,4 +28,5 @@ export const getVideos = async (): Promise<Video[]> => {
     return videosPromise;
 };
 
-export const posts = sortByDateDesc(postsData as Post[]);
+export const announcements = sortAnnouncements(announcementsData as Announcement[]);
+export const findAnnouncement = (id: string) => announcements.find((announcement) => announcement.id === id);
