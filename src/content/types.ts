@@ -16,13 +16,12 @@ export type Video = {
     publishedAt: string; // ISO date
 };
 
-export type Post = {
+export type Announcement = {
     id: string;
     title: string;
-    url: string;
-    publishedAt: string; // ISO date
-    tags: string[];
-    excerpt: string;
+    date: string; // ISO date
+    summary: string;
+    body?: string;
 };
 
 export type FeaturedTopic = {

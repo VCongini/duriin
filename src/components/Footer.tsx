@@ -20,8 +20,11 @@ const FooterComponent: React.FC = () => {
                     <NavLink to="/videos" className={({ isActive }) => `footer__link ${isActive ? 'is-active' : ''}`}>
                         Videos
                     </NavLink>
-                    <NavLink to="/blog" className={({ isActive }) => `footer__link ${isActive ? 'is-active' : ''}`}>
-                        Blog
+                    <NavLink
+                        to="/announcements"
+                        className={({ isActive }) => `footer__link ${isActive ? 'is-active' : ''}`}
+                    >
+                        Announcements
                     </NavLink>
                     <a className="footer__link" href="mailto:theincomparableduriin@gmail.com">
                         Email

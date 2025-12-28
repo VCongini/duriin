@@ -1,14 +1,16 @@
 import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { Hero } from '../components/Hero';
-import { featuredTopics, getVideos, posts } from '../content';
-import { Video } from '../content/types';
+import { announcements, featuredTopics, getVideos } from '../content';
+import { Announcement, Video } from '../content/types';
 
 const LatestVideosSection = lazy(() =>
     import('../components/home/LatestVideosSection').then((module) => ({ default: module.LatestVideosSection }))
 );
 
-const LatestPostsSection = lazy(() =>
-    import('../components/home/LatestPostsSection').then((module) => ({ default: module.LatestPostsSection }))
+const LatestAnnouncementSection = lazy(() =>
+    import('../components/home/LatestAnnouncementSection').then((module) => ({
+        default: module.LatestAnnouncementSection,
+    }))
 );
 
 const FeaturedCarousel = lazy(() =>
@@ -33,7 +35,7 @@ const SectionFallback: React.FC = () => (
 export const Home: React.FC = () => {
     const [latestVideos, setLatestVideos] = useState<Video[]>([]);
     const [isLoadingVideos, setIsLoadingVideos] = useState(true);
-    const latestPosts = useMemo(() => posts.slice(0, 2), []);
+    const latestAnnouncement = useMemo<Announcement | null>(() => (announcements[0] ? announcements[0] : null), []);
 
     useEffect(() => {
         let isMounted = true;
@@ -74,7 +76,7 @@ export const Home: React.FC = () => {
             </Suspense>
 
             <Suspense fallback={<SectionFallback />}>
-                <LatestPostsSection latestPosts={latestPosts} />
+                <LatestAnnouncementSection announcement={latestAnnouncement} />
             </Suspense>
         </div>
     );
