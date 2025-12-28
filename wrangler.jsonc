@@ -2,10 +2,21 @@
     "$schema": "node_modules/wrangler/config-schema.json",
     "name": "duriin",
     "compatibility_date": "2025-11-23",
+    "main": "src/workers/youtubeFeed.ts",
     "assets": {
         "directory": "./dist"
     },
     "build": {
         "command": "npm run build"
+    },
+    "kv_namespaces": [
+        {
+            "binding": "YOUTUBE_FEED_KV",
+            "id": "00000000000000000000000000000000",
+            "preview_id": "dev-youtube-feed"
+        }
+    ],
+    "triggers": {
+        "crons": ["0 * * * *"]
     }
 }

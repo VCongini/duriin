@@ -9,6 +9,38 @@ npm install
 npm run dev
 ```
 
+To develop the YouTube feed worker locally, run it alongside Vite:
+
+```bash
+npm run dev:worker
+```
+
+## YouTube feed Worker
+
+The `/api/youtube-feed` Worker fetches uploads on a schedule and serves cached JSON from Cloudflare KV. It is
+configured in `wrangler.jsonc` with an hourly Cron trigger.
+
+Required bindings/secrets:
+
+- `YOUTUBE_FEED_KV`: Cloudflare KV namespace used for cached feed payloads.
+- `YOUTUBE_API_KEY`: (optional) YouTube Data API key for the playlistItems endpoint.
+- `YOUTUBE_PLAYLIST_ID`: (optional) Uploads playlist ID (required when using the Data API path).
+- `YOUTUBE_CHANNEL_ID`: (optional) Channel ID used for the RSS fallback when no API key is present.
+- `YOUTUBE_RSS_URL`: (optional) Override RSS URL instead of building it from the channel ID.
+
+Set secrets and deploy:
+
+```bash
+wrangler kv namespace create YOUTUBE_FEED_KV
+wrangler secret put YOUTUBE_API_KEY
+wrangler secret put YOUTUBE_PLAYLIST_ID
+wrangler secret put YOUTUBE_CHANNEL_ID
+wrangler deploy
+```
+
+The scheduled event refreshes KV hourly. The front end consumes the cached JSON via `/api/youtube-feed?limit=50`
+and falls back to the bundled `videos.json` if the cache is empty or unreachable.
+
 ## Syncing YouTube uploads without exposing keys
 
 Use the provided content script as a tiny proxy so the YouTube API key never ships to the browser:
