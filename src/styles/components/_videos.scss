@@ -532,6 +532,25 @@
     text-align: center;
 }
 
+.spotlight-shell {
+    overflow: hidden;
+    height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: height 260ms ease, opacity 200ms ease, transform 260ms ease;
+    pointer-events: none;
+}
+
+.spotlight-shell--open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.spotlight-shell__inner {
+    width: 100%;
+}
+
 .spotlight {
     position: relative;
 }
@@ -683,6 +702,11 @@
 
     .video-card:hover .video-card__media img,
     .video-card:focus-within .video-card__media img {
+        transform: none;
+    }
+
+    .spotlight-shell {
+        transition: none;
         transform: none;
     }
 }

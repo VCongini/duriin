@@ -62,6 +62,10 @@ export const Videos: React.FC = () => {
     const [isSortMenuOpen, setSortMenuOpen] = useState(false);
     const [playingId, setPlayingId] = useState<string | null>(null);
     const [spotlightId, setSpotlightId] = useState<string | null>(null);
+    const [isSpotlightRendered, setIsSpotlightRendered] = useState(false);
+    const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
+    const [renderedSpotlight, setRenderedSpotlight] = useState<Video | null>(null);
+    const [spotlightHeight, setSpotlightHeight] = useState(0);
     const [videos, setVideos] = useState<Video[] | null>(null);
     const [isLoadingVideos, setIsLoadingVideos] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
@@ -84,7 +88,9 @@ export const Videos: React.FC = () => {
     const sortMenuRef = useRef<HTMLDivElement>(null);
     const sortMenuId = useId();
     const spotlightRowRef = useRef<HTMLDivElement>(null);
+    const spotlightContentRef = useRef<HTMLDivElement>(null);
     const isMobile = useMediaQuery('(max-width: 47.99rem)');
+    const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
     const filtered = useMemo(() => {
         if (!videos) {
@@ -111,8 +117,9 @@ export const Videos: React.FC = () => {
     const isPlayingInFilter = playingId ? filtered.some((video) => video.id === playingId) : false;
     const activePlayerId = isPlayingInFilter ? playingId : null;
     const spotlightVideo = spotlightId ? filtered.find((video) => video.id === spotlightId) : null;
-    const listWithoutSpotlight = spotlightVideo
-        ? filtered.filter((video) => video.id !== spotlightVideo.id)
+    const spotlightedVideoId = spotlightVideo?.id ?? renderedSpotlight?.id ?? null;
+    const listWithoutSpotlight = spotlightedVideoId
+        ? filtered.filter((video) => video.id !== spotlightedVideoId)
         : filtered;
 
     useEffect(() => {
@@ -131,6 +138,80 @@ export const Videos: React.FC = () => {
             setPlayingId((current) => (current === spotlightId ? null : current));
         }
     }, [spotlightId, spotlightVideo]);
+
+    useEffect(() => {
+        let frame: number | null = null;
+
+        if (isMobile) {
+            setRenderedSpotlight(spotlightVideo ?? null);
+            setIsSpotlightRendered(Boolean(spotlightVideo));
+            setIsSpotlightOpen(Boolean(spotlightVideo));
+            return () => {};
+        }
+
+        if (spotlightVideo) {
+            setRenderedSpotlight(spotlightVideo);
+            setIsSpotlightRendered(true);
+            frame = window.requestAnimationFrame(() => {
+                setIsSpotlightOpen(true);
+            });
+        } else if (renderedSpotlight) {
+            setIsSpotlightOpen(false);
+        } else {
+            setIsSpotlightRendered(false);
+        }
+
+        return () => {
+            if (frame) {
+                window.cancelAnimationFrame(frame);
+            }
+        };
+    }, [isMobile, renderedSpotlight, spotlightVideo]);
+
+    useEffect(() => {
+        if (!isSpotlightRendered || isMobile) {
+            return;
+        }
+
+        const contentEl = spotlightContentRef.current;
+        if (!contentEl) {
+            return;
+        }
+
+        const measure = () => {
+            const rect = contentEl.getBoundingClientRect();
+            const styles = getComputedStyle(contentEl);
+            const marginBottom = parseFloat(styles.marginBottom) || 0;
+            setSpotlightHeight(rect.height + marginBottom);
+        };
+
+        measure();
+
+        if (typeof ResizeObserver === 'undefined') {
+            return;
+        }
+
+        const resizeObserver = new ResizeObserver(() => measure());
+        resizeObserver.observe(contentEl);
+
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, [isMobile, isSpotlightRendered, renderedSpotlight]);
+
+    useEffect(() => {
+        if (
+            !isMobile &&
+            prefersReducedMotion &&
+            !isSpotlightOpen &&
+            isSpotlightRendered &&
+            !spotlightVideo
+        ) {
+            setIsSpotlightRendered(false);
+            setRenderedSpotlight(null);
+            setSpotlightHeight(0);
+        }
+    }, [isMobile, isSpotlightOpen, isSpotlightRendered, prefersReducedMotion, spotlightVideo]);
 
     useEffect(() => {
         if (typeof window === 'undefined') {
@@ -258,6 +339,21 @@ export const Videos: React.FC = () => {
         setSpotlightId(null);
         setPlayingId(null);
     }, []);
+
+    const handleSpotlightTransitionEnd = useCallback(
+        (event: React.TransitionEvent<HTMLDivElement>) => {
+            if (event.propertyName !== 'height') {
+                return;
+            }
+
+            if (!isSpotlightOpen) {
+                setIsSpotlightRendered(false);
+                setRenderedSpotlight(null);
+                setSpotlightHeight(0);
+            }
+        },
+        [isSpotlightOpen]
+    );
 
     useEffect(() => {
         if (!isTagMenuOpen && !isSortMenuOpen) {
@@ -478,17 +574,29 @@ export const Videos: React.FC = () => {
                     </div>
                 ) : filtered.length ? (
                     <>
-                        {spotlightVideo ? (
-                            isMobile ? (
+                        {isMobile ? (
+                            spotlightVideo ? (
                                 <Spotlight variant="overlay" video={spotlightVideo} onExit={handleSpotlightExit} />
-                            ) : (
-                                <Spotlight
-                                    variant="row"
-                                    video={spotlightVideo}
-                                    onExit={handleSpotlightExit}
-                                    ref={spotlightRowRef}
-                                />
-                            )
+                            ) : null
+                        ) : isSpotlightRendered ? (
+                            <div
+                                className={`spotlight-shell ${isSpotlightOpen ? 'spotlight-shell--open' : ''}`}
+                                style={{
+                                    height: isSpotlightOpen ? `${Math.max(spotlightHeight, 0)}px` : '0px'
+                                }}
+                                onTransitionEnd={handleSpotlightTransitionEnd}
+                            >
+                                <div ref={spotlightContentRef} className="spotlight-shell__inner">
+                                    {renderedSpotlight ? (
+                                        <Spotlight
+                                            variant="row"
+                                            video={renderedSpotlight}
+                                            onExit={handleSpotlightExit}
+                                            ref={spotlightRowRef}
+                                        />
+                                    ) : null}
+                                </div>
+                            </div>
                         ) : null}
                         <div className="video-grid" role="list">
                             {listWithoutSpotlight.map((video) => (
