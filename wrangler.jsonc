@@ -3,12 +3,16 @@
     "name": "duriin",
     "main": "src/workers/youtubeFeed.ts",
     "compatibility_date": "2025-11-23",
-    "assets": {
-        "directory": "./dist"
-    },
-    "build": {
-        "command": "npm run build"
-    },
+    "routes": [
+        {
+            "pattern": "duriin.com/api/*",
+            "zone_name": "duriin.com"
+        },
+        {
+            "pattern": "www.duriin.com/api/*",
+            "zone_name": "duriin.com"
+        }
+    ],
     "kv_namespaces": [
         {
             "binding": "YOUTUBE_FEED_KV",

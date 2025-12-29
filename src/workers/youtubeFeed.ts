@@ -24,7 +24,7 @@ export interface Env {
     YOUTUBE_PLAYLIST_ID?: string;
     YOUTUBE_CHANNEL_ID?: string;
     YOUTUBE_RSS_URL?: string;
-    ASSETS: Fetcher;
+    ASSETS?: Fetcher;
 }
 
 type ThumbnailSet = {
@@ -297,8 +297,7 @@ const isHtmlRequest = (request: Request) => {
 
 const fetchAssetWithSpaFallback = async (request: Request, env: Env): Promise<Response> => {
     if (!env.ASSETS?.fetch) {
-        console.error('ASSETS binding is missing');
-        return new Response('Static assets not configured', { status: 500 });
+        return new Response('Not Found', { status: 404 });
     }
 
     try {
