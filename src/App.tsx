@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
+import { NotFound } from './pages/NotFound';
 import { ThemeProvider, useTheme } from './theme/ThemeContext';
 
 // Lazily load heavier secondary routes so the initial bundle only ships
@@ -36,6 +37,7 @@ const AppShell: React.FC = () => {
                         <Route path="/announcements/:announcementId" element={<AnnouncementDetail />} />
                         <Route path="/videos" element={<Videos />} />
                         <Route path="/about" element={<About />} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Suspense>
             </main>
