@@ -289,6 +289,49 @@ const buildResponse = (payload: FeedPayload | null, limit?: number) => {
     );
 };
 
+const isHtmlRequest = (request: Request) => {
+    const acceptHeader = request.headers.get('accept') ?? '';
+
+    return request.method === 'GET' && acceptHeader.includes('text/html');
+};
+
+const fetchAssetWithSpaFallback = async (request: Request, env: Env): Promise<Response> => {
+    if (!env.ASSETS?.fetch) {
+        console.error('ASSETS binding is missing');
+        return new Response('Static assets not configured', { status: 500 });
+    }
+
+    try {
+        const assetResponse = await env.ASSETS.fetch(request);
+
+        if (assetResponse.status === 404 && isHtmlRequest(request)) {
+            const indexRequest = new Request(new URL('/index.html', request.url).toString(), {
+                headers: request.headers,
+            });
+
+            return env.ASSETS.fetch(indexRequest);
+        }
+
+        return assetResponse;
+    } catch (error) {
+        console.error('Asset fetch failed', error);
+
+        if (isHtmlRequest(request)) {
+            try {
+                const indexRequest = new Request(new URL('/index.html', request.url).toString(), {
+                    headers: request.headers,
+                });
+
+                return env.ASSETS.fetch(indexRequest);
+            } catch (fallbackError) {
+                console.error('Fallback index fetch failed', fallbackError);
+            }
+        }
+
+        return new Response('Internal server error', { status: 500 });
+    }
+};
+
 const handleFetch = async (request: Request, env: Env): Promise<Response> => {
     const url = new URL(request.url);
 
@@ -299,7 +342,7 @@ const handleFetch = async (request: Request, env: Env): Promise<Response> => {
         return buildResponse(feed, Number.isNaN(parsedLimit) ? undefined : parsedLimit);
     }
 
-    return env.ASSETS.fetch(request);
+    return fetchAssetWithSpaFallback(request, env);
 };
 
 const refreshScheduledFeed = async (env: Env) => {
