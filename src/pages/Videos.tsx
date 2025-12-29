@@ -7,7 +7,7 @@ import React, {
     useRef,
     useState
 } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { VideoCard } from '../components/videos/VideoCard';
 import { Spotlight } from '../components/videos/Spotlight';
 import { useViewedVideos } from '../components/videos/useViewedVideos';
@@ -83,6 +83,8 @@ export const Videos: React.FC = () => {
     const sortMenuId = useId();
     const spotlightRowRef = useRef<HTMLDivElement>(null);
     const spotlightContentRef = useRef<HTMLDivElement>(null);
+    const spotlightAppliedRef = useRef<string | null>(null);
+    const location = useLocation();
     const isMobile = useMediaQuery('(max-width: 47.99rem)');
     const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
@@ -132,6 +134,27 @@ export const Videos: React.FC = () => {
             setPlayingId((current) => (current === spotlightId ? null : current));
         }
     }, [spotlightId, spotlightVideo]);
+
+    const spotlightParam = useMemo(() => {
+        const params = new URLSearchParams(location.search);
+        return params.get('spotlight');
+    }, [location.search]);
+
+    useEffect(() => {
+        if (!spotlightParam || !videos) {
+            return;
+        }
+
+        if (spotlightAppliedRef.current === spotlightParam) {
+            return;
+        }
+
+        if (videos.some((video) => video.id === spotlightParam)) {
+            setSpotlightId(spotlightParam);
+            setPlayingId(spotlightParam);
+            spotlightAppliedRef.current = spotlightParam;
+        }
+    }, [spotlightParam, videos]);
 
     useEffect(() => {
         let frame: number | null = null;

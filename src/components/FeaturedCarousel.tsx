@@ -36,14 +36,14 @@ const FeaturedCarouselComponent: React.FC<FeaturedCarouselProps> = ({ items }) =
     return (
         <section
             className={`featured-carousel c-panel u-stack featured-carousel--${layout}`}
-            aria-label="Featured topics"
+            aria-label="Featured highlights"
         >
             <div className="featured-carousel__stage">
                 <button
                     type="button"
                     className="featured-carousel__nav featured-carousel__nav--prev"
                     onClick={handlePrev}
-                    aria-label="Show previous featured topic"
+                    aria-label="Show previous highlight"
                 >
                     <span aria-hidden="true">◀</span>
                 </button>
@@ -73,13 +73,13 @@ const FeaturedCarouselComponent: React.FC<FeaturedCarouselProps> = ({ items }) =
                                     </picture>
                                 </div>
                                 <div className="featured-carousel__body">
-                                    <p className="featured-carousel__eyebrow u-text-caption">FEATURED</p>
+                                    <p className="featured-carousel__eyebrow u-text-caption">FEATURED HIGHLIGHTS</p>
                                     <h3 className="featured-carousel__title u-text-heading-lg">{topic.title}</h3>
                                     <p className="featured-carousel__description u-text-body">
                                         {topic.description}
                                     </p>
                                     <a href={topic.href} className="featured-carousel__cta">
-                                        {topic.ctaLabel ?? 'Explore topic'}
+                                        {topic.ctaLabel ?? 'Open in spotlight'}
                                     </a>
                                 </div>
                             </article>
@@ -90,20 +90,20 @@ const FeaturedCarouselComponent: React.FC<FeaturedCarouselProps> = ({ items }) =
                     type="button"
                     className="featured-carousel__nav featured-carousel__nav--next"
                     onClick={handleNext}
-                    aria-label="Show next featured topic"
+                    aria-label="Show next highlight"
                 >
                     <span aria-hidden="true">▶</span>
                 </button>
             </div>
 
-            <div className="featured-carousel__indicators" role="tablist" aria-label="Featured topic selector">
+            <div className="featured-carousel__indicators" role="tablist" aria-label="Featured highlight selector">
                 {topics.map((topic, index) => (
                     <button
                         key={topic.id}
                         type="button"
                         role="tab"
                         aria-selected={index === activeIndex}
-                        aria-label={`Show ${topic.title}`}
+                        aria-label={`Show highlight ${topic.title}`}
                         className={`featured-carousel__indicator ${index === activeIndex ? 'is-active' : ''}`}
                         onClick={() => goTo(index)}
                     />
