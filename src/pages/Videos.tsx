@@ -111,6 +111,9 @@ export const Videos: React.FC = () => {
     const isPlayingInFilter = playingId ? filtered.some((video) => video.id === playingId) : false;
     const activePlayerId = isPlayingInFilter ? playingId : null;
     const spotlightVideo = spotlightId ? filtered.find((video) => video.id === spotlightId) : null;
+    const listWithoutSpotlight = spotlightVideo
+        ? filtered.filter((video) => video.id !== spotlightVideo.id)
+        : filtered;
 
     useEffect(() => {
         if (!playingId) {
@@ -488,7 +491,7 @@ export const Videos: React.FC = () => {
                             )
                         ) : null}
                         <div className="video-grid" role="list">
-                            {filtered.map((video) => (
+                            {listWithoutSpotlight.map((video) => (
                                 <VideoCard
                                     key={video.id}
                                     video={video}

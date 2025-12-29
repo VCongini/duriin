@@ -431,6 +431,46 @@
     border-color: var(--video-active-outline);
 }
 
+.spotlight-toggle {
+    position: relative;
+    padding-inline: clamp(0.65rem, 2vw, 0.9rem);
+    gap: var(--space-2xs);
+}
+
+.spotlight-toggle__icon svg {
+    width: 1.4rem;
+    height: 1.4rem;
+    display: block;
+    fill: var(--color-text-primary);
+    stroke: currentColor;
+    stroke-width: 0.5;
+}
+
+.spotlight-toggle__hover-hint {
+    position: absolute;
+    inset: auto 50% calc(100% + var(--space-xs)) auto;
+    transform: translateX(50%);
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--color-bg-panel) 90%, rgba(0, 0, 0, 0.08));
+    border: 1px solid var(--panel-outline);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 140ms ease, transform 140ms ease;
+    white-space: nowrap;
+    box-shadow: var(--panel-shadow);
+}
+
+.spotlight-toggle:hover .spotlight-toggle__hover-hint,
+.spotlight-toggle:focus-visible .spotlight-toggle__hover-hint {
+    opacity: 1;
+    transform: translateX(50%) translateY(-2px);
+}
+
 .video-card:hover,
 .video-card:focus-within {
     transform: translateY(-4px);
