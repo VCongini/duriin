@@ -3,13 +3,19 @@
     "name": "duriin",
     "main": "src/workers/youtubeFeed.ts",
     "compatibility_date": "2025-11-23",
+    "assets": {
+        "directory": "./dist"
+    },
+    "build": {
+        "command": "npm run build"
+    },
     "routes": [
         {
-            "pattern": "duriin.com/api/*",
+            "pattern": "duriin.com/*",
             "zone_name": "duriin.com"
         },
         {
-            "pattern": "www.duriin.com/api/*",
+            "pattern": "www.duriin.com/*",
             "zone_name": "duriin.com"
         }
     ],
