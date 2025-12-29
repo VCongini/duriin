@@ -7,6 +7,7 @@ import React, {
     useRef,
     useState
 } from 'react';
+import { Link } from 'react-router-dom';
 import { VideoCard } from '../components/videos/VideoCard';
 import { useViewedVideos } from '../components/videos/useViewedVideos';
 import { getVideos } from '../content';
@@ -253,9 +254,9 @@ export const Videos: React.FC = () => {
                     >
                         Watch on YouTube
                     </a>
-                    <a href="/about" className="page-cta__secondary">
+                    <Link to="/about" className="page-cta__secondary">
                         See what's coming next
-                    </a>
+                    </Link>
                 </div>
                 <div className="page-card u-stack">
                     <div className="videos-page__toolbar">
