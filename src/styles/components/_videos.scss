@@ -532,7 +532,11 @@
     text-align: center;
 }
 
-.spotlight-row {
+.spotlight {
+    position: relative;
+}
+
+.spotlight--row {
     width: 100%;
     margin: 0 auto var(--space-lg);
     padding: clamp(var(--space-md), 3vw, var(--space-lg));
@@ -542,7 +546,7 @@
     box-shadow: var(--page-card-shadow);
 }
 
-[data-theme-layout='brutalist'] .spotlight-row {
+[data-theme-layout='brutalist'] .spotlight--row {
     box-shadow: none;
 }
 
@@ -609,7 +613,7 @@
     align-items: center;
 }
 
-.spotlight-overlay {
+.spotlight--overlay {
     position: fixed;
     inset: 0;
     z-index: 50;
@@ -617,7 +621,7 @@
     grid-template-rows: 1fr;
 }
 
-.spotlight-overlay__backdrop {
+.spotlight__backdrop {
     position: absolute;
     inset: 0;
     background: color-mix(in srgb, rgba(0, 0, 0, 0.62), var(--color-bg-muted) 15%);
@@ -625,7 +629,12 @@
     cursor: pointer;
 }
 
-.spotlight-overlay__panel {
+.spotlight__panel {
+    position: relative;
+    z-index: 1;
+}
+
+.spotlight__panel--overlay {
     position: relative;
     z-index: 1;
     align-self: end;
@@ -640,7 +649,7 @@
     padding-bottom: max(var(--space-lg), env(safe-area-inset-bottom));
 }
 
-.spotlight-overlay .spotlight__header {
+.spotlight--overlay .spotlight__header {
     position: sticky;
     top: 0;
     padding-bottom: var(--space-sm);
@@ -648,8 +657,8 @@
     background: linear-gradient(var(--page-card-bg), color-mix(in srgb, var(--page-card-bg) 88%, transparent));
 }
 
-.spotlight-overlay .spotlight-player,
-.spotlight-overlay .spotlight__fallback {
+.spotlight--overlay .spotlight-player,
+.spotlight--overlay .spotlight__fallback {
     max-height: 45vh;
 }
 
