@@ -8,9 +8,13 @@ type Fetcher = {
     fetch(request: Request): Promise<Response>;
 };
 
-type ScheduledEvent = {
+type ScheduledController = {
     readonly scheduledTime: number;
     readonly cron: string;
+    noRetry?: () => void;
+};
+
+type ExecutionContext = {
     waitUntil(promise: Promise<any>): void;
 };
 
@@ -45,6 +49,7 @@ type FeedPayload = {
 
 const FEED_KEY = 'youtube:feed';
 const VERSION_KEY = 'youtube:feed:version';
+const LAST_CRON_KEY = 'youtube:feed:last_cron';
 const MAX_RESULTS = 50;
 
 const selectThumbnail = (thumbs?: Record<string, { url: string } | undefined>): ThumbnailSet => ({
@@ -70,13 +75,75 @@ const normalizePlaylistItem = (item: any): NormalizedVideo | null => {
     };
 };
 
-const normalizeRssEntry = (entry: Element): NormalizedVideo | null => {
-    const text = (selector: string) => entry.querySelector(selector)?.textContent?.trim();
-    const id = text('yt\\:videoId') ?? text('id');
-    const title = text('title');
-    const publishedAt = text('published') ?? '';
-    const link = entry.querySelector('link')?.getAttribute('href');
-    const thumbnail = entry.querySelector('media\\:thumbnail')?.getAttribute('url');
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const decodeXmlEntities = (value: string) => value
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&');
+
+const normalizeXmlText = (value: string) => {
+    const trimmed = value.trim();
+    const cdataMatch = trimmed.match(/^<!\[CDATA\[([\s\S]*?)\]\]>$/);
+    const cleaned = cdataMatch ? cdataMatch[1] : trimmed;
+    return decodeXmlEntities(cleaned);
+};
+
+const extractTagText = (xml: string, tag: string): string | null => {
+    const tagName = escapeRegExp(tag);
+    const regex = new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)<\\/${tagName}>`, 'i');
+    const match = xml.match(regex);
+    return match ? normalizeXmlText(match[1]) : null;
+};
+
+const extractTagAttribute = (
+    xml: string,
+    tag: string,
+    attr: string,
+    required?: { name: string; value: string }
+): string | null => {
+    const tagName = escapeRegExp(tag);
+    const tagRegex = new RegExp(`<${tagName}\\b[^>]*>`, 'gi');
+    const attrName = escapeRegExp(attr);
+    let match: RegExpExecArray | null;
+    while ((match = tagRegex.exec(xml))) {
+        const tagText = match[0];
+        if (required) {
+            const requiredMatch = tagText.match(
+                new RegExp(`${escapeRegExp(required.name)}\\s*=\\s*"([^"]*)"`, 'i')
+            );
+            if (!requiredMatch || requiredMatch[1] !== required.value) {
+                continue;
+            }
+        }
+        const attrMatch = tagText.match(new RegExp(`${attrName}\\s*=\\s*"([^"]*)"`, 'i'));
+        if (attrMatch) {
+            return normalizeXmlText(attrMatch[1]);
+        }
+    }
+    return null;
+};
+
+const extractEntries = (xmlText: string) => {
+    const entries: string[] = [];
+    const entryRegex = /<entry\b[^>]*>([\s\S]*?)<\/entry>/gi;
+    let match: RegExpExecArray | null;
+    while ((match = entryRegex.exec(xmlText))) {
+        entries.push(match[1]);
+    }
+    return entries;
+};
+
+const normalizeRssEntry = (entryXml: string): NormalizedVideo | null => {
+    const rawId = extractTagText(entryXml, 'yt:videoId') ?? extractTagText(entryXml, 'id');
+    const id = rawId ? rawId.split(':').pop() ?? rawId : null;
+    const title = extractTagText(entryXml, 'title');
+    const publishedAt = extractTagText(entryXml, 'published') ?? '';
+    const link = extractTagAttribute(entryXml, 'link', 'href', { name: 'rel', value: 'alternate' }) ??
+        extractTagAttribute(entryXml, 'link', 'href');
+    const thumbnail = extractTagAttribute(entryXml, 'media:thumbnail', 'url');
 
     if (!id || !title) {
         return null;
@@ -155,8 +222,7 @@ const fetchFromRss = async (env: Env): Promise<NormalizedVideo[]> => {
     }
 
     const xmlText = await response.text();
-    const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
-    const entries = Array.from(doc.getElementsByTagName('entry'));
+    const entries = extractEntries(xmlText);
 
     return entries
         .map((entry) => normalizeRssEntry(entry))
@@ -236,18 +302,33 @@ const handleFetch = async (request: Request, env: Env): Promise<Response> => {
     return env.ASSETS.fetch(request);
 };
 
-const handleScheduled = async (event: ScheduledEvent, env: Env) => {
-    const run = (async () => {
-        try {
-            const payload = await fetchYouTubeFeed(env);
-            await storeFeed(env, payload);
-        } catch (error) {
-            console.error('Scheduled YouTube feed refresh failed', error);
-        }
-    })();
+const refreshScheduledFeed = async (env: Env) => {
+    try {
+        const payload = await fetchYouTubeFeed(env);
+        await storeFeed(env, payload);
+    } catch (error) {
+        console.error('Scheduled YouTube feed refresh failed', error);
+    }
+};
 
-    event.waitUntil(run);
-    return run;
+const runScheduledRefresh = async (env: Env, cron: string) => {
+    if (!env.YOUTUBE_FEED_KV) {
+        return;
+    }
+
+    await env.YOUTUBE_FEED_KV.put(LAST_CRON_KEY, cron);
+    await refreshScheduledFeed(env);
+};
+
+const handleScheduled = (controller: ScheduledController, env: Env, ctx: ExecutionContext) => {
+    const cron = controller.cron;
+
+    if (!env.YOUTUBE_FEED_KV) {
+        return;
+    }
+
+    console.log('scheduled refresh', { cron });
+    ctx.waitUntil(runScheduledRefresh(env, cron));
 };
 
 export default {

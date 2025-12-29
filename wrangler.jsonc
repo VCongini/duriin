@@ -1,8 +1,8 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
     "name": "duriin",
-    "compatibility_date": "2025-11-23",
     "main": "src/workers/youtubeFeed.ts",
+    "compatibility_date": "2025-11-23",
     "assets": {
         "directory": "./dist"
     },
@@ -12,8 +12,8 @@
     "kv_namespaces": [
         {
             "binding": "YOUTUBE_FEED_KV",
-            "id": "00000000000000000000000000000000",
-            "preview_id": "dev-youtube-feed"
+            "id": "14b74937438f4a24b296618ace1aee83",
+            "preview_id": "14b74937438f4a24b296618ace1aee83"
         }
     ],
     "triggers": {
