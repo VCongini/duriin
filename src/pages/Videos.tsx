@@ -9,11 +9,43 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 import { VideoCard } from '../components/videos/VideoCard';
+import { Spotlight } from '../components/videos/Spotlight';
 import { useViewedVideos } from '../components/videos/useViewedVideos';
 import { getVideos } from '../content';
 import { Video } from '../content/types';
 
 type SortOrder = 'newest' | 'oldest';
+
+const useMediaQuery = (query: string) => {
+    const [matches, setMatches] = useState(() => {
+        if (typeof window === 'undefined') {
+            return false;
+        }
+
+        return window.matchMedia(query).matches;
+    });
+
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return undefined;
+        }
+
+        const mediaQuery = window.matchMedia(query);
+        const handleChange = (event: MediaQueryListEvent) => setMatches(event.matches);
+
+        setMatches(mediaQuery.matches);
+        if (typeof mediaQuery.addEventListener === 'function') {
+            mediaQuery.addEventListener('change', handleChange);
+
+            return () => mediaQuery.removeEventListener('change', handleChange);
+        }
+
+        mediaQuery.addListener(handleChange);
+        return () => mediaQuery.removeListener(handleChange);
+    }, [query]);
+
+    return matches;
+};
 
 const sortVideos = (list: Video[], sort: SortOrder) =>
     sort === 'newest'
@@ -29,6 +61,7 @@ export const Videos: React.FC = () => {
     const [isTagMenuOpen, setTagMenuOpen] = useState(false);
     const [isSortMenuOpen, setSortMenuOpen] = useState(false);
     const [playingId, setPlayingId] = useState<string | null>(null);
+    const [spotlightId, setSpotlightId] = useState<string | null>(null);
     const [videos, setVideos] = useState<Video[] | null>(null);
     const [isLoadingVideos, setIsLoadingVideos] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
@@ -50,6 +83,8 @@ export const Videos: React.FC = () => {
     const tagMenuRef = useRef<HTMLSpanElement>(null);
     const sortMenuRef = useRef<HTMLDivElement>(null);
     const sortMenuId = useId();
+    const spotlightRowRef = useRef<HTMLDivElement>(null);
+    const isMobile = useMediaQuery('(max-width: 47.99rem)');
 
     const filtered = useMemo(() => {
         if (!videos) {
@@ -75,6 +110,7 @@ export const Videos: React.FC = () => {
 
     const isPlayingInFilter = playingId ? filtered.some((video) => video.id === playingId) : false;
     const activePlayerId = isPlayingInFilter ? playingId : null;
+    const spotlightVideo = spotlightId ? filtered.find((video) => video.id === spotlightId) : null;
 
     useEffect(() => {
         if (!playingId) {
@@ -85,6 +121,13 @@ export const Videos: React.FC = () => {
             setPlayingId(null);
         }
     }, [filtered, playingId]);
+
+    useEffect(() => {
+        if (spotlightId && !spotlightVideo) {
+            setSpotlightId(null);
+            setPlayingId((current) => (current === spotlightId ? null : current));
+        }
+    }, [spotlightId, spotlightVideo]);
 
     useEffect(() => {
         if (typeof window === 'undefined') {
@@ -200,6 +243,19 @@ export const Videos: React.FC = () => {
         [markViewed]
     );
 
+    const handleSpotlightToggle = useCallback((id: string) => {
+        setSpotlightId((current) => {
+            const next = current === id ? null : id;
+            setPlayingId(next ? id : null);
+            return next;
+        });
+    }, []);
+
+    const handleSpotlightExit = useCallback(() => {
+        setSpotlightId(null);
+        setPlayingId(null);
+    }, []);
+
     useEffect(() => {
         if (!isTagMenuOpen && !isSortMenuOpen) {
             return undefined;
@@ -230,6 +286,30 @@ export const Videos: React.FC = () => {
             document.removeEventListener('keydown', handleEscape);
         };
     }, [closeTagMenu, isSortMenuOpen, isTagMenuOpen]);
+
+    useEffect(() => {
+        if (!spotlightId) {
+            return;
+        }
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                handleSpotlightExit();
+            }
+        };
+
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [handleSpotlightExit, spotlightId]);
+
+    useEffect(() => {
+        if (spotlightVideo && !isMobile && spotlightRowRef.current) {
+            spotlightRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [isMobile, spotlightVideo]);
 
     const handleCompactToggle = useCallback(() => {
         setIsCompactMode((current) => !current);
@@ -385,7 +465,6 @@ export const Videos: React.FC = () => {
                     </div>
                 </div>
 
-
                 {loadError ? (
                     <div className="video-empty" role="status">
                         {loadError}
@@ -395,18 +474,34 @@ export const Videos: React.FC = () => {
                         Loading videos…
                     </div>
                 ) : filtered.length ? (
-                    <div className="video-grid" role="list">
-                        {filtered.map((video) => (
-                            <VideoCard
-                                key={video.id}
-                                video={video}
-                                isViewed={isViewed(video.id)}
-                                isPlaying={activePlayerId === video.id}
-                                onPlay={handleVideoPlay}
-                                isCompact={isCompactMode}
-                            />
-                        ))}
-                    </div>
+                    <>
+                        {spotlightVideo ? (
+                            isMobile ? (
+                                <Spotlight variant="overlay" video={spotlightVideo} onExit={handleSpotlightExit} />
+                            ) : (
+                                <Spotlight
+                                    variant="row"
+                                    video={spotlightVideo}
+                                    onExit={handleSpotlightExit}
+                                    ref={spotlightRowRef}
+                                />
+                            )
+                        ) : null}
+                        <div className="video-grid" role="list">
+                            {filtered.map((video) => (
+                                <VideoCard
+                                    key={video.id}
+                                    video={video}
+                                    isViewed={isViewed(video.id)}
+                                    isPlaying={activePlayerId === video.id}
+                                    onPlay={handleVideoPlay}
+                                    isCompact={isCompactMode}
+                                    isSpotlighted={video.id === spotlightId}
+                                    onSpotlightToggle={handleSpotlightToggle}
+                                />
+                            ))}
+                        </div>
+                    </>
                 ) : (
                     <div className="video-empty" role="status">
                         No videos match that filter. Try clearing the search or switching tags.
