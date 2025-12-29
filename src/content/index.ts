@@ -35,7 +35,7 @@ const createVideoFromFeed = (item: YouTubeFeedItem, index: number): Video => ({
     title: item.title,
     platform: 'YouTube',
     url: item.url,
-    embedUrl: `${item.url}&autoplay=1`,
+    embedUrl: `https://www.youtube.com/embed/${item.id}`,
     thumbnailUrl: item.thumbnails?.high || item.thumbnails?.medium || item.thumbnails?.default,
     duration: '—',
     status: 'ARCHIVED',
