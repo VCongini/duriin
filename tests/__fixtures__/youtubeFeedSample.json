@@ -1,0 +1,17 @@
+{
+    "updatedAt": "2025-01-01T00:00:00.000Z",
+    "version": 1735689600000,
+    "items": [
+        {
+            "id": "abc123",
+            "title": "Sample Video",
+            "publishedAt": "2025-01-01T00:00:00Z",
+            "url": "https://www.youtube.com/watch?v=abc123",
+            "thumbnails": {
+                "default": "https://image.test/default.jpg",
+                "medium": "https://image.test/medium.jpg",
+                "high": "https://image.test/high.jpg"
+            }
+        }
+    ]
+}

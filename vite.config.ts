@@ -7,6 +7,14 @@ const base = process.env.VITE_BASE ?? '/';
 export default defineConfig({
     plugins: [react()],
     base,
+    server: {
+        proxy: {
+            '/api': {
+                target: 'http://127.0.0.1:8787',
+                changeOrigin: true,
+            },
+        },
+    },
     build: {
         // Keep the app bundle lean and predictable for faster page loads.
         target: 'es2018',

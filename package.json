@@ -4,9 +4,10 @@
     "private": true,
     "scripts": {
         "dev": "vite",
+        "dev:worker": "wrangler dev --local",
         "build": "vite build",
         "preview": "vite preview",
-        "test": "npm run test:build && node -e \"const fs=require('fs');const path=require('path');const dir='dist-tests/src/assets/icons';fs.mkdirSync(dir,{recursive:true});['online','offline'].forEach((name)=>fs.writeFileSync(path.join(dir, name + '.svg?raw'), 'module.exports = \\\"<svg></svg>\\\";'));\" && node --test dist-tests/tests/Header.test.js",
+        "test": "npm run test:build && node -e \"const fs=require('fs');const path=require('path');const dir='dist-tests/src/assets/icons';fs.mkdirSync(dir,{recursive:true});['online','offline'].forEach((name)=>fs.writeFileSync(path.join(dir, name + '.svg?raw'), 'module.exports = \\\"<svg></svg>\\\";'));\" && node --test dist-tests/tests",
         "test:build": "tsc -p tsconfig.test.json",
         "sync:content": "node scripts/fetch-content.mjs"
     },
