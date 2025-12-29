@@ -45,8 +45,10 @@ const SpotlightPlayer: React.FC<{ embedUrl?: string; title: string; url: string 
 
 export const Spotlight = React.forwardRef<HTMLDivElement, SpotlightProps>(
     ({ variant, video, onExit }, ref) => {
+        const isOverlay = variant === 'overlay';
+
         useEffect(() => {
-            if (variant !== 'overlay') {
+            if (!isOverlay) {
                 return;
             }
 
@@ -56,7 +58,7 @@ export const Spotlight = React.forwardRef<HTMLDivElement, SpotlightProps>(
             return () => {
                 document.body.style.overflow = previousOverflow;
             };
-        }, [variant]);
+        }, [isOverlay]);
 
         const content = (
             <div className="spotlight__content u-stack">
@@ -76,25 +78,28 @@ export const Spotlight = React.forwardRef<HTMLDivElement, SpotlightProps>(
             </div>
         );
 
-        if (variant === 'overlay') {
-            return (
-                <div className="spotlight-overlay" role="dialog" aria-modal="true" aria-label="Spotlight video">
+        return (
+            <div
+                className={`spotlight ${isOverlay ? 'spotlight--overlay' : 'spotlight--row'}`}
+                role={isOverlay ? 'dialog' : undefined}
+                aria-modal={isOverlay ? 'true' : undefined}
+                aria-label={isOverlay ? 'Spotlight video' : undefined}
+                ref={ref}
+            >
+                {isOverlay ? (
                     <button
                         type="button"
-                        className="spotlight-overlay__backdrop"
+                        className="spotlight__backdrop"
                         aria-label="Exit Spotlight"
                         onClick={onExit}
                     />
-                    <div className="spotlight-overlay__panel" onClick={(event) => event.stopPropagation()}>
-                        {content}
-                    </div>
+                ) : null}
+                <div
+                    className={`spotlight__panel ${isOverlay ? 'spotlight__panel--overlay' : ''}`}
+                    onClick={isOverlay ? (event) => event.stopPropagation() : undefined}
+                >
+                    {content}
                 </div>
-            );
-        }
-
-        return (
-            <div className="spotlight-row" ref={ref}>
-                {content}
             </div>
         );
     }
