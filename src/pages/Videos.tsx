@@ -69,13 +69,7 @@ export const Videos: React.FC = () => {
     const [videos, setVideos] = useState<Video[] | null>(null);
     const [isLoadingVideos, setIsLoadingVideos] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
-    const [isCompactMode, setIsCompactMode] = useState(() => {
-        if (typeof window === 'undefined') {
-            return false;
-        }
-
-        return window.localStorage.getItem('videos:compact-mode') === 'true';
-    });
+    const isCompactMode = true;
     const { isViewed, markViewed } = useViewedVideos();
 
     const tags = useMemo(
@@ -212,14 +206,6 @@ export const Videos: React.FC = () => {
             setSpotlightHeight(0);
         }
     }, [isMobile, isSpotlightOpen, isSpotlightRendered, prefersReducedMotion, spotlightVideo]);
-
-    useEffect(() => {
-        if (typeof window === 'undefined') {
-            return;
-        }
-
-        window.localStorage.setItem('videos:compact-mode', String(isCompactMode));
-    }, [isCompactMode]);
 
     useEffect(() => {
         let isMounted = true;
@@ -410,10 +396,6 @@ export const Videos: React.FC = () => {
         }
     }, [isMobile, spotlightVideo]);
 
-    const handleCompactToggle = useCallback(() => {
-        setIsCompactMode((current) => !current);
-    }, []);
-
     return (
         <div className={`u-page u-stack-lg videos-page ${isCompactMode ? 'videos-page--compact' : ''}`}>
             <section className="page-section u-stack">
@@ -438,17 +420,6 @@ export const Videos: React.FC = () => {
                     </Link>
                 </div>
                 <div className="page-card u-stack">
-                    <div className="videos-page__toolbar">
-                        <div className="compact-toggle">
-                            <input
-                                type="checkbox"
-                                id="compact-mode"
-                                checked={isCompactMode}
-                                onChange={handleCompactToggle}
-                            />
-                            <label htmlFor="compact-mode">Compact mode</label>
-                        </div>
-                    </div>
                     <form className="filters" aria-label="Video filters" onSubmit={(e) => e.preventDefault()}>
                         <label className="field">
                             <span className="field__label">Search</span>
