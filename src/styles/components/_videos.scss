@@ -685,6 +685,24 @@
     gap: var(--space-md);
 }
 
+@media (max-width: 47.99rem) {
+    .spotlight--overlay {
+        align-items: center;
+        padding: clamp(var(--space-sm), 3vh, var(--space-xl)) clamp(var(--space-sm), 4vw, var(--space-lg));
+        box-sizing: border-box;
+    }
+
+    .spotlight__panel--overlay {
+        align-self: center;
+        max-height: 96vh;
+    }
+
+    .spotlight--overlay .spotlight-player,
+    .spotlight--overlay .spotlight__fallback {
+        max-height: 60vh;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .video-card {
         transition: box-shadow 120ms ease, border-color 120ms ease;
