@@ -1,4 +1,5 @@
 import React, { memo, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FeaturedTopic } from '../content/types';
 import { useTheme } from '../theme/ThemeContext';
 import { buildResponsiveImageSources } from '../utils/images';
@@ -6,6 +7,8 @@ import { buildResponsiveImageSources } from '../utils/images';
 export type FeaturedCarouselProps = {
     items: FeaturedTopic[];
 };
+
+const isExternalHref = (href: string) => /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('//');
 
 const FeaturedCarouselComponent: React.FC<FeaturedCarouselProps> = ({ items }) => {
     const { layout } = useTheme();
@@ -78,9 +81,20 @@ const FeaturedCarouselComponent: React.FC<FeaturedCarouselProps> = ({ items }) =
                                     <p className="featured-carousel__description u-text-body">
                                         {topic.description}
                                     </p>
-                                    <a href={topic.href} className="featured-carousel__cta">
-                                        {topic.ctaLabel ?? 'Open in spotlight'}
-                                    </a>
+                                    {isExternalHref(topic.href) ? (
+                                        <a
+                                            href={topic.href}
+                                            className="featured-carousel__cta"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {topic.ctaLabel ?? 'Open in spotlight'}
+                                        </a>
+                                    ) : (
+                                        <Link to={topic.href} className="featured-carousel__cta">
+                                            {topic.ctaLabel ?? 'Open in spotlight'}
+                                        </Link>
+                                    )}
                                 </div>
                             </article>
                         );

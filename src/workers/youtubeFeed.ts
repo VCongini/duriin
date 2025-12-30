@@ -337,7 +337,20 @@ const handleFetch = async (request: Request, env: Env): Promise<Response> => {
     if (url.pathname === '/api/youtube-feed') {
         const limit = url.searchParams.get('limit');
         const parsedLimit = limit ? Number.parseInt(limit, 10) : undefined;
-        const feed = await readFeed(env);
+        let feed = await readFeed(env);
+
+        if (!feed || feed.items.length === 0) {
+            try {
+                const refreshed = await fetchYouTubeFeed(env);
+                if (refreshed.items.length > 0) {
+                    await storeFeed(env, refreshed);
+                }
+                feed = refreshed;
+            } catch (error) {
+                console.error('On-demand YouTube feed refresh failed', error);
+            }
+        }
+
         return buildResponse(feed, Number.isNaN(parsedLimit) ? undefined : parsedLimit);
     }
 
