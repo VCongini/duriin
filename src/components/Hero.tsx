@@ -30,7 +30,6 @@ const HeroComponent: React.FC = () => {
                 <div className="hero__content u-readable u-stack">
                     <h1 className="hero__title u-text-heading-xl">
                         DURIIN
-                        <span className="hero__title-accent">_ONLINE</span>
                     </h1>
                     <p className="hero__subtitle u-text-body">
                         Fast-moving cuts, late-night builds, and breakdowns from the games-in-progress feed.
@@ -57,7 +56,7 @@ const HeroComponent: React.FC = () => {
                 </div>
 
                 <div className="hero__social-proof" aria-label="Channel highlights">
-                    <p className="u-text-caption">Small but growing crew here—sharing builds in the open and posting fresh drops each week.</p>
+                    <p className="u-text-caption">A small channel built as an escape from everyday life, hope you enjoy it.</p>
                 </div>
             </div>
         </section>

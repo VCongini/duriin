@@ -1,22 +1,16 @@
 [
     {
-        "id": "announce-03",
+        "id": "announce-02",
         "title": "Release Notes // Announcements replace blog",
-        "date": "2024-11-18",
+        "date": "2025-12-20",
         "summary": "Swapped the longform blog for a lean announcements feed, tuned for shipping status notes and quick drops.",
         "body": "The blog got too weighty for the cadence of updates this site needs. In its place is a streamlined announcements lane that keeps the brutalist look while focusing on concise release notes. Expect short, factual updates with direct links instead of full essays.\n\nThis rollout also adds an archive page for everything shipped so far, plus a compact callout on the home screen so you can see the latest change without digging."
     },
     {
-        "id": "announce-02",
+        "id": "announce-01",
         "title": "Site Status // Media Hub deployment",
-        "date": "2024-11-10",
+        "date": "2025-12-20",
         "summary": "Media hub landed with fresh GitHub Actions wiring and a locked-down base path for Pages deployments.",
         "body": "The static deploy flow now locks to the repository base path so embeds and assets stay stable between pushes. GitHub Actions handles the build-and-ship loop, so releases post automatically once checks pass.\n\nIf something looks off, hard refresh the cache-busted assets or ping the repo with an issue."
-    },
-    {
-        "id": "announce-01",
-        "title": "Roadmap // Winter drops",
-        "date": "2024-10-28",
-        "summary": "Stack ranking the next wave of releases: HUD builds, edit cutdowns, and FPS tuning drills."
     }
 ]
