@@ -1,7 +1,5 @@
 import announcementsData from './announcements.json';
 import { Announcement, Video } from './types';
-export { featuredTopics } from './featured-topics';
-
 type YouTubeFeedItem = {
     id: string;
     title: string;
