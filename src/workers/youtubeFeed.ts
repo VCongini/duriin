@@ -1,3 +1,5 @@
+import { applySecurityHeaders } from './securityHeaders';
+
 // Minimal Worker platform types to avoid depending on @cloudflare/workers-types during tests
 type KVNamespace = {
     get(key: string): Promise<string | null>;
@@ -334,6 +336,18 @@ const fetchAssetWithSpaFallback = async (request: Request, env: Env): Promise<Re
 const handleFetch = async (request: Request, env: Env): Promise<Response> => {
     const url = new URL(request.url);
 
+    if (url.protocol === 'http:') {
+        const httpsUrl = new URL(request.url);
+        httpsUrl.protocol = 'https:';
+
+        return applySecurityHeaders(
+            new Response(null, {
+                status: 308,
+                headers: { Location: httpsUrl.toString() },
+            })
+        );
+    }
+
     if (url.pathname === '/api/youtube-feed') {
         const limit = url.searchParams.get('limit');
         const parsedLimit = limit ? Number.parseInt(limit, 10) : undefined;
@@ -351,10 +365,11 @@ const handleFetch = async (request: Request, env: Env): Promise<Response> => {
             }
         }
 
-        return buildResponse(feed, Number.isNaN(parsedLimit) ? undefined : parsedLimit);
+        return applySecurityHeaders(buildResponse(feed, Number.isNaN(parsedLimit) ? undefined : parsedLimit));
     }
 
-    return fetchAssetWithSpaFallback(request, env);
+    const assetResponse = await fetchAssetWithSpaFallback(request, env);
+    return applySecurityHeaders(assetResponse);
 };
 
 const refreshScheduledFeed = async (env: Env) => {
