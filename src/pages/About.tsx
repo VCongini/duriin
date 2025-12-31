@@ -2,11 +2,9 @@ import React from 'react';
 
 const socials = [
     { name: 'YouTube', url: 'https://www.youtube.com/@duriin6656' },
-    { name: 'Twitch', url: 'https://www.twitch.tv' },
-    { name: 'TikTok', url: 'https://www.tiktok.com/@duriin' },
-    { name: 'Twitter / X', url: 'https://twitter.com' },
-    { name: 'Instagram', url: 'https://www.instagram.com' },
-    { name: 'Reddit', url: 'https://www.reddit.com' }
+    { name: 'Twitch', url: 'https://www.twitch.tv/duriindoes' },
+    { name: 'TikTok', url: 'https://www.tiktok.com/@duriin2' },
+    { name: 'Twitter / X', url: 'https://x.com/Duriin2' }
 ];
 
 export const About: React.FC = () => {

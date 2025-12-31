@@ -25,12 +25,4 @@ export const featuredTopics: FeaturedTopic[] = [
         href: 'https://www.youtube.com/@duriin6656',
         ctaLabel: 'See experiments',
     },
-    {
-        id: 'community',
-        title: 'Community Drops',
-        description: 'Spotlights on squad builds, fan art, and collabs pulled from the Discord.',
-        image: 'https://images.unsplash.com/photo-1520607162513-6c284b56fefb?auto=format&fit=crop&w=1200&q=80',
-        href: 'https://discord.com',
-        ctaLabel: 'Join the drop',
-    },
 ];

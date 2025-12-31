@@ -9,7 +9,7 @@ const FooterComponent: React.FC = () => {
             <div className="footer__inner u-page">
                 <div className="footer__section footer__identity">
                     <p className="footer__copy">
-                        © {currentYear} Duriin (Vincent Congini). All rights reserved.
+                        © {currentYear} Duriin. All rights reserved.
                     </p>
                 </div>
 
@@ -34,14 +34,6 @@ const FooterComponent: React.FC = () => {
                 <div className="footer__section footer__signals" aria-label="Signal links">
                     <a
                         className="footer__link footer__link--signal"
-                        href="https://github.com/vcongini/duriin"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        GitHub Repo
-                    </a>
-                    <a
-                        className="footer__link footer__link--signal"
                         href="https://www.youtube.com/@duriin6656"
                         target="_blank"
                         rel="noreferrer"
@@ -50,7 +42,7 @@ const FooterComponent: React.FC = () => {
                     </a>
                     <a
                         className="footer__link footer__link--signal"
-                        href="https://twitter.com"
+                        href="https://x.com/Duriin2"
                         target="_blank"
                         rel="noreferrer"
                     >
