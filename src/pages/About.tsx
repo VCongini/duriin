@@ -17,14 +17,12 @@ export const About: React.FC = () => {
                 </header>
                 <div className="u-readable u-stack">
                     <p className="u-text-body">
-                        Duriin is a channel for people who like their feeds sharp and their games loud.
-                        Expect breakdowns of FPS setups, behind-the-scenes edits, and experiments in
-                        game audio and visuals. No fluff—just the drop.
+                        I'm Duriin, a gamer who likes to tinker and occasionally code. This is the
+                        accumulation of fun moments that deserve a home.
                     </p>
                     <p className="u-text-body">
-                        This space will expand with player guides, patch note reactions, build logs,
-                        and cross-posted shorts. If you want something featured, ping me and I will
-                        line it up in the queue.
+                        You will find clips, quick breakdowns, and small experiments when they are
+                        worth sharing. If something resonates, reach out.
                     </p>
                 </div>
                 <div className="page-cta">

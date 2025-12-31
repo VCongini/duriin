@@ -32,12 +32,13 @@ const HeroComponent: React.FC = () => {
                         DURIIN
                     </h1>
                     <p className="hero__subtitle u-text-body">
-                        Fast-moving cuts, late-night builds, and breakdowns from the games-in-progress feed.
+                        Hey, I'm Duriin. This is my corner for fun gaming moments, late-night builds, and the occasional
+                        coding experiment.
                     </p>
                     <ul className="hero__badges" aria-label="Content types">
                         <li className="hero__badge">Clips</li>
-                        <li className="hero__badge">Breakdowns</li>
-                        <li className="hero__badge">Devlogs</li>
+                        <li className="hero__badge">Builds</li>
+                        <li className="hero__badge">Experiments</li>
                     </ul>
                 </div>
 
@@ -56,7 +57,7 @@ const HeroComponent: React.FC = () => {
                 </div>
 
                 <div className="hero__social-proof" aria-label="Channel highlights">
-                    <p className="u-text-caption">A small channel built as an escape from everyday life, hope you enjoy it.</p>
+                    <p className="u-text-caption">A small archive of the moments I want to keep and share.</p>
                 </div>
             </div>
         </section>
