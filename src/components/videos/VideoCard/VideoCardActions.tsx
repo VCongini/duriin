@@ -8,6 +8,7 @@ export interface VideoCardActionsProps {
     ctaLabel?: string;
     isSpotlighted?: boolean;
     onSpotlightToggle?: () => void;
+    spotlightToggleId?: string;
 }
 
 export const VideoCardActions: React.FC<VideoCardActionsProps> = ({
@@ -15,12 +16,14 @@ export const VideoCardActions: React.FC<VideoCardActionsProps> = ({
     platform,
     ctaLabel,
     isSpotlighted = false,
-    onSpotlightToggle
+    onSpotlightToggle,
+    spotlightToggleId
 }) => (
     <div className="video-card__actions">
         {onSpotlightToggle ? (
             <button
                 type="button"
+                id={spotlightToggleId}
                 className={`btn btn--ghost spotlight-toggle ${isSpotlighted ? 'is-active' : ''}`}
                 aria-pressed={isSpotlighted}
                 onClick={onSpotlightToggle}

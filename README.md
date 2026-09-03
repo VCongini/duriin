@@ -38,6 +38,12 @@ wrangler secret put YOUTUBE_CHANNEL_ID
 wrangler deploy
 ```
 
+Pushes to `main` deploy the Worker and static assets through GitHub Actions. Configure these repository
+Actions secrets before the next push:
+
+- `CLOUDFLARE_API_TOKEN`: token with Workers Scripts and Workers Routes edit access.
+- `CLOUDFLARE_ACCOUNT_ID`: the Cloudflare account that owns `duriin.com`.
+
 The scheduled event refreshes KV hourly. The front end consumes the cached JSON via `/api/youtube-feed?limit=50`
 and falls back to the bundled `videos.json` if the cache is empty or unreachable.
 
@@ -47,8 +53,8 @@ Use the provided content script as a tiny proxy so the YouTube API key never shi
 
 1. Create `.env.local` (or set CI secrets) with:
    ```
-   VITE_YOUTUBE_API_KEY=your_api_key
-   VITE_YOUTUBE_CHANNEL_ID=your_channel_id
+   YOUTUBE_API_KEY=your_api_key
+   YOUTUBE_CHANNEL_ID=your_channel_id
    # Optional: Twitch VODs
    TWITCH_CLIENT_ID=...
    TWITCH_CLIENT_SECRET=...

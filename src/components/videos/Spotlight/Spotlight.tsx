@@ -1,11 +1,13 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useId, useMemo, useRef } from 'react';
 import { Video } from '../../../content/types';
+import { normalizeYouTubeEmbedUrl } from '../../../utils/video';
 import { VideoCardMeta } from '../VideoCard/VideoCardMeta';
 
 export interface SpotlightProps {
     variant: 'row' | 'overlay';
     video: Video;
     onExit: () => void;
+    returnFocusId?: string;
 }
 
 const SpotlightPlayer: React.FC<{ embedUrl?: string; title: string; url: string }> = ({
@@ -19,7 +21,8 @@ const SpotlightPlayer: React.FC<{ embedUrl?: string; title: string; url: string 
         }
 
         const params = ['autoplay=1', 'rel=0', 'controls=1'];
-        return `${embedUrl}${embedUrl.includes('?') ? '&' : '?'}${params.join('&')}`;
+        const privacyEnhancedUrl = normalizeYouTubeEmbedUrl(embedUrl);
+        return `${privacyEnhancedUrl}${privacyEnhancedUrl.includes('?') ? '&' : '?'}${params.join('&')}`;
     }, [embedUrl]);
 
     if (!embedSrc) {
@@ -44,30 +47,73 @@ const SpotlightPlayer: React.FC<{ embedUrl?: string; title: string; url: string 
 };
 
 export const Spotlight = React.forwardRef<HTMLDivElement, SpotlightProps>(
-    ({ variant, video, onExit }, ref) => {
+    ({ variant, video, onExit, returnFocusId }, ref) => {
         const isOverlay = variant === 'overlay';
+        const dialogRef = useRef<HTMLDialogElement>(null);
+        const closeButtonRef = useRef<HTMLButtonElement>(null);
+        const previousFocusRef = useRef<HTMLElement | null>(null);
+        const titleId = useId();
 
         useEffect(() => {
             if (!isOverlay) {
                 return;
             }
 
+            const dialog = dialogRef.current;
             const previousOverflow = document.body.style.overflow;
+            previousFocusRef.current = document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null;
             document.body.style.overflow = 'hidden';
+
+            if (dialog && !dialog.open) {
+                if (typeof dialog.showModal === 'function') {
+                    dialog.showModal();
+                } else {
+                    dialog.setAttribute('open', '');
+                }
+            }
+
+            closeButtonRef.current?.focus();
 
             return () => {
                 document.body.style.overflow = previousOverflow;
+                if (dialog?.open) {
+                    if (typeof dialog.close === 'function') {
+                        dialog.close();
+                    } else {
+                        dialog.removeAttribute('open');
+                    }
+                }
+
+                const previousFocus = previousFocusRef.current;
+                window.requestAnimationFrame(() => {
+                    const returnTarget = previousFocus?.isConnected
+                        ? previousFocus
+                        : returnFocusId
+                            ? document.getElementById(returnFocusId)
+                            : null;
+                    returnTarget?.focus();
+                });
             };
-        }, [isOverlay]);
+        }, [isOverlay, returnFocusId]);
 
         const content = (
             <div className="spotlight__content u-stack">
                 <header className="spotlight__header">
                     <div className="spotlight__titles">
                         <p className="spotlight__eyebrow">{video.platform}</p>
-                        <h2 className="spotlight__title">{video.title}</h2>
+                        <h2 className="spotlight__title" id={titleId}>
+                            {video.title}
+                        </h2>
                     </div>
-                    <button type="button" className="btn btn--ghost" onClick={onExit}>
+                    <button
+                        type="button"
+                        className="btn btn--ghost"
+                        onClick={onExit}
+                        ref={isOverlay ? closeButtonRef : undefined}
+                        autoFocus={isOverlay}
+                    >
                         Exit Spotlight
                     </button>
                 </header>
@@ -78,26 +124,32 @@ export const Spotlight = React.forwardRef<HTMLDivElement, SpotlightProps>(
             </div>
         );
 
-        return (
-            <div
-                className={`spotlight ${isOverlay ? 'spotlight--overlay' : 'spotlight--row'}`}
-                role={isOverlay ? 'dialog' : undefined}
-                aria-modal={isOverlay ? 'true' : undefined}
-                aria-label={isOverlay ? 'Spotlight video' : undefined}
-                ref={ref}
-            >
-                {isOverlay ? (
-                    <button
-                        type="button"
-                        className="spotlight__backdrop"
-                        aria-label="Exit Spotlight"
-                        onClick={onExit}
-                    />
-                ) : null}
-                <div
-                    className={`spotlight__panel ${isOverlay ? 'spotlight__panel--overlay' : ''}`}
-                    onClick={isOverlay ? (event) => event.stopPropagation() : undefined}
+        if (isOverlay) {
+            return (
+                <dialog
+                    className="spotlight spotlight--overlay"
+                    ref={dialogRef}
+                    aria-labelledby={titleId}
+                    onCancel={(event) => {
+                        event.preventDefault();
+                        onExit();
+                    }}
+                    onClick={(event) => {
+                        if (event.target === event.currentTarget) {
+                            onExit();
+                        }
+                    }}
                 >
+                    <div className="spotlight__panel spotlight__panel--overlay">
+                        {content}
+                    </div>
+                </dialog>
+            );
+        }
+
+        return (
+            <div className="spotlight spotlight--row" ref={ref}>
+                <div className="spotlight__panel">
                     {content}
                 </div>
             </div>

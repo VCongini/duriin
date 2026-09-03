@@ -63,7 +63,7 @@ export const Home: React.FC = () => {
     const featuredHighlights = useMemo<FeaturedTopic[]>(
         () =>
             latestVideos
-                .map((video) => {
+                .map<FeaturedTopic | null>((video) => {
                     const image = getHighlightImage(video);
                     if (!image) {
                         return null;

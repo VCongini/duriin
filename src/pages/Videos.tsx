@@ -2,7 +2,6 @@ import React, {
     useCallback,
     useDeferredValue,
     useEffect,
-    useId,
     useMemo,
     useRef,
     useState
@@ -13,6 +12,7 @@ import { Spotlight } from '../components/videos/Spotlight';
 import { useViewedVideos } from '../components/videos/useViewedVideos';
 import { getVideos } from '../content';
 import { Video } from '../content/types';
+import { parseDate } from '../utils/format';
 
 type SortOrder = 'newest' | 'oldest';
 
@@ -47,19 +47,18 @@ const useMediaQuery = (query: string) => {
     return matches;
 };
 
-const sortVideos = (list: Video[], sort: SortOrder) =>
-    sort === 'newest'
-        ? list
-        : [...list].sort(
-              (a, b) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
-          );
+const sortVideos = (list: Video[], sort: SortOrder) => {
+    const direction = sort === 'newest' ? -1 : 1;
+
+    return [...list].sort(
+        (a, b) => direction * (parseDate(a.publishedAt).getTime() - parseDate(b.publishedAt).getTime())
+    );
+};
 
 export const Videos: React.FC = () => {
     const [query, setQuery] = useState('');
     const [sort, setSort] = useState<SortOrder>('newest');
     const [activeTag, setActiveTag] = useState<string | null>(null);
-    const [isTagMenuOpen, setTagMenuOpen] = useState(false);
-    const [isSortMenuOpen, setSortMenuOpen] = useState(false);
     const [playingId, setPlayingId] = useState<string | null>(null);
     const [spotlightId, setSpotlightId] = useState<string | null>(null);
     const [isSpotlightRendered, setIsSpotlightRendered] = useState(false);
@@ -69,7 +68,6 @@ export const Videos: React.FC = () => {
     const [videos, setVideos] = useState<Video[] | null>(null);
     const [isLoadingVideos, setIsLoadingVideos] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
-    const isCompactMode = true;
     const { isViewed, markViewed } = useViewedVideos();
 
     const tags = useMemo(
@@ -77,10 +75,6 @@ export const Videos: React.FC = () => {
         [videos]
     );
     const deferredQuery = useDeferredValue(query);
-    const tagFilterId = useId();
-    const tagMenuRef = useRef<HTMLSpanElement>(null);
-    const sortMenuRef = useRef<HTMLDivElement>(null);
-    const sortMenuId = useId();
     const spotlightRowRef = useRef<HTMLDivElement>(null);
     const spotlightContentRef = useRef<HTMLDivElement>(null);
     const spotlightAppliedRef = useRef<string | null>(null);
@@ -270,57 +264,6 @@ export const Videos: React.FC = () => {
                 ? '1 video'
                 : `${filtered.length} videos${activeTag ? ` tagged ${activeTag}` : ''}`;
 
-    const tagOptions = useMemo(
-        () => [{ value: null, label: 'All' }, ...tags.map((tag) => ({ value: tag, label: `#${tag}` }))],
-        [tags]
-    );
-
-    const closeTagMenu = useCallback(() => {
-        setTagMenuOpen(false);
-    }, []);
-
-    const handleTagSelect = useCallback(
-        (value: string | null) => {
-            setActiveTag(value);
-            closeTagMenu();
-        },
-        [closeTagMenu]
-    );
-
-    const handleSortSelect = useCallback((value: SortOrder) => {
-        setSort(value);
-        setSortMenuOpen(false);
-    }, []);
-
-    const handleTagTriggerKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>) => {
-        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-            event.preventDefault();
-            setTagMenuOpen(true);
-        }
-    }, []);
-
-    const handleSortTriggerKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>) => {
-        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-            event.preventDefault();
-            setSortMenuOpen(true);
-        }
-    }, []);
-
-    const handleTagBlur = useCallback(
-        (event: React.FocusEvent<HTMLElement>) => {
-            if (tagMenuRef.current && !tagMenuRef.current.contains(event.relatedTarget as Node | null)) {
-                closeTagMenu();
-            }
-        },
-        [closeTagMenu]
-    );
-
-    const handleSortBlur = useCallback((event: React.FocusEvent<HTMLElement>) => {
-        if (sortMenuRef.current && !sortMenuRef.current.contains(event.relatedTarget as Node | null)) {
-            setSortMenuOpen(false);
-        }
-    }, []);
-
     const handleVideoPlay = useCallback(
         (id: string) => {
             setPlayingId((current) => {
@@ -365,37 +308,6 @@ export const Videos: React.FC = () => {
     );
 
     useEffect(() => {
-        if (!isTagMenuOpen && !isSortMenuOpen) {
-            return undefined;
-        }
-
-        const handleClickOutside = (event: MouseEvent) => {
-            if (tagMenuRef.current && !tagMenuRef.current.contains(event.target as Node)) {
-                closeTagMenu();
-            }
-
-            if (sortMenuRef.current && !sortMenuRef.current.contains(event.target as Node)) {
-                setSortMenuOpen(false);
-            }
-        };
-
-        const handleEscape = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                closeTagMenu();
-                setSortMenuOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('keydown', handleEscape);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-            document.removeEventListener('keydown', handleEscape);
-        };
-    }, [closeTagMenu, isSortMenuOpen, isTagMenuOpen]);
-
-    useEffect(() => {
         if (!spotlightId) {
             return;
         }
@@ -420,7 +332,7 @@ export const Videos: React.FC = () => {
     }, [isMobile, spotlightVideo]);
 
     return (
-        <div className={`u-page u-stack-lg videos-page ${isCompactMode ? 'videos-page--compact' : ''}`}>
+        <div className="u-page u-stack-lg videos-page">
             <section className="page-section u-stack">
                 <header className="c-section-header c-section-header--accent">
                     <p className="c-section-header__label">Archive</p>
@@ -453,103 +365,38 @@ export const Videos: React.FC = () => {
                                 onChange={(e) => setQuery(e.target.value)}
                             />
                         </label>
-                        <label className="field">
+                        <label className="field" htmlFor="video-sort">
                             <span className="field__label">Sort</span>
-                            <div
-                                className="filters__dropdown"
-                                ref={sortMenuRef}
-                                onBlur={handleSortBlur}
-                                aria-label="Sort dropdown"
-                            >
-                                <button
-                                    type="button"
+                            <span className="filters__dropdown">
+                                <select
+                                    id="video-sort"
                                     className="filters__select"
-                                    aria-haspopup="listbox"
-                                    aria-expanded={isSortMenuOpen}
-                                    aria-controls={`${sortMenuId}-menu`}
-                                    onClick={() => setSortMenuOpen((open) => !open)}
-                                    onKeyDown={handleSortTriggerKeyDown}
+                                    value={sort}
+                                    onChange={(event) => setSort(event.target.value as SortOrder)}
                                 >
-                                    <span className="filters__select-label">
-                                        {sort === 'newest' ? 'Newest first' : 'Oldest first'}
-                                    </span>
-                                    <span className="filters__select-icon" aria-hidden="true" />
-                                </button>
-                                {isSortMenuOpen && (
-                                    <div
-                                        id={`${sortMenuId}-menu`}
-                                        role="listbox"
-                                        aria-label="Sort options"
-                                        className="filters__dropdown-menu"
-                                    >
-                                        <button
-                                            type="button"
-                                            role="option"
-                                            aria-selected={sort === 'newest'}
-                                            className={`filters__option ${sort === 'newest' ? 'is-active' : ''}`}
-                                            onClick={() => handleSortSelect('newest')}
-                                        >
-                                            Newest first
-                                        </button>
-                                        <button
-                                            type="button"
-                                            role="option"
-                                            aria-selected={sort === 'oldest'}
-                                            className={`filters__option ${sort === 'oldest' ? 'is-active' : ''}`}
-                                            onClick={() => handleSortSelect('oldest')}
-                                        >
-                                            Oldest first
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
+                                    <option value="newest">Newest first</option>
+                                    <option value="oldest">Oldest first</option>
+                                </select>
+                                <span className="filters__select-icon" aria-hidden="true" />
+                            </span>
                         </label>
-                        <label className="field field--tags" htmlFor={tagFilterId}>
+                        <label className="field field--tags" htmlFor="video-tag-filter">
                             <span className="field__label">Filter by tag</span>
-                            {/* Tag filter: pills replaced by single dropdown for condensed UI (brutalist + modern themes supported) */}
-                            <span
-                                className="filters__dropdown"
-                                ref={tagMenuRef}
-                                onBlur={handleTagBlur}
-                                aria-label="Tag filter dropdown"
-                            >
-                                <button
-                                    id={tagFilterId}
-                                    type="button"
+                            <span className="filters__dropdown">
+                                <select
+                                    id="video-tag-filter"
                                     className="filters__select"
-                                    aria-haspopup="listbox"
-                                    aria-expanded={isTagMenuOpen}
-                                    aria-controls={`${tagFilterId}-menu`}
-                                    onClick={() => setTagMenuOpen((open) => !open)}
-                                    onKeyDown={handleTagTriggerKeyDown}
+                                    value={activeTag ?? ''}
+                                    onChange={(event) => setActiveTag(event.target.value || null)}
                                 >
-                                    <span className="filters__select-label">{activeTag ? `#${activeTag}` : 'All'}</span>
-                                    <span className="filters__select-icon" aria-hidden="true" />
-                                </button>
-                                {isTagMenuOpen && (
-                                    <div
-                                        id={`${tagFilterId}-menu`}
-                                        role="listbox"
-                                        aria-label="Tag options"
-                                        className="filters__dropdown-menu"
-                                    >
-                                        {tagOptions.map(({ value, label }) => {
-                                            const isActive = (!activeTag && value === null) || activeTag === value;
-                                            return (
-                                                <button
-                                                    key={value ?? 'all'}
-                                                    type="button"
-                                                    role="option"
-                                                    aria-selected={isActive}
-                                                    className={`filters__option ${isActive ? 'is-active' : ''}`}
-                                                    onClick={() => handleTagSelect(value)}
-                                                >
-                                                    {label}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                )}
+                                    <option value="">All</option>
+                                    {tags.map((tag) => (
+                                        <option key={tag} value={tag}>
+                                            #{tag}
+                                        </option>
+                                    ))}
+                                </select>
+                                <span className="filters__select-icon" aria-hidden="true" />
                             </span>
                         </label>
                     </form>
@@ -570,7 +417,12 @@ export const Videos: React.FC = () => {
                     <>
                         {isMobile ? (
                             spotlightVideo ? (
-                                <Spotlight variant="overlay" video={spotlightVideo} onExit={handleSpotlightExit} />
+                                <Spotlight
+                                    variant="overlay"
+                                    video={spotlightVideo}
+                                    onExit={handleSpotlightExit}
+                                    returnFocusId={`spotlight-toggle-${spotlightVideo.id}`}
+                                />
                             ) : null
                         ) : isSpotlightRendered ? (
                             <div
@@ -600,7 +452,6 @@ export const Videos: React.FC = () => {
                                     isViewed={isViewed(video.id)}
                                     isPlaying={activePlayerId === video.id}
                                     onPlay={handleVideoPlay}
-                                    isCompact={isCompactMode}
                                     isSpotlighted={video.id === spotlightId}
                                     onSpotlightToggle={handleSpotlightToggle}
                                 />

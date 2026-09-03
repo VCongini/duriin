@@ -1,12 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 
-// Allow overriding the base for different hosting targets (e.g., Cloudflare Pages at root).
-const base = process.env.VITE_BASE ?? '/';
-
 export default defineConfig({
     plugins: [react()],
-    base,
     server: {
         proxy: {
             '/api': {

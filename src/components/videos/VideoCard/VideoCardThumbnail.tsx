@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { normalizeYouTubeEmbedUrl } from '../../../utils/video';
 
 export interface VideoCardThumbnailProps {
     thumbnailUrl?: string;
@@ -35,7 +36,14 @@ export const VideoCardThumbnail: React.FC<VideoCardThumbnailProps> = ({
                 aria-pressed={isPlaying}
             >
                 {thumbnailUrl ? (
-                    <img src={thumbnailUrl} alt="" loading="lazy" />
+                    <img
+                        src={thumbnailUrl}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        width="1280"
+                        height="720"
+                    />
                 ) : (
                     <div className="video-card__placeholder">{platform}</div>
                 )}
@@ -75,7 +83,8 @@ const VideoCardEmbed: React.FC<VideoCardEmbedProps> = ({ embedUrl, title }) => {
     const embedSrc = useMemo(() => {
         const params = ['autoplay=1', 'rel=0', 'controls=1'];
 
-        return `${embedUrl}${embedUrl.includes('?') ? '&' : '?'}${params.join('&')}`;
+        const privacyEnhancedUrl = normalizeYouTubeEmbedUrl(embedUrl);
+        return `${privacyEnhancedUrl}${privacyEnhancedUrl.includes('?') ? '&' : '?'}${params.join('&')}`;
     }, [embedUrl]);
 
     return (

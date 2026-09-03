@@ -15,7 +15,7 @@ export const AnnouncementDetail: React.FC = () => {
                 <section className="page-section u-stack">
                     <header className="c-section-header c-section-header--accent">
                         <p className="c-section-header__label">Announcements</p>
-                        <h2 className="c-section-header__title">Announcement not found</h2>
+                        <h1 className="c-section-header__title">Announcement not found</h1>
                     </header>
                     <p className="announcement-body announcement-body--muted">
                         We couldn&apos;t find that update. It may have been renamed or removed.

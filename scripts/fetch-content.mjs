@@ -9,8 +9,8 @@ const root = path.resolve(__dirname, '..');
 const videosPath = path.join(root, 'src/content/videos.json');
 
 let env = {
-    youtubeApiKey: process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY,
-    youtubeChannelId: process.env.YOUTUBE_CHANNEL_ID || process.env.VITE_YOUTUBE_CHANNEL_ID,
+    youtubeApiKey: process.env.YOUTUBE_API_KEY,
+    youtubeChannelId: process.env.YOUTUBE_CHANNEL_ID,
     twitchClientId: process.env.TWITCH_CLIENT_ID,
     twitchClientSecret: process.env.TWITCH_CLIENT_SECRET,
     twitchUserId: process.env.TWITCH_USER_ID
@@ -37,8 +37,8 @@ const loadLocalEnv = async () => {
     }
 
     env = {
-        youtubeApiKey: process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY,
-        youtubeChannelId: process.env.YOUTUBE_CHANNEL_ID || process.env.VITE_YOUTUBE_CHANNEL_ID,
+        youtubeApiKey: process.env.YOUTUBE_API_KEY,
+        youtubeChannelId: process.env.YOUTUBE_CHANNEL_ID,
         twitchClientId: process.env.TWITCH_CLIENT_ID,
         twitchClientSecret: process.env.TWITCH_CLIENT_SECRET,
         twitchUserId: process.env.TWITCH_USER_ID
@@ -48,9 +48,12 @@ const loadLocalEnv = async () => {
 const readExisting = async () => {
     try {
         const data = await fs.readFile(videosPath, 'utf8');
-        return JSON.parse(data);
-    } catch {
-        return [];
+        const videos = JSON.parse(data);
+        if (!Array.isArray(videos)) throw new Error('videos.json must contain an array');
+        return videos;
+    } catch (error) {
+        if (error?.code === 'ENOENT') return [];
+        throw error;
     }
 };
 
@@ -84,15 +87,39 @@ const truncate = (text, limit = 220) => {
     return text.slice(0, limit - 1).trimEnd() + '…';
 };
 
-const fetchJson = async (url, opts = {}) => {
-    const res = await fetch(url, opts);
-    if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
-    return res.json();
+const safeRequestTarget = (url) => {
+    try {
+        const parsed = new URL(url);
+        return `${parsed.origin}${parsed.pathname}`;
+    } catch {
+        return 'request';
+    }
+};
+
+const formatError = (error) => {
+    const message = error instanceof Error ? error.message : String(error);
+    return Object.values(env)
+        .filter((value) => typeof value === 'string' && value.length > 0)
+        .reduce((safe, secret) => safe.replaceAll(secret, '[REDACTED]'), message);
+};
+
+export const fetchJson = async (url, opts = {}) => {
+    let status;
+
+    try {
+        const res = await fetch(url, opts);
+        status = res.status;
+        if (!res.ok) throw new Error('Non-success response');
+        return await res.json();
+    } catch {
+        const statusText = status ? ` ${status}` : '';
+        throw new Error(`Fetch failed${statusText} for ${safeRequestTarget(url)}`);
+    }
 };
 
 const fetchYouTubeUploads = async (existingLookup) => {
     if (!env.youtubeApiKey || !env.youtubeChannelId) {
-        console.log('YouTube: missing YOUTUBE_API_KEY/YOUTUBE_CHANNEL_ID (or VITE_ variants), skipping.');
+        console.log('YouTube: missing YOUTUBE_API_KEY/YOUTUBE_CHANNEL_ID, skipping.');
         return [];
     }
     console.log('YouTube: fetching uploads…');
@@ -114,8 +141,8 @@ const fetchYouTubeUploads = async (existingLookup) => {
     const videosData = await fetchJson(
         `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${ids.join(',')}&key=${env.youtubeApiKey}`
     );
-    return videosData.items
-        ?.map((item) => {
+    return (videosData.items || [])
+        .map((item) => {
             const duration = isoDurationToClock(item.contentDetails?.duration || '');
             const id = item.id;
             const thumbnail =
@@ -130,7 +157,7 @@ const fetchYouTubeUploads = async (existingLookup) => {
                 title: item.snippet?.title || 'Untitled',
                 platform: 'YouTube',
                 url: `https://www.youtube.com/watch?v=${id}`,
-                embedUrl: `https://www.youtube.com/embed/${id}`,
+                embedUrl: `https://www.youtube-nocookie.com/embed/${id}`,
                 thumbnailUrl: thumbnail,
                 duration: duration || '00:00',
                 status: 'LIVE',
@@ -178,24 +205,39 @@ const fetchTwitchVods = async (existingLookup) => {
     });
 };
 
-const mergeContent = (existing, incoming) => {
-    const incomingIds = new Set(incoming.map((v) => v.id));
-    const preserved = existing.filter((v) => !incomingIds.has(v.id) && v.platform === 'TikTok');
-    return [...incoming, ...preserved];
+export const replaceProviderRecords = (existing, platform, incoming) => {
+    if (!Array.isArray(incoming) || !incoming.length) {
+        console.warn(`${platform}: fetched no records; keeping existing ${platform} records.`);
+        return existing;
+    }
+
+    return [...incoming, ...existing.filter((video) => video.platform !== platform)];
+};
+
+const refreshProvider = async (label, fetcher) => {
+    try {
+        return await fetcher();
+    } catch (error) {
+        console.error(`${label}: refresh failed; keeping existing records. ${formatError(error)}`);
+        return [];
+    }
 };
 
 const main = async () => {
     await loadLocalEnv();
     const existing = await readExisting();
     const existingLookup = new Map(existing.map((v) => [v.id, v]));
-    const youtube = await fetchYouTubeUploads(existingLookup);
-    const twitch = await fetchTwitchVods(existingLookup);
-    const combined = mergeContent(existing, [...youtube, ...twitch]);
+    const youtube = await refreshProvider('YouTube', () => fetchYouTubeUploads(existingLookup));
+    const twitch = await refreshProvider('Twitch', () => fetchTwitchVods(existingLookup));
+    const withYouTube = replaceProviderRecords(existing, 'YouTube', youtube);
+    const combined = replaceProviderRecords(withYouTube, 'Twitch', twitch);
     await writeVideos(combined);
     console.log(`Content sync complete. Total videos: ${combined.length}`);
 };
 
-main().catch((err) => {
-    console.error(err);
-    process.exitCode = 1;
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+    main().catch((error) => {
+        console.error(`Content sync failed: ${formatError(error)}`);
+        process.exitCode = 1;
+    });
+}

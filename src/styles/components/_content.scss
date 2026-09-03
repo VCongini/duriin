@@ -182,46 +182,6 @@
     gap: var(--space-xs);
 }
 
-.episode-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    @include responsive-space(gap, var(--space-md), var(--space-lg));
-}
-
-.episode {
-    border: var(--video-border-width) solid var(--panel-outline);
-    border-radius: calc(var(--panel-radius) - 0.25rem);
-    @include responsive-space(padding, var(--space-md), var(--space-lg));
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    background: var(--color-bg-muted);
-}
-
-.episode--compact {
-    background: var(--color-bg-panel);
-    border-radius: var(--panel-radius);
-}
-
-.episode__header {
-    @include fluid-stack(column, var(--space-xxs), row, var(--space-sm));
-    justify-content: space-between;
-    @include responsive-text(0.85rem, 0.95rem);
-}
-
-.episode__header-actions {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-}
-
-.episode__label {
-    color: var(--color-text-secondary);
-}
-
 .episode__status {
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -237,102 +197,6 @@
 
 .episode__status--draft {
     color: var(--color-status-draft);
-}
-
-.episode__title {
-    color: var(--color-text-primary);
-    text-decoration: none;
-    @include responsive-heading(1.25rem, 1.65rem);
-}
-
-.episode__title-row {
-    @include fluid-stack(column, var(--space-xs), row, var(--space-sm));
-}
-
-.episode__title-stack {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-xs);
-}
-
-.episode__badge {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xxs);
-    padding: 0.2rem 0.5rem;
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--color-accent-section) 18%, transparent);
-    color: var(--color-text-primary);
-    border: 1px solid var(--panel-outline);
-    font-size: var(--font-size-xs);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
-.episode__submeta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-sm);
-    color: var(--color-text-secondary);
-}
-
-.episode__secondary-meta,
-.episode__secondary-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xxs);
-    font-weight: 600;
-    letter-spacing: 0.02em;
-}
-
-.episode__secondary-meta--muted {
-    color: var(--color-text-tertiary);
-}
-
-.episode__secondary-link {
-    color: var(--color-text-primary);
-    text-decoration: none;
-    border-bottom: 1px dotted color-mix(in srgb, var(--color-text-primary) 70%, transparent);
-    padding-bottom: 0.05rem;
-}
-
-.episode__secondary-link:hover {
-    color: var(--color-accent-section);
-    border-color: color-mix(in srgb, var(--color-accent-section) 80%, transparent);
-}
-.episode__platform-glyph {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.65rem;
-    height: 1.65rem;
-    border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--color-border-strong) 24%, transparent);
-    color: var(--color-text-primary);
-    padding: 0.2rem;
-}
-
-.episode__platform-glyph svg {
-    width: 100%;
-    height: 100%;
-    fill: currentColor;
-}
-
-.episode__platform-glyph--youtube {
-    background: color-mix(in srgb, #ff0000 70%, transparent);
-    color: #fff;
-}
-
-.episode__platform-glyph--twitch {
-    background: color-mix(in srgb, #9146ff 70%, transparent);
-    color: #fff;
-}
-
-.episode__platform-glyph--tiktok {
-    background: color-mix(in srgb, #23f2ea 70%, transparent);
-    color: #111;
 }
 
 .filter-summary {
@@ -384,16 +248,13 @@
     border: 1px solid var(--theme-control-border);
     background: var(--theme-control-bg);
     color: var(--color-text-primary);
-    padding: 0.65rem 0.9rem;
+    padding: 0.65rem 2.25rem 0.65rem 0.9rem;
     font-size: var(--font-size-sm);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    justify-content: space-between;
+    display: block;
     width: 100%;
     min-height: var(--tap-target);
     transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
@@ -410,76 +271,20 @@
     box-shadow: none;
 }
 
-.filters__select-label {
-    white-space: nowrap;
-}
-
 .filters__select-icon {
+    position: absolute;
+    top: 50%;
+    right: 0.9rem;
     width: 0;
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
     border-top: 6px solid var(--theme-control-muted);
-    transition: transform 150ms ease;
-}
-
-.filters__select[aria-expanded='true'] .filters__select-icon {
-    transform: rotate(180deg) translateY(-1px);
-}
-
-.filters__dropdown-menu {
-    position: absolute;
-    top: calc(100% + 0.3rem);
-    left: 0;
-    width: 100%;
-    border: 1px solid var(--theme-control-border);
-    background: var(--theme-control-bg);
-    border-radius: var(--radius-md);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
-    padding: 0.3rem;
-    z-index: 12;
-}
-
-.filters__option {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: var(--color-text-primary);
-    font-size: var(--font-size-sm);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.55rem 0.85rem;
-    border-radius: var(--radius-sm);
-    display: block;
-    cursor: pointer;
-    text-align: left;
-    transition: background 150ms ease, color 150ms ease;
-}
-
-.filters__option:hover,
-.filters__option:focus-visible {
-    background: var(--theme-control-active);
-    color: var(--theme-control-active-text);
-}
-
-.filters__option.is-active {
-    background: var(--theme-control-active);
-    color: var(--theme-control-active-text);
-    font-weight: 700;
+    pointer-events: none;
+    transform: translateY(-50%);
 }
 
 [data-theme-layout='brutalist'] .filters__select {
     border-radius: var(--radius-none);
     border-width: var(--border-base);
 }
-
-[data-theme-layout='brutalist'] .filters__dropdown-menu {
-    border-radius: var(--radius-none);
-    border-width: var(--border-base);
-    box-shadow: var(--shadow-brutalist);
-}
-
-[data-theme-layout='brutalist'] .filters__option {
-    border-radius: var(--radius-none);
-}
-
