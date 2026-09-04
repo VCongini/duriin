@@ -32,7 +32,7 @@
 }
 
 .app__loader {
-    min-height: 12rem;
+    min-height: clamp(32rem, 70vh, 48rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,4 +41,3 @@
     text-transform: uppercase;
     letter-spacing: 0.2em;
 }
-

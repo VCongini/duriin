@@ -12,7 +12,6 @@ export interface VideoCardProps {
     video: Video;
     isPlaying: boolean;
     isViewed: boolean;
-    isCompact: boolean;
     onPlay: (id: string) => void;
     isSpotlighted: boolean;
     onSpotlightToggle: (id: string) => void;
@@ -22,23 +21,20 @@ export const VideoCard: React.FC<VideoCardProps> = ({
     video,
     isPlaying,
     isViewed,
-    isCompact,
     onPlay,
     isSpotlighted,
     onSpotlightToggle
 }) => {
     const handlePlay = () => onPlay(video.id);
-    const teaser = createTeaser(video.description ?? video.title, isCompact ? 70 : 110);
+    const teaser = createTeaser(video.description ?? video.title, 70);
     const handleSpotlightToggle = () => onSpotlightToggle(video.id);
 
     return (
-        <article
+        <li
             className={`video-card ${isPlaying ? 'is-playing' : ''} ${isViewed ? 'is-viewed' : ''} ${
-                isCompact ? 'video-card--compact' : ''
-            } ${isSpotlighted ? 'is-spotlighted' : ''}`}
-            role="listitem"
+                isSpotlighted ? 'is-spotlighted' : ''
+            }`}
             aria-current={isPlaying}
-            aria-pressed={isSpotlighted}
             aria-label={`${video.title}${isSpotlighted ? ' in Spotlight' : ''}`}
         >
             {isViewed ? <span className="video-card__badge">Viewed</span> : null}
@@ -83,10 +79,11 @@ export const VideoCard: React.FC<VideoCardProps> = ({
                         platform={video.platform}
                         isSpotlighted={isSpotlighted}
                         onSpotlightToggle={handleSpotlightToggle}
+                        spotlightToggleId={`spotlight-toggle-${video.id}`}
                     />
                 </div>
             </div>
-        </article>
+        </li>
     );
 };
 

@@ -46,7 +46,7 @@
 .announcement__label {
     @include pill-label;
     border: 1px solid var(--color-border-strong);
-    background: var(--color-bg);
+    background: var(--color-bg-panel);
 }
 
 .announcement__date {
@@ -87,6 +87,7 @@
     text-decoration: none;
     text-transform: uppercase;
     font-size: var(--font-size-sm);
+    min-height: var(--tap-target);
 }
 
 .announcement__link::after {

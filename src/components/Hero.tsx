@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getVideos } from '../content';
 import { Video } from '../content/types';
 
@@ -51,9 +52,9 @@ const HeroComponent: React.FC = () => {
                     >
                         Watch latest drop
                     </a>
-                    <a href="/videos" className="page-cta__secondary hero__secondary-link">
+                    <Link to="/videos" className="page-cta__secondary hero__secondary-link">
                         Browse the archive
-                    </a>
+                    </Link>
                 </div>
 
                 <div className="hero__social-proof" aria-label="Channel highlights">

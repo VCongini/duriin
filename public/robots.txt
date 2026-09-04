@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://duriin.com/sitemap.xml

@@ -4,28 +4,21 @@
         <meta charset="UTF-8" />
         <title>Duriin's Hub</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Duriin's hub for gaming moments, late-night builds, coding experiments, videos, and announcements."
+        />
+        <link rel="canonical" href="https://duriin.com/" />
+        <meta property="og:title" content="Duriin's Hub" />
+        <meta
+            property="og:description"
+            content="Gaming moments, late-night builds, coding experiments, videos, and announcements from Duriin."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://duriin.com/" />
+        <meta property="og:site_name" content="Duriin" />
         <link rel="icon" type="image/png" href="/favicon.png" />
-        <script>
-            (() => {
-                const root = document.documentElement;
-                const MODE_STORAGE_KEY = 'duriin-theme-mode';
-                const LAYOUT_STORAGE_KEY = 'duriin-theme-layout';
-
-                const storedMode = localStorage.getItem(MODE_STORAGE_KEY);
-                const storedLayout = localStorage.getItem(LAYOUT_STORAGE_KEY);
-
-                const mode = storedMode === 'light' || storedMode === 'dark'
-                    ? storedMode
-                    : window.matchMedia('(prefers-color-scheme: light)').matches
-                        ? 'light'
-                        : 'dark';
-
-                const layout = storedLayout === 'modern' ? 'modern' : 'brutalist';
-
-                root.setAttribute('data-theme-mode', mode);
-                root.setAttribute('data-theme-layout', layout);
-            })();
-        </script>
+        <script src="/theme-init.js"></script>
     </head>
     <body>
         <div id="root"></div>

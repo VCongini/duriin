@@ -9,7 +9,9 @@ dist-tests
 
 # environment / logs
 .env
+.env.local
 .env.*.local
+.dev.vars
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

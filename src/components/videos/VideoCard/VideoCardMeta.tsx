@@ -1,4 +1,5 @@
 import React from 'react';
+import { getTagOptions } from '../videoFilters';
 import { formatRelativeDate } from './videoCard.utils';
 
 export interface VideoCardMetaProps {
@@ -18,21 +19,26 @@ export const VideoCardMeta: React.FC<VideoCardMetaProps> = ({
     showDate = true,
     showTags = false
 }) => {
-    const tagCount = showTags ? tags.length : 0;
+    const tagOptions = React.useMemo(
+        () => getTagOptions([{ tags }]),
+        [tags]
+    );
+    const tagCount = showTags ? tagOptions.length : 0;
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+    const popoverId = React.useId();
 
     const handleMetaMouseDown = (event: React.SyntheticEvent) => {
         event.stopPropagation();
     };
 
     const handleMetaClick = (event: React.SyntheticEvent) => {
-        event.preventDefault();
         event.stopPropagation();
     };
 
-    const handlePopoverEnter = (event: React.SyntheticEvent) => {
+    const handlePopoverClick = (event: React.SyntheticEvent) => {
+        event.preventDefault();
         event.stopPropagation();
-        setIsPopoverOpen(true);
+        setIsPopoverOpen((current) => !current);
     };
 
     const handlePopoverLeave = () => {
@@ -49,25 +55,35 @@ export const VideoCardMeta: React.FC<VideoCardMetaProps> = ({
             {showDate ? <span className="tag tag--meta">{formatRelativeDate(publishedAt)}</span> : null}
             {showTags && tagCount > 0 ? (
                 <div
-                    className={`video-card__tag-counter ${isPopoverOpen ? 'is-open' : ''}`}
-                    aria-label={`${tagCount} tags`}
-                    aria-expanded={isPopoverOpen}
-                    onMouseEnter={handlePopoverEnter}
+                    className={`video-card__tag-disclosure ${isPopoverOpen ? 'is-open' : ''}`}
                     onMouseLeave={handlePopoverLeave}
                     onMouseDown={handleMetaMouseDown}
                     onMouseUp={handleMetaMouseDown}
-                    onClick={handleMetaClick}
-                    onFocus={handlePopoverEnter}
-                    onBlur={handlePopoverLeave}
                 >
-                    <span className="video-card__tag-count">{tagCount}</span>
-                    <div className="video-card__tag-popover" role="presentation">
+                    <button
+                        type="button"
+                        className="video-card__tag-counter"
+                        aria-label={`${isPopoverOpen ? 'Hide' : 'Show'} ${tagCount} tags`}
+                        aria-expanded={isPopoverOpen}
+                        aria-controls={popoverId}
+                        onClick={handlePopoverClick}
+                        onBlur={handlePopoverLeave}
+                    >
+                        <span className="video-card__tag-count">{tagCount}</span>
+                    </button>
+                    <div
+                        className="video-card__tag-popover"
+                        id={popoverId}
+                        role="region"
+                        aria-label="Video tags"
+                        aria-hidden={!isPopoverOpen}
+                    >
                         <div className="video-card__tag-popover-inner">
                             <div className="video-card__tag-popover-title">Tags</div>
                             <div className="video-card__tag-grid">
-                                {tags.map((tag) => (
-                                    <span key={tag} className="tag tag--content">
-                                        #{tag}
+                                {tagOptions.map((tag) => (
+                                    <span key={tag.value} className="tag tag--content">
+                                        #{tag.label}
                                     </span>
                                 ))}
                             </div>

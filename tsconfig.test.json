@@ -5,11 +5,12 @@
         "moduleResolution": "node",
         "noEmit": false,
         "outDir": "dist-tests",
+        "types": ["node"],
         "baseUrl": "./",
         "paths": {
             "*.svg?raw": ["tests/__mocks__/svgRaw"]
         }
     },
-    "include": ["src/components/**/*", "src/theme/**/*", "src/types/**/*", "tests/**/*"],
+    "include": ["src/components/**/*", "src/theme/**/*", "src/types/**/*", "src/workers/**/*", "tests/**/*"],
     "exclude": ["src/main.tsx"]
 }

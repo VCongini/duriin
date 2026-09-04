@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const socials = [
     { name: 'YouTube', url: 'https://www.youtube.com/@duriin6656' },
@@ -34,9 +35,9 @@ export const About: React.FC = () => {
                     >
                         Watch the channel
                     </a>
-                    <a href="/videos" className="page-cta__secondary">
+                    <Link to="/videos" className="page-cta__secondary">
                         Browse the video archive
-                    </a>
+                    </Link>
                 </div>
             </section>
 

@@ -49,7 +49,10 @@
     color: var(--color-text-secondary);
     text-decoration: none;
     line-height: 1.5;
-    padding: 0.1rem 0;
+    padding: 0.35rem 0;
+    min-height: var(--tap-target);
+    display: inline-flex;
+    align-items: center;
     transition: color 150ms ease, text-decoration-color 150ms ease;
     text-underline-offset: 0.2em;
 }

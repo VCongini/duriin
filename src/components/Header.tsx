@@ -34,9 +34,12 @@ const HeaderComponent: React.FC = () => {
                             About
                         </NavLink>
                     </nav>
-                    <div className="header__controls" aria-label="Theme and layout settings">
-                        <ThemeSettings />
-                    </div>
+                    <details className="header__appearance">
+                        <summary className="header__appearance-toggle">Appearance</summary>
+                        <div className="header__appearance-panel">
+                            <ThemeSettings />
+                        </div>
+                    </details>
                 </div>
             </div>
         </header>

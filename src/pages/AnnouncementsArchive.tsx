@@ -7,15 +7,19 @@ export const AnnouncementsArchive: React.FC = () => (
         <section className="page-section u-stack">
             <header className="c-section-header c-section-header--accent">
                 <p className="c-section-header__label">Announcements</p>
-                <h2 className="c-section-header__title">Release notes &amp; status</h2>
+                <h1 className="c-section-header__title">Release notes &amp; status</h1>
                 <p className="c-section-header__description">
                     Short, high-signal updates covering deployments, site news, and roadmap tweaks.
                 </p>
             </header>
 
-            <div className="announcement-list" role="list">
+            <div className="announcement-list">
                 {announcements.map((announcement) => (
-                    <AnnouncementCard key={announcement.id} announcement={announcement} />
+                    <AnnouncementCard
+                        key={announcement.id}
+                        announcement={announcement}
+                        headingLevel="h2"
+                    />
                 ))}
             </div>
         </section>

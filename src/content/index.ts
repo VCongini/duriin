@@ -27,32 +27,44 @@ let videosPromise: Promise<Video[]> | null = null;
 const sortVideos = (items: Video[]): Video[] => sortByDateDesc(items, 'publishedAt');
 const sortAnnouncements = (items: Announcement[]): Announcement[] => sortByDateDesc(items, 'date');
 
-const createVideoFromFeed = (item: YouTubeFeedItem, index: number): Video => ({
+const createVideoFromFeed = (item: YouTubeFeedItem, index: number, bundled?: Video): Video => ({
+    ...bundled,
     id: item.id,
-    episode: `VIDEO ${index + 1}`,
-    title: item.title,
+    episode: bundled?.episode ?? `VIDEO ${index + 1}`,
+    title: item.title || bundled?.title || 'Untitled',
     platform: 'YouTube',
-    url: item.url,
-    embedUrl: `https://www.youtube.com/embed/${item.id}`,
-    thumbnailUrl: item.thumbnails?.high || item.thumbnails?.medium || item.thumbnails?.default,
-    duration: '—',
-    status: 'ARCHIVED',
-    tags: [],
-    description: `Watch ${item.title} on YouTube`,
-    publishedAt: item.publishedAt,
+    url: item.url || bundled?.url || `https://www.youtube.com/watch?v=${item.id}`,
+    embedUrl: `https://www.youtube-nocookie.com/embed/${item.id}`,
+    thumbnailUrl:
+        item.thumbnails?.high || item.thumbnails?.medium || item.thumbnails?.default || bundled?.thumbnailUrl,
+    duration: bundled?.duration ?? '—',
+    status: bundled?.status ?? 'ARCHIVED',
+    tags: bundled?.tags ?? [],
+    description: bundled?.description ?? `Watch ${item.title} on YouTube`,
+    publishedAt: item.publishedAt || bundled?.publishedAt || '',
 });
 
-const getFeedBaseUrl = () => {
-    if (typeof window !== 'undefined' && window.location?.origin) {
-        return window.location.origin;
-    }
-
-    return 'http://localhost:5173';
+export const mergeRemoteVideos = (bundled: Video[], items: YouTubeFeedItem[]): Video[] => {
+    const bundledById = new Map(bundled.map((video) => [video.id, video]));
+    const remote = items.map((item, index) => createVideoFromFeed(item, index, bundledById.get(item.id)));
+    const remoteIds = new Set(remote.map((video) => video.id));
+    return sortVideos([...remote, ...bundled.filter((video) => !remoteIds.has(video.id))]);
 };
 
-const fetchRemoteVideos = async (): Promise<Video[]> => {
-    const baseUrl = getFeedBaseUrl();
-    const requestUrl = `${baseUrl}/api/youtube-feed?limit=50`;
+const getFeedRequestUrl = () => {
+    if (typeof window === 'undefined' || !window.location?.origin) {
+        return null;
+    }
+
+    return new URL('/api/youtube-feed?limit=50', window.location.origin).toString();
+};
+
+const fetchRemoteVideos = async (bundled: Video[]): Promise<Video[]> => {
+    const requestUrl = getFeedRequestUrl();
+    if (!requestUrl) {
+        return bundled;
+    }
+
     const response = await fetch(requestUrl, { headers: { accept: 'application/json' } });
 
     if (!response.ok) {
@@ -66,7 +78,7 @@ const fetchRemoteVideos = async (): Promise<Video[]> => {
         throw new Error('Feed was empty');
     }
 
-    return sortVideos(items.map((item, index) => createVideoFromFeed(item, index)));
+    return mergeRemoteVideos(bundled, items);
 };
 
 const fetchLocalVideos = async (): Promise<Video[]> => {
@@ -81,18 +93,22 @@ export const getVideos = async (): Promise<Video[]> => {
     }
 
     if (!videosPromise) {
-        videosPromise = (async () => {
+        videosPromise = (async (): Promise<Video[]> => {
+            const local = await fetchLocalVideos();
+
             try {
-                const remote = await fetchRemoteVideos();
+                const remote = await fetchRemoteVideos(local);
                 videosCache = remote;
                 return remote;
             } catch (error) {
                 console.warn('Falling back to bundled videos.json', error);
-                const local = await fetchLocalVideos();
                 videosCache = local;
                 return local;
             }
-        })();
+        })().catch((error) => {
+            videosPromise = null;
+            throw error;
+        });
     }
 
     return videosPromise;

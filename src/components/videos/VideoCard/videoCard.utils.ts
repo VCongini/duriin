@@ -1,3 +1,5 @@
+import { parseDate } from '../../../utils/format';
+
 export const createTeaser = (description: string, maxLength = 110): string => {
     const text = description?.trim();
 
@@ -12,7 +14,7 @@ export const createTeaser = (description: string, maxLength = 110): string => {
 export const getExternalCtaLabel = (platform: string): string => platform;
 
 export const formatRelativeDate = (iso: string): string => {
-    const published = new Date(iso);
+    const published = parseDate(iso);
     const now = new Date();
     const diffDays = Math.max(0, Math.floor((now.getTime() - published.getTime()) / (1000 * 60 * 60 * 24)));
 

@@ -17,7 +17,7 @@ type ScheduledController = {
 };
 
 type ExecutionContext = {
-    waitUntil(promise: Promise<any>): void;
+    waitUntil(promise: Promise<unknown>): void;
 };
 
 export interface Env {
@@ -26,13 +26,23 @@ export interface Env {
     YOUTUBE_PLAYLIST_ID?: string;
     YOUTUBE_CHANNEL_ID?: string;
     YOUTUBE_RSS_URL?: string;
-    ASSETS?: Fetcher;
+    ASSETS: Fetcher;
 }
 
 type ThumbnailSet = {
     default?: string;
     medium?: string;
     high?: string;
+};
+
+type PlaylistItem = {
+    id?: string;
+    snippet?: {
+        resourceId?: { videoId?: string };
+        title?: string;
+        publishedAt?: string;
+        thumbnails?: Record<string, { url: string } | undefined>;
+    };
 };
 
 export type NormalizedVideo = {
@@ -43,7 +53,7 @@ export type NormalizedVideo = {
     thumbnails: ThumbnailSet;
 };
 
-type FeedPayload = {
+export type FeedPayload = {
     updatedAt: string;
     items: NormalizedVideo[];
     version: number;
@@ -52,7 +62,7 @@ type FeedPayload = {
 const FEED_KEY = 'youtube:feed';
 const VERSION_KEY = 'youtube:feed:version';
 const LAST_CRON_KEY = 'youtube:feed:last_cron';
-const MAX_RESULTS = 50;
+const FEED_ITEM_LIMIT = 50;
 
 const selectThumbnail = (thumbs?: Record<string, { url: string } | undefined>): ThumbnailSet => ({
     default: thumbs?.default?.url,
@@ -60,11 +70,16 @@ const selectThumbnail = (thumbs?: Record<string, { url: string } | undefined>): 
     high: thumbs?.high?.url ?? thumbs?.maxres?.url,
 });
 
-const normalizePlaylistItem = (item: any): NormalizedVideo | null => {
+const normalizePlaylistItem = (value: unknown): NormalizedVideo | null => {
+    if (!value || typeof value !== 'object') {
+        return null;
+    }
+
+    const item = value as PlaylistItem;
     const snippet = item?.snippet;
     const videoId = snippet?.resourceId?.videoId ?? item?.id;
 
-    if (!snippet || !videoId) {
+    if (!snippet || !videoId || !snippet.title || !snippet.publishedAt) {
         return null;
     }
 
@@ -170,35 +185,26 @@ const fetchFromDataApi = async (env: Env): Promise<NormalizedVideo[]> => {
         return [];
     }
 
-    let pageToken: string | undefined;
+    const url = new URL('https://www.googleapis.com/youtube/v3/playlistItems');
+    url.searchParams.set('part', 'snippet');
+    url.searchParams.set('playlistId', playlistId);
+    url.searchParams.set('maxResults', String(FEED_ITEM_LIMIT));
+    url.searchParams.set('key', apiKey);
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`YouTube API error ${response.status}`);
+    }
+
+    const payload = await response.json() as { items?: unknown };
+    const items = Array.isArray(payload.items) ? payload.items : [];
     const collected: NormalizedVideo[] = [];
-
-    do {
-        const url = new URL('https://www.googleapis.com/youtube/v3/playlistItems');
-        url.searchParams.set('part', 'snippet');
-        url.searchParams.set('playlistId', playlistId);
-        url.searchParams.set('maxResults', String(MAX_RESULTS));
-        url.searchParams.set('key', apiKey);
-        if (pageToken) {
-            url.searchParams.set('pageToken', pageToken);
+    items.forEach((item: unknown) => {
+        const normalized = normalizePlaylistItem(item);
+        if (normalized) {
+            collected.push(normalized);
         }
-
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`YouTube API error ${response.status}`);
-        }
-
-        const payload = await response.json();
-        const items = Array.isArray(payload.items) ? payload.items : [];
-        items.forEach((item) => {
-            const normalized = normalizePlaylistItem(item);
-            if (normalized) {
-                collected.push(normalized);
-            }
-        });
-
-        pageToken = payload.nextPageToken;
-    } while (pageToken);
+    });
 
     return collected;
 };
@@ -248,8 +254,13 @@ const fetchYouTubeFeed = async (env: Env): Promise<FeedPayload> => {
 };
 
 const storeFeed = async (env: Env, payload: FeedPayload) => {
-    await env.YOUTUBE_FEED_KV.put(FEED_KEY, JSON.stringify(payload), { expirationTtl: 60 * 60 * 24 });
+    if (payload.items.length === 0) {
+        return false;
+    }
+
+    await env.YOUTUBE_FEED_KV.put(FEED_KEY, JSON.stringify(payload));
     await env.YOUTUBE_FEED_KV.put(VERSION_KEY, String(payload.version));
+    return true;
 };
 
 const readFeed = async (env: Env): Promise<FeedPayload | null> => {
@@ -259,7 +270,16 @@ const readFeed = async (env: Env): Promise<FeedPayload | null> => {
     }
 
     try {
-        return JSON.parse(stored) as FeedPayload;
+        const parsed = JSON.parse(stored) as Partial<FeedPayload>;
+        if (
+            typeof parsed.updatedAt !== 'string' ||
+            typeof parsed.version !== 'number' ||
+            !Array.isArray(parsed.items)
+        ) {
+            throw new Error('Stored feed has an invalid shape');
+        }
+
+        return parsed as FeedPayload;
     } catch (error) {
         console.error('Unable to parse stored feed', error);
         return null;
@@ -277,7 +297,10 @@ const buildResponse = (payload: FeedPayload | null, limit?: number) => {
         });
     }
 
-    const items = typeof limit === 'number' && limit > 0 ? payload.items.slice(0, limit) : payload.items;
+    const itemLimit = typeof limit === 'number' && limit > 0
+        ? Math.min(limit, FEED_ITEM_LIMIT)
+        : FEED_ITEM_LIMIT;
+    const items = payload.items.slice(0, itemLimit);
 
     return new Response(
         JSON.stringify({ ...payload, items }),
@@ -294,19 +317,16 @@ const buildResponse = (payload: FeedPayload | null, limit?: number) => {
 const isHtmlRequest = (request: Request) => {
     const acceptHeader = request.headers.get('accept') ?? '';
 
-    return request.method === 'GET' && acceptHeader.includes('text/html');
+    return (request.method === 'GET' || request.method === 'HEAD') && acceptHeader.includes('text/html');
 };
 
 const fetchAssetWithSpaFallback = async (request: Request, env: Env): Promise<Response> => {
-    if (!env.ASSETS?.fetch) {
-        return new Response('Not Found', { status: 404 });
-    }
-
     try {
         const assetResponse = await env.ASSETS.fetch(request);
 
         if (assetResponse.status === 404 && isHtmlRequest(request)) {
             const indexRequest = new Request(new URL('/index.html', request.url).toString(), {
+                method: request.method,
                 headers: request.headers,
             });
 
@@ -320,6 +340,7 @@ const fetchAssetWithSpaFallback = async (request: Request, env: Env): Promise<Re
         if (isHtmlRequest(request)) {
             try {
                 const indexRequest = new Request(new URL('/index.html', request.url).toString(), {
+                    method: request.method,
                     headers: request.headers,
                 });
 
@@ -344,13 +365,14 @@ const handleFetch = async (request: Request, env: Env): Promise<Response> => {
             new Response(null, {
                 status: 308,
                 headers: { Location: httpsUrl.toString() },
-            })
+            }),
+            url.pathname
         );
     }
 
     if (url.pathname === '/api/youtube-feed') {
         const limit = url.searchParams.get('limit');
-        const parsedLimit = limit ? Number.parseInt(limit, 10) : undefined;
+        const parsedLimit = limit ? Number(limit) : undefined;
         let feed = await readFeed(env);
 
         if (!feed || feed.items.length === 0) {
@@ -358,8 +380,8 @@ const handleFetch = async (request: Request, env: Env): Promise<Response> => {
                 const refreshed = await fetchYouTubeFeed(env);
                 if (refreshed.items.length > 0) {
                     await storeFeed(env, refreshed);
+                    feed = refreshed;
                 }
-                feed = refreshed;
             } catch (error) {
                 console.error('On-demand YouTube feed refresh failed', error);
             }
@@ -368,8 +390,18 @@ const handleFetch = async (request: Request, env: Env): Promise<Response> => {
         return applySecurityHeaders(buildResponse(feed, Number.isNaN(parsedLimit) ? undefined : parsedLimit));
     }
 
+    if (url.pathname.startsWith('/api/')) {
+        return applySecurityHeaders(
+            new Response(JSON.stringify({ message: 'Not found' }), {
+                status: 404,
+                headers: { 'content-type': 'application/json' },
+            }),
+            url.pathname
+        );
+    }
+
     const assetResponse = await fetchAssetWithSpaFallback(request, env);
-    return applySecurityHeaders(assetResponse);
+    return applySecurityHeaders(assetResponse, url.pathname);
 };
 
 const refreshScheduledFeed = async (env: Env) => {
@@ -406,4 +438,4 @@ export default {
     scheduled: handleScheduled,
 };
 
-export { fetchYouTubeFeed, buildResponse };
+export { fetchYouTubeFeed, buildResponse, handleFetch, refreshScheduledFeed };
