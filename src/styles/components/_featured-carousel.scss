@@ -139,7 +139,7 @@
     justify-self: center;
     box-shadow: var(--carousel-nav-shadow);
     position: absolute;
-    top: 50%;
+    top: 8rem;
     transform: translateY(-50%);
     z-index: 2;
 
@@ -147,6 +147,7 @@
         width: var(--button-height-lg);
         height: var(--button-height-lg);
         justify-self: stretch;
+        top: 50%;
     }
 }
 

@@ -40,7 +40,7 @@ export const AnnouncementDetail: React.FC = () => {
                     <h1 className="c-section-header__title">{announcement.title}</h1>
                 </header>
 
-                <AnnouncementCard announcement={announcement} showLink={false} />
+                <AnnouncementCard announcement={announcement} showLink={false} showTitle={false} />
 
                 {paragraphs.length > 0 ? (
                     <article className="announcement-body">

@@ -11,10 +11,10 @@
     --color-border-strong: #111b2f;
     --color-text-primary: #0f172a;
     --color-text-secondary: #46506b;
-    --color-text-tertiary: #6b7280;
-    --color-text-on-accent: #0b1220;
-    --color-accent-primary: #0ea5e9;
-    --color-accent-secondary: #2563eb;
+    --color-text-tertiary: #596273;
+    --color-text-on-accent: #ffffff;
+    --color-accent-primary: #006b8f;
+    --color-accent-secondary: #174ea6;
     --color-accent: var(--color-accent-primary);
     --color-accent-section: var(--color-accent-primary);
     --color-danger: #e11d48;
@@ -28,15 +28,15 @@
     --tag-base-text: var(--color-text-secondary);
     --tag-platform-bg: var(--color-accent-primary);
     --tag-platform-border: var(--color-accent-primary);
-    --tag-platform-text: #0b1220;
+    --tag-platform-text: #ffffff;
     --tag-meta-bg: rgba(15, 23, 42, 0.02);
     --tag-meta-border: rgba(15, 23, 42, 0.18);
     --tag-meta-text: var(--color-text-secondary);
-    --tag-content-bg: rgba(14, 165, 233, 0.12);
-    --tag-content-border: rgba(14, 165, 233, 0.32);
+    --tag-content-bg: rgba(0, 107, 143, 0.1);
+    --tag-content-border: rgba(0, 107, 143, 0.32);
     --tag-content-text: #0f172a;
     --tag-content-active-bg: var(--color-accent-primary);
-    --tag-content-active-text: #0b1220;
+    --tag-content-active-text: #ffffff;
     --tag-focus-outline: var(--color-accent-secondary);
     --theme-control-bg: #ffffff;
     --theme-control-border: rgba(15, 23, 42, 0.25);
@@ -44,7 +44,7 @@
     --theme-control-active: var(--color-accent-secondary);
     --theme-control-active-text: #ffffff;
     --skeleton-base: rgba(15, 23, 42, 0.08);
-    --skeleton-highlight: rgba(14, 165, 233, 0.3);
+    --skeleton-highlight: rgba(0, 107, 143, 0.25);
     --button-ghost-bg: transparent;
     --button-ghost-hover: rgba(15, 23, 42, 0.07);
     --button-ghost-text: var(--color-text-primary);
@@ -69,7 +69,7 @@
     --page-card-shadow: none;
     --video-border-width: var(--border-base);
     --video-border-width-active: var(--border-thick);
-    --video-active-outline: #ff1fb7;
+    --video-active-outline: #9a3412;
     --video-active-surface: var(--color-bg-panel);
     --video-active-overlay: transparent;
     --video-active-shadow: none;
@@ -83,4 +83,6 @@
     --button-border-radius: var(--radius-none);
     --hero-outline-color: rgba(37, 99, 235, 0.4);
     --header-blur: 0;
+    --font-family-display: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    --font-family-label: ui-monospace, 'SFMono-Regular', Consolas, monospace;
 }

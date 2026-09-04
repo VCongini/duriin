@@ -7,14 +7,14 @@
     --color-surface-alt: #161a2d;
     --color-bg-panel: var(--color-surface);
     --color-border: #272b3e;
-    --color-border-subtle: rgba(95, 240, 255, 0.24);
-    --color-border-strong: #5ff0ff;
+    --color-border-subtle: rgba(242, 255, 102, 0.24);
+    --color-border-strong: #f2ff66;
     --color-text-primary: #f5f8ff;
     --color-text-secondary: #cbd5e1;
     --color-text-tertiary: #94a3b8;
     --color-text-on-accent: #050608;
-    --color-accent-primary: #16f2d6;
-    --color-accent-secondary: #4ea3ff;
+    --color-accent-primary: #f2ff66;
+    --color-accent-secondary: #ff7849;
     --color-accent: var(--color-accent-primary);
     --color-accent-section: var(--color-accent-primary);
     --color-danger: #ff4b7d;
@@ -32,27 +32,30 @@
     --tag-meta-bg: rgba(255, 255, 255, 0.02);
     --tag-meta-border: var(--color-border);
     --tag-meta-text: var(--color-text-secondary);
-    --tag-content-bg: rgba(22, 242, 214, 0.14);
-    --tag-content-border: rgba(22, 242, 214, 0.35);
+    --tag-content-bg: rgba(242, 255, 102, 0.12);
+    --tag-content-border: rgba(242, 255, 102, 0.38);
     --tag-content-text: var(--color-text-primary);
     --tag-content-active-bg: var(--color-accent-primary);
     --tag-content-active-text: #050608;
     --tag-focus-outline: var(--color-accent-secondary);
     --theme-control-bg: #0b0f1e;
-    --theme-control-border: rgba(95, 240, 255, 0.35);
+    --theme-control-border: rgba(242, 255, 102, 0.35);
     --theme-control-muted: var(--color-text-tertiary);
     --theme-control-active: var(--color-accent-primary);
     --theme-control-active-text: #03050e;
     --skeleton-base: rgba(255, 255, 255, 0.08);
-    --skeleton-highlight: rgba(95, 240, 255, 0.35);
+    --skeleton-highlight: rgba(242, 255, 102, 0.3);
     --button-ghost-bg: transparent;
     --button-ghost-hover: rgba(255, 255, 255, 0.08);
     --button-ghost-text: var(--color-text-primary);
-    --grid-line-color: 95, 240, 255;
+    --grid-line-color: 242, 255, 102;
     --grid-line-opacity: 0.06;
-    --app-bg-image: radial-gradient(circle at 14% 18%, rgba(22, 242, 214, 0.14), transparent 36%),
-        radial-gradient(circle at 82% 10%, rgba(78, 163, 255, 0.12), transparent 42%),
-        linear-gradient(160deg, #05070f 0%, #0a0f1d 55%, #03050d 100%);
+    --app-bg-image: repeating-linear-gradient(
+            90deg,
+            rgba(var(--grid-line-color), var(--grid-line-opacity)) 0 1px,
+            transparent 1px 42px
+        ),
+        #03050e;
     --shadow-brutalist: none;
     --shadow-modern: 0 30px 80px rgba(5, 6, 24, 0.9);
     --page-section-bg: transparent;
@@ -64,7 +67,7 @@
     --page-card-shadow: none;
     --video-border-width: var(--border-base);
     --video-border-width-active: var(--border-thick);
-    --video-active-outline: #ff2bd0;
+    --video-active-outline: #ff7849;
     --video-active-surface: var(--color-bg-panel);
     --video-active-overlay: transparent;
     --video-active-shadow: none;
@@ -76,6 +79,8 @@
     --panel-outline: var(--color-border-strong);
     --panel-shadow: none;
     --button-border-radius: var(--radius-none);
-    --hero-outline-color: rgba(22, 242, 214, 0.5);
+    --hero-outline-color: rgba(242, 255, 102, 0.5);
+    --font-family-display: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    --font-family-label: ui-monospace, 'SFMono-Regular', Consolas, monospace;
     --header-blur: 0;
 }

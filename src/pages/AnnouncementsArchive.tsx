@@ -13,9 +13,13 @@ export const AnnouncementsArchive: React.FC = () => (
                 </p>
             </header>
 
-            <div className="announcement-list" role="list">
+            <div className="announcement-list">
                 {announcements.map((announcement) => (
-                    <AnnouncementCard key={announcement.id} announcement={announcement} />
+                    <AnnouncementCard
+                        key={announcement.id}
+                        announcement={announcement}
+                        headingLevel="h2"
+                    />
                 ))}
             </div>
         </section>

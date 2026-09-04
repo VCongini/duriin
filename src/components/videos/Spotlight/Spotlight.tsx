@@ -10,10 +10,11 @@ export interface SpotlightProps {
     returnFocusId?: string;
 }
 
-const SpotlightPlayer: React.FC<{ embedUrl?: string; title: string; url: string }> = ({
+const SpotlightPlayer: React.FC<{ embedUrl?: string; title: string; url: string; platform: string }> = ({
     embedUrl,
     title,
-    url
+    url,
+    platform
 }) => {
     const embedSrc = useMemo(() => {
         if (!embedUrl) {
@@ -28,7 +29,7 @@ const SpotlightPlayer: React.FC<{ embedUrl?: string; title: string; url: string 
     if (!embedSrc) {
         return (
             <a className="spotlight__fallback" href={url} target="_blank" rel="noreferrer">
-                Watch on YouTube
+                Watch on {platform}
             </a>
         );
     }
@@ -117,7 +118,12 @@ export const Spotlight = React.forwardRef<HTMLDivElement, SpotlightProps>(
                         Exit Spotlight
                     </button>
                 </header>
-                <SpotlightPlayer embedUrl={video.embedUrl} title={video.title} url={video.url} />
+                <SpotlightPlayer
+                    embedUrl={video.embedUrl}
+                    title={video.title}
+                    url={video.url}
+                    platform={video.platform}
+                />
                 <div className="spotlight__meta">
                     <VideoCardMeta duration={video.duration} publishedAt={video.publishedAt} showTags={false} />
                 </div>

@@ -10,9 +10,9 @@ const ThemeSettingsComponent: React.FC = () => {
     const { layout, mode, setLayout, setMode } = useTheme();
 
     return (
-        <div className="theme-settings" aria-label="Appearance settings">
+        <div className="theme-settings" role="group" aria-label="Appearance settings">
             <label className="theme-settings__group" htmlFor="theme-layout">
-                <span className="theme-settings__label">Layout</span>
+                <span className="theme-settings__label">Theme</span>
                 <span className="theme-settings__control theme-settings__control--layout">
                     <select
                         id="theme-layout"

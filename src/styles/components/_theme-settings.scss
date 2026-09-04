@@ -1,12 +1,10 @@
 @use '../utilities' as *;
 
 .theme-settings {
-    @include fluid-stack(column, var(--space-sm), row, var(--space-sm));
-    align-items: flex-start;
-
-    @include respond(tablet) {
-        align-items: center;
-    }
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
 }
 
 .theme-settings__group {
@@ -17,6 +15,7 @@
     text-transform: uppercase;
     letter-spacing: 0.2em;
     color: var(--color-text-secondary);
+    flex: 1 1 7rem;
 }
 
 .theme-settings__label {
@@ -35,14 +34,15 @@
     border: 1px solid var(--theme-control-border);
     background: var(--theme-control-bg);
     color: var(--color-text-primary);
-    padding: 0.45rem 2.25rem 0.45rem 1rem;
+    padding: 0.4rem 2rem 0.4rem 0.75rem;
     font-size: var(--font-size-sm);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     border-radius: var(--radius-sm);
     cursor: pointer;
     display: block;
-    min-width: 8.5rem;
+    min-width: 7rem;
+    width: 100%;
     min-height: var(--tap-target);
     transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
 }
@@ -50,7 +50,6 @@
 .theme-settings__select:hover,
 .theme-settings__select:focus-visible {
     border-color: var(--color-border-strong);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .theme-settings__select-icon {
@@ -72,6 +71,7 @@
     border: 1px solid var(--theme-control-border);
     border-radius: var(--radius-pill);
     overflow: hidden;
+    width: 100%;
 }
 
 .theme-settings__mode-btn {
@@ -81,6 +81,7 @@
     font-size: var(--font-size-sm);
     padding: 0.6rem 1rem;
     min-height: var(--tap-target);
+    flex: 1;
     cursor: pointer;
     transition: background 200ms ease, color 200ms ease;
 }
@@ -98,4 +99,5 @@
 
 [data-theme-layout='modern'] .theme-settings__group {
     letter-spacing: 0.1em;
+    text-transform: none;
 }

@@ -23,5 +23,8 @@ test('Header renders its primary navigation and skip link', () => {
     assert(html.includes('aria-label="Primary"'));
     assert(html.includes('href="/videos"'));
     assert(html.includes('href="/about"'));
+    assert(html.includes('<details'));
+    assert(html.includes('<summary'));
+    assert(html.includes('Appearance'));
     assert(!html.includes('header__status-light'));
 });

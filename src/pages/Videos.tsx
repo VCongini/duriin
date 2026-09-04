@@ -10,6 +10,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { VideoCard } from '../components/videos/VideoCard';
 import { Spotlight } from '../components/videos/Spotlight';
 import { useViewedVideos } from '../components/videos/useViewedVideos';
+import { getTagOptions, videoHasTag } from '../components/videos/videoFilters';
 import { getVideos } from '../content';
 import { Video } from '../content/types';
 import { parseDate } from '../utils/format';
@@ -70,10 +71,7 @@ export const Videos: React.FC = () => {
     const [loadError, setLoadError] = useState<string | null>(null);
     const { isViewed, markViewed } = useViewedVideos();
 
-    const tags = useMemo(
-        () => Array.from(new Set((videos ?? []).flatMap((v) => v.tags))).sort(),
-        [videos]
-    );
+    const tags = useMemo(() => getTagOptions(videos ?? []), [videos]);
     const deferredQuery = useDeferredValue(query);
     const spotlightRowRef = useRef<HTMLDivElement>(null);
     const spotlightContentRef = useRef<HTMLDivElement>(null);
@@ -95,7 +93,7 @@ export const Videos: React.FC = () => {
                     !normalizedQuery ||
                     haystack.includes(normalizedQuery) ||
                     video.tags.some((t) => t.toLowerCase().includes(normalizedQuery));
-                const matchTag = activeTag ? video.tags.includes(activeTag) : true;
+                const matchTag = activeTag ? videoHasTag(video, activeTag) : true;
                 return matchQuery && matchTag;
             })
             .map((video) => ({
@@ -107,10 +105,9 @@ export const Videos: React.FC = () => {
     const isPlayingInFilter = playingId ? filtered.some((video) => video.id === playingId) : false;
     const activePlayerId = isPlayingInFilter ? playingId : null;
     const spotlightVideo = spotlightId ? filtered.find((video) => video.id === spotlightId) : null;
-    const spotlightedVideoId = spotlightVideo?.id ?? renderedSpotlight?.id ?? null;
-    const listWithoutSpotlight = spotlightedVideoId
-        ? filtered.filter((video) => video.id !== spotlightedVideoId)
-        : filtered;
+    const activeTagLabel = activeTag
+        ? tags.find((tag) => tag.value === activeTag)?.label ?? activeTag
+        : null;
 
     useEffect(() => {
         if (!playingId) {
@@ -262,7 +259,7 @@ export const Videos: React.FC = () => {
             ? 'Loading videos…'
             : filtered.length === 1
                 ? '1 video'
-                : `${filtered.length} videos${activeTag ? ` tagged ${activeTag}` : ''}`;
+                : `${filtered.length} videos${activeTagLabel ? ` tagged ${activeTagLabel}` : ''}`;
 
     const handleVideoPlay = useCallback(
         (id: string) => {
@@ -391,8 +388,8 @@ export const Videos: React.FC = () => {
                                 >
                                     <option value="">All</option>
                                     {tags.map((tag) => (
-                                        <option key={tag} value={tag}>
-                                            #{tag}
+                                        <option key={tag.value} value={tag.value}>
+                                            #{tag.label}
                                         </option>
                                     ))}
                                 </select>
@@ -405,64 +402,68 @@ export const Videos: React.FC = () => {
                     </div>
                 </div>
 
-                {loadError ? (
-                    <div className="video-empty" role="status">
-                        {loadError}
-                    </div>
-                ) : isLoadingVideos ? (
-                    <div className="video-empty" role="status">
-                        Loading videos…
-                    </div>
-                ) : filtered.length ? (
-                    <>
-                        {isMobile ? (
-                            spotlightVideo ? (
-                                <Spotlight
-                                    variant="overlay"
-                                    video={spotlightVideo}
-                                    onExit={handleSpotlightExit}
-                                    returnFocusId={`spotlight-toggle-${spotlightVideo.id}`}
-                                />
-                            ) : null
-                        ) : isSpotlightRendered ? (
-                            <div
-                                className={`spotlight-shell ${isSpotlightOpen ? 'spotlight-shell--open' : ''}`}
-                                style={{
-                                    height: isSpotlightOpen ? `${Math.max(spotlightHeight, 0)}px` : '0px'
-                                }}
-                                onTransitionEnd={handleSpotlightTransitionEnd}
-                            >
-                                <div ref={spotlightContentRef} className="spotlight-shell__inner">
-                                    {renderedSpotlight ? (
-                                        <Spotlight
-                                            variant="row"
-                                            video={renderedSpotlight}
-                                            onExit={handleSpotlightExit}
-                                            ref={spotlightRowRef}
-                                        />
-                                    ) : null}
-                                </div>
-                            </div>
-                        ) : null}
-                        <div className="video-grid" role="list">
-                            {listWithoutSpotlight.map((video) => (
-                                <VideoCard
-                                    key={video.id}
-                                    video={video}
-                                    isViewed={isViewed(video.id)}
-                                    isPlaying={activePlayerId === video.id}
-                                    onPlay={handleVideoPlay}
-                                    isSpotlighted={video.id === spotlightId}
-                                    onSpotlightToggle={handleSpotlightToggle}
-                                />
+                <div className="video-results">
+                    {loadError ? (
+                        <div className="video-empty" role="status">
+                            {loadError}
+                        </div>
+                    ) : isLoadingVideos ? (
+                        <div className="video-grid video-grid--loading" aria-hidden="true">
+                            {[0, 1, 2].map((index) => (
+                                <div className="video-card video-card--skeleton" key={index} />
                             ))}
                         </div>
-                    </>
-                ) : (
-                    <div className="video-empty" role="status">
-                        No videos match that filter. Try clearing the search or switching tags.
-                    </div>
-                )}
+                    ) : filtered.length ? (
+                        <>
+                            {isMobile ? (
+                                spotlightVideo ? (
+                                    <Spotlight
+                                        variant="overlay"
+                                        video={spotlightVideo}
+                                        onExit={handleSpotlightExit}
+                                        returnFocusId={`spotlight-toggle-${spotlightVideo.id}`}
+                                    />
+                                ) : null
+                            ) : isSpotlightRendered ? (
+                                <div
+                                    className={`spotlight-shell ${isSpotlightOpen ? 'spotlight-shell--open' : ''}`}
+                                    style={{
+                                        height: isSpotlightOpen ? `${Math.max(spotlightHeight, 0)}px` : '0px'
+                                    }}
+                                    onTransitionEnd={handleSpotlightTransitionEnd}
+                                >
+                                    <div ref={spotlightContentRef} className="spotlight-shell__inner">
+                                        {renderedSpotlight ? (
+                                            <Spotlight
+                                                variant="row"
+                                                video={renderedSpotlight}
+                                                onExit={handleSpotlightExit}
+                                                ref={spotlightRowRef}
+                                            />
+                                        ) : null}
+                                    </div>
+                                </div>
+                            ) : null}
+                            <ul className="video-grid">
+                                {filtered.map((video) => (
+                                    <VideoCard
+                                        key={video.id}
+                                        video={video}
+                                        isViewed={isViewed(video.id)}
+                                        isPlaying={activePlayerId === video.id}
+                                        onPlay={handleVideoPlay}
+                                        isSpotlighted={video.id === spotlightId}
+                                        onSpotlightToggle={handleSpotlightToggle}
+                                    />
+                                ))}
+                            </ul>
+                        </>
+                    ) : (
+                        <div className="video-empty" role="status">
+                            No videos match that filter. Try clearing the search or switching tags.
+                        </div>
+                    )}
+                </div>
             </section>
         </div>
     );

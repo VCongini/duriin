@@ -11,10 +11,10 @@
     --color-border-strong: rgba(12, 20, 40, 0.38);
     --color-text-primary: #0b1220;
     --color-text-secondary: #4a5365;
-    --color-text-tertiary: #6f7584;
+    --color-text-tertiary: #5f6674;
     --color-text-on-accent: #f8fafc;
-    --color-accent-primary: #0a84ff;
-    --color-accent-secondary: #6f7cff;
+    --color-accent-primary: #005eb8;
+    --color-accent-secondary: #5145cd;
     --color-accent: var(--color-accent-primary);
     --color-accent-section: var(--color-accent-primary);
     --color-danger: #db2777;
@@ -28,7 +28,7 @@
     --tag-base-text: var(--color-text-secondary);
     --tag-platform-bg: var(--color-accent-primary);
     --tag-platform-border: var(--color-accent-primary);
-    --tag-platform-text: #0b1220;
+    --tag-platform-text: #ffffff;
     --tag-meta-bg: rgba(12, 20, 40, 0.03);
     --tag-meta-border: rgba(12, 20, 40, 0.12);
     --tag-meta-text: var(--color-text-secondary);
@@ -36,7 +36,7 @@
     --tag-content-border: rgba(37, 99, 235, 0.28);
     --tag-content-text: #0b1220;
     --tag-content-active-bg: var(--color-accent-primary);
-    --tag-content-active-text: #0b1220;
+    --tag-content-active-text: #ffffff;
     --tag-focus-outline: var(--color-accent-secondary);
     --theme-control-bg: rgba(255, 255, 255, 0.92);
     --theme-control-border: rgba(12, 20, 40, 0.12);
@@ -52,7 +52,7 @@
         radial-gradient(circle at 86% 4%, rgba(10, 132, 255, 0.32), transparent 42%),
         linear-gradient(150deg, #f9fbff 0%, #eef2ff 36%, #f6f8ff 100%);
     --shadow-brutalist: 0 18px 40px rgba(12, 20, 40, 0.12);
-    --shadow-modern: 0 38px 80px rgba(12, 20, 40, 0.14);
+    --shadow-modern: 0 16px 42px rgba(12, 20, 40, 0.12);
     --page-section-bg: transparent;
     --page-section-border: var(--color-border-subtle);
     --page-section-shadow: none;
@@ -77,4 +77,6 @@
     --button-border-radius: var(--radius-pill);
     --hero-outline-color: rgba(37, 99, 235, 0.28);
     --header-blur: 28px;
+    --font-family-display: 'Avenir Next Condensed', 'Arial Narrow', 'Segoe UI', sans-serif;
+    --font-family-label: 'Avenir Next', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
 }

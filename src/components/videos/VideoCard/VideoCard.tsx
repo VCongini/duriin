@@ -30,11 +30,10 @@ export const VideoCard: React.FC<VideoCardProps> = ({
     const handleSpotlightToggle = () => onSpotlightToggle(video.id);
 
     return (
-        <article
+        <li
             className={`video-card ${isPlaying ? 'is-playing' : ''} ${isViewed ? 'is-viewed' : ''} ${
                 isSpotlighted ? 'is-spotlighted' : ''
             }`}
-            role="listitem"
             aria-current={isPlaying}
             aria-label={`${video.title}${isSpotlighted ? ' in Spotlight' : ''}`}
         >
@@ -84,7 +83,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
                     />
                 </div>
             </div>
-        </article>
+        </li>
     );
 };
 
